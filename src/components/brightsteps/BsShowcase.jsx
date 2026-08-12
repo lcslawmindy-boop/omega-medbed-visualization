@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Image } from "@/components/ui/image";
 import { BS_SHOWCASE, SHOWCASE_GROUPS } from "@/data/brightstepsShowcase";
 import DocLightbox from "@/components/medbed/DocLightbox";
+import { downloadSheetPdf, downloadInvestorPackage } from "@/lib/showcasePdf";
 
 export default function BsShowcase() {
   const [group, setGroup] = useState("All");
   const [lightbox, setLightbox] = useState(null);
+  const [busy, setBusy] = useState(null);
   const list = group === "All" ? BS_SHOWCASE : BS_SHOWCASE.filter((i) => i.group === group);
   const images = list.map((i) => ({ ...i, rev: i.group }));
 
@@ -35,6 +37,18 @@ export default function BsShowcase() {
             );
           })}
         </div>
+        <button
+          onClick={async () => {
+            setBusy("pkg");
+            try { await downloadInvestorPackage(BS_SHOWCASE, (n, t) => setBusy(`${n}/${t}`)); }
+            finally { setBusy(null); }
+          }}
+          disabled={!!busy}
+          className="font-display ml-auto rounded-md"
+          style={{ fontSize: 9, padding: "6px 10px", minHeight: 32, letterSpacing: "0.07em", background: "var(--sky)", color: "#04121F", opacity: busy ? 0.6 : 1 }}
+        >
+          {busy && busy !== "sheet" ? `BUILDING PDF ${busy === "pkg" ? "" : busy}` : "⬇ INVESTOR PDF PACKAGE"}
+        </button>
       </div>
 
       <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))" }}>
@@ -45,7 +59,17 @@ export default function BsShowcase() {
             </button>
             <figcaption className="px-2.5 py-1.5" style={{ borderTop: "1px solid var(--border)" }}>
               <div className="font-body truncate" style={{ fontSize: 10, color: "var(--text-primary)" }}>{img.title}</div>
-              <div className="font-mono truncate" style={{ fontSize: 8, color: "var(--text-muted)" }}>{img.doc} · {img.group}</div>
+              <div className="flex items-center gap-2">
+                <div className="font-mono truncate flex-1" style={{ fontSize: 8, color: "var(--text-muted)" }}>{img.doc} · {img.group}</div>
+                <button
+                  onClick={async () => { setBusy("sheet"); try { await downloadSheetPdf(img); } finally { setBusy(null); } }}
+                  disabled={!!busy}
+                  className="font-display flex-none rounded"
+                  style={{ fontSize: 8, padding: "4px 7px", minHeight: 28, color: "var(--sky)", border: "1px solid var(--sky-dim)", opacity: busy ? 0.6 : 1 }}
+                >
+                  ⬇ PDF
+                </button>
+              </div>
             </figcaption>
           </figure>
         ))}
