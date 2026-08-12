@@ -5,14 +5,9 @@ const BASE = "https://media.base44.com/images/public/6a7c053f6098c206f62a3535";
 
 export const ENG_DOC_IMAGES = [
   { url: `${BASE}/363da9bea_ChatGPTImageAug11202610_02_37PM.png`, section: "assembly", title: "Exploded Isometric Assembly View", doc: "ZA-ENG-MB-OMEGA-A-EXP-001", rev: "Rev A · 2026-08-12 · Scale: NTS" },
-  { url: `${BASE}/7850badf3_ChatGPTImageAug11202610_08_00PM.png`, section: "assembly", title: "Exploded Isometric — Layer Stack", doc: "ZA-ENG-MB-OMEGA-A-EXP-001", rev: "Rev A · 2026-08-12 · Scale: NTS" },
   { url: `${BASE}/4cf3d69a4_ChatGPTImageAug11202610_04_32PM.png`, section: "plan", title: "Plan View — Modality Zone Map", doc: "ZA-ENG-MB-OMEGA-A-PLN-001", rev: "Rev A · 2026-08-12 · Scale: 1:20" },
-  { url: `${BASE}/d13876c95_ChatGPTImageAug11202610_11_30PM.png`, section: "specs", title: "System Specification Sheet", doc: "ZA-ENG-MB-OMEGA-A-PRD", rev: "Rev A · 2026-08-12" },
-  { url: `${BASE}/6fc203896_ChatGPTImageAug11202610_18_40PM.png`, section: "specs", title: "PRD — Exploded View & Callouts", doc: "ZA-ENG-MB-OMEGA-A-PRD", rev: "Rev A · 2026-08-12" },
-  { url: `${BASE}/d9534fc70_ChatGPTImageAug11202610_21_44PM.png`, section: "specs", title: "Technical Specification Dashboard", doc: "ZA-ENG-MB-OMEGA-A-PRD", rev: "Rev A · 2026-08-12" },
+  { url: `${BASE}/6fc203896_ChatGPTImageAug11202610_18_40PM.png`, section: "specs", title: "System Specification & Callouts", doc: "ZA-ENG-MB-OMEGA-A-PRD", rev: "Rev A · 2026-08-12" },
   { url: `${BASE}/ad1a5b5ac_ChatGPTImageAug11202610_23_21PM.png`, section: "aatcs", title: "AATCS-P2 Adaptive Resonance Pod", doc: "AATCS-P2-EXP-001", rev: "Rev A · 2026-08-12" },
-  { url: `${BASE}/f33d3153b_ChatGPTImageAug11202610_24_58PM.png`, section: "aatcs", title: "AATCS-P2 — Features & Architecture", doc: "AATCS-P2-PRD", rev: "Rev A · 2026-08-12" },
-  { url: `${BASE}/0a75d64ad_ChatGPTImageAug11202611_10_04PM.png`, section: "aatcs", title: "AATCS-P2 — Specification Sheet", doc: "AATCS-P2-PRD", rev: "Rev A · 2026-08-12" },
 ];
 
 export const DOC_SECTIONS = [
