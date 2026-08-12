@@ -18,6 +18,19 @@ const KEY_INDEX = {
   a: 10, b: 11, c: 12, d: 13, e: 14, g: 15, h: 16,
 };
 
+// Scripted power-up boot sequence — staged phases with power level + focus modality
+const BOOT_STAGES = [
+  { t: 0,     power: 0.08, code: "BIO", label: "BFAC CONTROLLER ONLINE" },
+  { t: 1500,  power: 0.20, code: "PBM", label: "PHOTONIC ARRAY PRIMED" },
+  { t: 3000,  power: 0.34, code: "PEMF", label: "ELECTROMAGNETIC FIELD" },
+  { t: 4500,  power: 0.48, code: "VAT", label: "ACOUSTIC RESONANCE" },
+  { t: 6000,  power: 0.62, code: "FIT", label: "THERMAL ENVELOPE" },
+  { t: 7500,  power: 0.80, code: "SFT", label: "SCALAR CORONA SPIN-UP" },
+  { t: 9000,  power: 0.92, code: "PRI", label: "MULTICHANNEL MODULATOR" },
+  { t: 10500, power: 1.00, code: "BIO", label: "ALL SYSTEMS NOMINAL" },
+];
+const BOOT_END = BOOT_STAGES[BOOT_STAGES.length - 1].t + 1500;
+
 export default function OmegaMedBed() {
   const [activeCode, setActiveCode] = useState("SFT");
   const [view, setView] = useState("reset");
@@ -28,6 +41,7 @@ export default function OmegaMedBed() {
   const [remaining, setRemaining] = useState(0);
   const [nominal, setNominal] = useState(false);
   const [power, setPower] = useState(0);
+  const [bootStage, setBootStage] = useState(null);
 
   const openDetail = (code) => setDetailCode(code);
   const closeDetail = () => setDetailCode(null);
@@ -43,41 +57,49 @@ export default function OmegaMedBed() {
     setProtocolOpen(false);
   };
 
-  // Session countdown + sequential modality activation (1.5s each)
+  // Session countdown + scripted power-up boot sequence
   useEffect(() => {
     if (!session) return;
     const steps = session.codes.length;
     const tick = () => {
       const rem = Math.max(0, Math.round((session.endAt - Date.now()) / 1000));
       setRemaining(rem);
-      if (rem <= 0) { setSession(null); setPower(0); }
+      if (rem <= 0) { setSession(null); setPower(0); setBootStage(null); }
     };
     tick();
     const id = setInterval(tick, 1000);
 
-    // Modality cycling (1.5s each)
-    let idx = 0;
-    setActiveCode(session.codes[0]);
-    const cycleId = setInterval(() => {
-      idx += 1;
-      setActiveCode(session.codes[idx % steps]);
-    }, 1500);
-
-    // Power ramp — dramatic 12s boot sequence to full power
-    let p = 0;
-    setPower(0);
+    // Scripted staged boot sequence — drives power, focus modality, and stage label
+    const start = Date.now();
     setNominal(false);
-    const powerId = setInterval(() => {
-      p = Math.min(1, p + 1 / 60);
-      setPower(p);
-      if (p >= 1) {
-        clearInterval(powerId);
+    let cycleId = null;
+    const applyStage = (s) => {
+      setBootStage(s.label);
+      setPower(s.power);
+      setActiveCode(s.code);
+    };
+    applyStage(BOOT_STAGES[0]);
+    const bootId = setInterval(() => {
+      const elapsed = Date.now() - start;
+      let stage = BOOT_STAGES[0];
+      for (const s of BOOT_STAGES) if (elapsed >= s.t) stage = s;
+      applyStage(stage);
+      if (elapsed >= BOOT_END) {
+        clearInterval(bootId);
+        setBootStage(null);
+        setPower(1);
         setNominal(true);
         setTimeout(() => setNominal(false), 2500);
+        // Post-boot: continue cycling through session modalities at full power
+        let i = 0;
+        cycleId = setInterval(() => {
+          i += 1;
+          setActiveCode(session.codes[i % steps]);
+        }, 1500);
       }
-    }, 200);
+    }, 120);
 
-    return () => { clearInterval(id); clearInterval(cycleId); clearInterval(powerId); };
+    return () => { clearInterval(id); clearInterval(bootId); if (cycleId) clearInterval(cycleId); };
   }, [session]);
 
   // Keyboard shortcuts
@@ -174,7 +196,7 @@ export default function OmegaMedBed() {
       >
         <div className="relative flex-1 min-h-0">
           <MedBedScene activeCode={activeCode} view={view} onPickModality={setActiveCode} paused={paused} power={power} />
-          <SceneOverlay activeCode={activeCode} onHighlight={setActiveCode} onView={setView} />
+          <SceneOverlay activeCode={activeCode} onHighlight={setActiveCode} onView={setView} bootStage={bootStage} />
         </div>
         <CenterPanel
           activeCode={activeCode}

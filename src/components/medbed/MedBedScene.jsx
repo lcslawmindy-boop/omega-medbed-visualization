@@ -458,9 +458,10 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       // Power ramp lerp toward target
       powerCur = THREE.MathUtils.lerp(powerCur, powerRef.current, 0.045);
 
-      // Corona rings — spin faster with power, subtle tilt wobble
+      // Corona rings — turbine spin-up: slow at low power, accelerating hard to full
+      const spinFactor = 0.3 + Math.pow(powerCur, 1.6) * 11;
       coronaRings.forEach((ring, i) => {
-        ring.rotation.y += ring.userData.spin * (1 + powerCur * 9);
+        ring.rotation.y += ring.userData.spin * spinFactor;
         ring.rotation.x = Math.sin(t * 0.5 + i) * 0.12 * (0.3 + powerCur);
       });
       // Orbiting nodes
@@ -495,12 +496,13 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       // Power ambient light floods the chamber
       powerLight.intensity = powerCur * 2.8;
 
-      // Plasma drift
+      // Plasma drift — accelerates with power, particles throb
+      const plasmaSpeed = 1 + powerCur * 4;
       const pa = plasmaGeo.attributes.position.array;
       for (let i = 0; i < plasmaCount; i++) {
-        pa[i * 3] += plasmaVel[i * 3];
-        pa[i * 3 + 1] += plasmaVel[i * 3 + 1];
-        pa[i * 3 + 2] += plasmaVel[i * 3 + 2];
+        pa[i * 3] += plasmaVel[i * 3] * plasmaSpeed;
+        pa[i * 3 + 1] += plasmaVel[i * 3 + 1] * plasmaSpeed;
+        pa[i * 3 + 2] += plasmaVel[i * 3 + 2] * plasmaSpeed;
         if (pa[i * 3 + 1] > 1.6) {
           pa[i * 3] = 2.5 + (Math.random() - 0.5) * 0.4;
           pa[i * 3 + 1] = 0.2;
@@ -508,6 +510,8 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
         }
       }
       plasmaGeo.attributes.position.needsUpdate = true;
+      plasmaMat.opacity = 0.5 + powerCur * 0.4 + Math.sin(t * 5) * 0.12 * powerCur;
+      plasmaMat.size = 0.035 + powerCur * 0.04 + Math.sin(t * 7) * 0.012 * powerCur;
 
       // Orgone drift
       orgoneGroup.children.forEach((s) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { MODALITIES } from "@/data/modalities";
 
-export default function SceneOverlay({ activeCode, onHighlight, onView }) {
+export default function SceneOverlay({ activeCode, onHighlight, onView, bootStage }) {
   return (
     <>
       {/* Top-left badge */}
@@ -17,6 +17,18 @@ export default function SceneOverlay({ activeCode, onHighlight, onView }) {
         <span className="font-mono text-muted mx-2" style={{ fontSize: 9 }}>|</span>
         <span className="font-mono" style={{ fontSize: 9, color: "var(--green)" }}>BFAC+ACE ● ONLINE</span>
       </div>
+
+      {/* Boot sequence stage banner */}
+      {bootStage && (
+        <div
+          className="absolute top-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-4 py-1.5 rounded-sm fade-in"
+          style={{ background: "rgba(0,4,8,0.88)", border: "1px solid var(--gold)", backdropFilter: "blur(4px)" }}
+        >
+          <span className="pulse-dot inline-block w-1.5 h-1.5 rounded-full" style={{ background: "var(--gold)" }} />
+          <span className="font-mono text-muted" style={{ fontSize: 8, letterSpacing: "0.12em" }}>BOOT</span>
+          <span className="font-display text-gold" style={{ fontSize: 10, letterSpacing: "0.14em" }}>{bootStage}</span>
+        </div>
+      )}
 
       {/* Highlight modality panel (top-right) */}
       <div
