@@ -8,6 +8,8 @@ import CampaignTechnology from "./CampaignTechnology";
 import CampaignMission from "./CampaignMission";
 import CampaignRoadmap from "./CampaignRoadmap";
 import CampaignFinancials from "./CampaignFinancials";
+import CampaignDonate from "./CampaignDonate";
+import InvestorPortal from "./InvestorPortal";
 
 export default function BsCampaign() {
   const [tier, setTier] = useState(null);
@@ -40,6 +42,8 @@ export default function BsCampaign() {
       <CampaignRoadmap />
       <CampaignFinancials />
       <CampaignTiers onPledge={setTier} />
+      <CampaignDonate />
+      <InvestorPortal />
 
       {tier && (
         <div className="bs-card p-3" style={{ background: "var(--bg-card)", borderLeft: "3px solid var(--teal)" }}>
