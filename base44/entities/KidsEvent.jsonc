@@ -1,0 +1,120 @@
+{
+  "name": "KidsEvent",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "routine_event",
+        "emotion_checkin",
+        "help_request",
+        "calm_session",
+        "learning_event",
+        "communication_card"
+      ]
+    },
+    "child_name": {
+      "type": "string"
+    },
+    "session_id": {
+      "type": "string"
+    },
+    "device": {
+      "type": "string"
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "synced_offline": {
+      "type": "boolean",
+      "default": false
+    },
+    "routine_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "step_number": {
+      "type": "number"
+    },
+    "step_total": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "complete",
+        "skipped",
+        "helped"
+      ]
+    },
+    "assistance_level": {
+      "type": "string",
+      "enum": [
+        "independent",
+        "verbal",
+        "physical",
+        "full"
+      ]
+    },
+    "duration_seconds": {
+      "type": "number"
+    },
+    "stars_earned": {
+      "type": "number"
+    },
+    "emotion": {
+      "type": "string"
+    },
+    "intensity": {
+      "type": "number"
+    },
+    "trigger": {
+      "type": "string"
+    },
+    "location_context": {
+      "type": "string",
+      "enum": [
+        "home",
+        "school",
+        "therapy"
+      ]
+    },
+    "category": {
+      "type": "string"
+    },
+    "body_area": {
+      "type": "string"
+    },
+    "trusted_adult_requested": {
+      "type": "string"
+    },
+    "alert_sent": {
+      "type": "boolean"
+    },
+    "tool_used": {
+      "type": "string"
+    },
+    "post_emotion": {
+      "type": "string"
+    },
+    "module": {
+      "type": "string"
+    },
+    "card_label": {
+      "type": "string"
+    },
+    "card_category": {
+      "type": "string"
+    },
+    "context": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "occurred_at"
+  ]
+}

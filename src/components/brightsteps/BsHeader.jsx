@@ -61,6 +61,13 @@ export default function BsHeader({ mode, onMode, onSessionLog, onExport, onProto
             SESSION ACTIVE — {clock}
           </span>
         )}
+        <button
+          onClick={() => navigate("/kidsos")}
+          className="font-display rounded-md transition-colors hidden md:inline-flex"
+          style={{ fontSize: 9.5, padding: "7px 10px", color: "var(--sky)", border: "1px solid var(--sky-dim)", letterSpacing: "0.06em", minHeight: 36 }}
+        >
+          🌟 KIDS-OS APP
+        </button>
         <BsSearch onSelect={onSearchSelect} />
         <button
           onClick={onProtocol}
