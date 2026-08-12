@@ -21,6 +21,7 @@ import { POD_MODES } from "@/data/brightsteps";
 import { generateBsPackage } from "@/lib/bsSpecReport";
 import BsHoverLabel from "@/components/brightsteps/BsHoverLabel";
 import BsBiometrics from "@/components/brightsteps/BsBiometrics";
+import BsDossier from "@/components/brightsteps/dossier/BsDossier";
 import { playStartupChime } from "@/lib/startupChime";
 
 export default function BrightSteps() {
@@ -165,6 +166,7 @@ export default function BrightSteps() {
             </>
           )}
           <BsBiometrics />
+          {mode !== "parent" && <BsDossier />}
           <BsEcosystem />
           <div className="font-mono text-center py-2" style={{ fontSize: 8, color: "var(--text-muted)", lineHeight: 1.6 }}>
             CONCEPT — NOT A MEDICAL DEVICE · NOT FOR MANUFACTURE<br />© 2026 Aethon Apex IP Holdings LLC
