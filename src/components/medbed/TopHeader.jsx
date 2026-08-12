@@ -150,6 +150,15 @@ export default function TopHeader({ onExport, session, remaining, nominal, onSea
         >
           📐
         </button>
+        <button
+          onClick={() => navigate("/brightsteps")}
+          className="font-display rounded-sm transition-colors hover:bg-elevated"
+          style={{ fontSize: 13, padding: "5px 8px", color: "#38BDF8", border: "1px solid #1D6FA4", background: "transparent", minWidth: 44, minHeight: 44 }}
+          title="BrightSteps ASD Therapy Pod"
+          aria-label="BrightSteps ASD Therapy Pod"
+        >
+          🧒
+        </button>
         <span className="hidden lg:flex items-center gap-1.5 font-mono" style={{ fontSize: 10, color: "var(--green)" }}>
           <span className="pulse-dot inline-block w-1.5 h-1.5 rounded-full" style={{ background: "var(--green)" }} />
           BFAC ACTIVE

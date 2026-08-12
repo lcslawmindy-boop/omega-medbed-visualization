@@ -9,6 +9,7 @@ import ScrollToTop from './components/ScrollToTop';
 // Add page imports here
 import OmegaMedBed from './pages/OmegaMedBed';
 import EngineeringDocs from './pages/EngineeringDocs';
+import BrightSteps from './pages/BrightSteps';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -39,6 +40,7 @@ const AuthenticatedApp = () => {
       {/* Add your page Route elements here */}
       <Route path="/" element={<OmegaMedBed />} />
       <Route path="/engineering" element={<EngineeringDocs />} />
+      <Route path="/brightsteps" element={<BrightSteps />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

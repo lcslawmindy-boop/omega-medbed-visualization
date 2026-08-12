@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap');
+
+/* BrightSteps BS-ATP-Ω scoped design system — warm navy, sky-blue primary */
+.bs-root {
+  --bg-primary: #070B14;
+  --bg-panel: #0E1525;
+  --bg-elevated: #162035;
+  --bg-card: #1C2A42;
+  --gold: #C9A84C;
+  --sky: #38BDF8;
+  --sky-dim: #1D6FA4;
+  --teal: #2DD4BF;
+  --violet: #A78BFA;
+  --green: #34D399;
+  --amber: #FBBF24;
+  --coral: #FB7185;
+  --lavender: #C4B5FD;
+  --mint: #6EE7B7;
+  --text-primary: #EFF6FF;
+  --text-muted: #94A3B8;
+  --border: #1E3A5F;
+  --border-bright: #38BDF8;
+  --red-alert: #F87171;
+  --research-red: #CC2200;
+  --font-kid: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.bs-root .font-kid { font-family: var(--font-kid); }
+.bs-root .text-sky { color: var(--sky); }
+
+.bs-root .bs-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 250ms ease, box-shadow 250ms ease, transform 250ms ease;
+}
+.bs-root .bs-card:hover {
+  border-color: var(--border-bright);
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.18);
+  transform: translateY(-1px);
+}
+.bs-root .bs-card.active {
+  border-color: var(--sky) !important;
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.3) !important;
+}
+
+.bs-root .bs-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.bs-root .bs-scroll::-webkit-scrollbar-track { background: var(--bg-panel); }
+.bs-root .bs-scroll::-webkit-scrollbar-thumb { background: var(--sky-dim); border-radius: 3px; }
+.bs-root .bs-scroll::-webkit-scrollbar-thumb:hover { background: var(--sky); }
+.bs-root .bs-scroll { overscroll-behavior: contain; }
+
+@keyframes bs-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.bs-root .bs-pulse { animation: bs-glow 2.2s ease-in-out infinite; }
+
+.bs-root .bs-main {
+  position: absolute;
+  top: calc(64px + env(safe-area-inset-top));
+  bottom: calc(40px + env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+}
+.bs-root .bs-edges {
+  top: calc(64px + env(safe-area-inset-top));
+  bottom: calc(40px + env(safe-area-inset-bottom));
+}
+@media (min-width: 1024px) {
+  .bs-root .bs-main { left: 280px; right: 320px; }
+}
