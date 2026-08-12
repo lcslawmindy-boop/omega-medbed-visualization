@@ -11,8 +11,10 @@ const VIEWS = {
   fit: { pos: [0, 3.4, 10.5], tgt: [0.8, 1.0, 0] },
 };
 
-export default function BsScene({ activeCode, view, modeColor, autoRotate = true, sessionActive = false }) {
+export default function BsScene({ activeCode, view, modeColor, autoRotate = true, sessionActive = false, onHover }) {
   const mountRef = useRef(null);
+  const hoverRef = useRef(onHover);
+  useEffect(() => { hoverRef.current = onHover; }, [onHover]);
   const stateRef = useRef(null);
   const sessionRef = useRef(sessionActive);
   const activeRef = useRef(activeCode);
@@ -196,11 +198,13 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
 
     // FIT panels — interior side walls
     const fitMat = new THREE.MeshStandardMaterial({ color: 0x442200, emissive: 0xfbbf24, emissiveIntensity: 0.25, transparent: true, opacity: 0.85 });
+    const fitPanels = [];
     [-1.45, 1.45].forEach((x) => {
       const panel = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.7), fitMat);
       panel.position.set(x, -0.1, 0.3);
       panel.rotation.y = x > 0 ? -Math.PI / 2 : Math.PI / 2;
       pod.add(panel);
+      fitPanels.push(panel);
     });
     registerZone("fit", fitMat, 0.25, 1.3);
 
@@ -231,28 +235,73 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
 
     // MCT armrest ports (gold dots)
     const mctMat = new THREE.MeshStandardMaterial({ color: 0xc9a84c, emissive: 0xc9a84c, emissiveIntensity: 0.3, metalness: 1, roughness: 0.2 });
+    const mctPorts = [];
     [[-0.75, 0.35], [0.75, 0.35]].forEach(([x, z]) => {
       for (let i = 0; i < 2; i++) {
         const port = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.03, 12), mctMat);
         port.position.set(x, -0.32, z + i * 0.22);
         pod.add(port);
+        mctPorts.push(port);
       }
     });
     registerZone("mct", mctMat, 0.3, 1.4);
 
-    // Ghost child silhouette (seated)
-    const ghostMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.13, wireframe: true });
-    const ghost = new THREE.Group();
-    const gHead = new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 10), ghostMat);
-    gHead.position.set(0, 0.28, -0.35);
-    const gTorso = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.2, 0.55, 10), ghostMat);
-    gTorso.position.set(0, -0.12, -0.28);
-    gTorso.rotation.x = 0.22;
-    const gLegs = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.1, 0.6, 10), ghostMat);
-    gLegs.position.set(0, -0.42, 0.25);
-    gLegs.rotation.x = Math.PI / 2.4;
-    ghost.add(gHead, gTorso, gLegs);
-    pod.add(ghost);
+    // ---- SEATED CHILD (solid, softly lit) ----
+    const skinMat = new THREE.MeshStandardMaterial({ color: 0xf1c9a5, roughness: 0.75, metalness: 0.02 });
+    const hairMat = new THREE.MeshStandardMaterial({ color: 0x3a2418, roughness: 0.9 });
+    const shirtMat = new THREE.MeshStandardMaterial({ color: 0x4fb3d9, roughness: 0.85, emissive: 0x0d3a52, emissiveIntensity: 0.35 });
+    const pantsMat = new THREE.MeshStandardMaterial({ color: 0x2b3f63, roughness: 0.9 });
+    const child = new THREE.Group();
+    child.position.set(0, -0.02, 0);
+
+    const cHead = new THREE.Mesh(new THREE.SphereGeometry(0.19, 24, 20), skinMat);
+    cHead.scale.set(1, 1.08, 0.98);
+    cHead.position.set(0, 0.3, -0.38);
+    const cHair = new THREE.Mesh(new THREE.SphereGeometry(0.2, 24, 20, 0, Math.PI * 2, 0, Math.PI / 1.7), hairMat);
+    cHair.position.set(0, 0.32, -0.39);
+    cHair.rotation.x = -0.15;
+    const cNeck = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.1, 12), skinMat);
+    cNeck.position.set(0, 0.15, -0.36);
+
+    const cTorso = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.3, 8, 20), shirtMat);
+    cTorso.position.set(0, -0.1, -0.29);
+    cTorso.rotation.x = 0.24;
+
+    const arms = [];
+    [-1, 1].forEach((s) => {
+      const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.055, 0.24, 6, 14), shirtMat);
+      upper.position.set(s * 0.21, -0.12, -0.24);
+      upper.rotation.set(0.35, 0, s * 0.22);
+      const fore = new THREE.Mesh(new THREE.CapsuleGeometry(0.05, 0.22, 6, 14), skinMat);
+      fore.position.set(s * 0.3, -0.31, -0.02);
+      fore.rotation.set(1.15, 0, s * 0.12);
+      const hand = new THREE.Mesh(new THREE.SphereGeometry(0.058, 14, 12), skinMat);
+      hand.position.set(s * 0.34, -0.36, 0.16);
+      child.add(upper, fore, hand);
+      arms.push(upper, fore, hand);
+    });
+
+    [-1, 1].forEach((s) => {
+      const thigh = new THREE.Mesh(new THREE.CapsuleGeometry(0.075, 0.3, 6, 14), pantsMat);
+      thigh.position.set(s * 0.12, -0.4, 0.06);
+      thigh.rotation.set(Math.PI / 2.1, 0, 0);
+      const shin = new THREE.Mesh(new THREE.CapsuleGeometry(0.06, 0.28, 6, 14), pantsMat);
+      shin.position.set(s * 0.13, -0.56, 0.42);
+      shin.rotation.set(Math.PI / 2.6, 0, 0);
+      const foot = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.07, 0.18), hairMat);
+      foot.position.set(s * 0.13, -0.66, 0.62);
+      child.add(thigh, shin, foot);
+    });
+
+    child.add(cHead, cHair, cNeck, cTorso);
+    pod.add(child);
+
+    // Soft aura hugging the child while a session runs
+    const auraMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+    const aura = new THREE.Mesh(new THREE.SphereGeometry(0.62, 24, 18), auraMat);
+    aura.scale.set(1.15, 1.25, 1.05);
+    aura.position.set(0, -0.08, -0.2);
+    pod.add(aura);
 
     // Status dots column (BIO) on pod right exterior
     const statusMats = [];
@@ -344,6 +393,56 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
     applyView();
     applyModeColor();
 
+    // ---- HOVER LABELS FOR POD SUBSECTIONS ----
+    const pickables = [];
+    const tag = (objs, label, sub) => {
+      (Array.isArray(objs) ? objs : [objs]).forEach((o) => {
+        o.userData.label = label;
+        o.userData.sub = sub;
+        pickables.push(o);
+      });
+    };
+    tag(shell, "Pod Shell", "Enclosed acoustic chamber · 1600×1400×1500mm");
+    tag(canopy, "Chromotherapy Canopy — CHM", "RGBW LED dome · 380–780nm");
+    tag(pbm, "Photobiomodulation Array — PBM", "660/850nm · 40–60 mW/cm²");
+    tag(nadNodes, "Nada Resonators — NAD", "7-node acoustic spine column");
+    tag(seat, "Vibroacoustic Seat — VAT", "30–520Hz 6-transducer matrix");
+    tag(fitPanels, "Far-Infrared Panels — FIT", "5–14µm · 36–42°C envelope");
+    tag(eegRing, "EEG Headset Dock — EEG", "8-channel dry electrode array");
+    tag([binL, binR], "Binaural Emitters — BIN", "Delta 0.5–4Hz · Theta 4–8Hz");
+    tag(mctPorts, "Microcurrent Ports — MCT", "Armrest contact electrodes");
+    tag([vor, vorWater], "Vortex Water Unit — VOR", "Structured-water resonance loop");
+    tag(coronaRings, "Scalar Corona — GSC", "Counter-rotating field rings");
+    tag(headrest, "Headrest", "Adjustable pediatric support");
+    tag(rim, "Access Rim", "Illuminated open-face safety edge");
+    tag([cHead, cHair, cTorso, cNeck, ...arms], "Patient Position", "Ages 4–17 · reclined 15°");
+
+    const ray = new THREE.Raycaster();
+    const ptr = new THREE.Vector2();
+    let lastLabel = null;
+    const onPointerMove = (e) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      ptr.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      ptr.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      ray.setFromCamera(ptr, camera);
+      const hit = ray.intersectObjects(pickables, false)[0];
+      const cb = hoverRef.current;
+      if (!cb) return;
+      if (hit) {
+        const { label, sub } = hit.object.userData;
+        lastLabel = label;
+        cb({ label, sub, x: e.clientX - rect.left, y: e.clientY - rect.top });
+        renderer.domElement.style.cursor = "pointer";
+      } else if (lastLabel !== null) {
+        lastLabel = null;
+        cb(null);
+        renderer.domElement.style.cursor = "grab";
+      }
+    };
+    const onPointerLeave = () => { lastLabel = null; if (hoverRef.current) hoverRef.current(null); };
+    renderer.domElement.addEventListener("pointermove", onPointerMove);
+    renderer.domElement.addEventListener("pointerleave", onPointerLeave);
+
     let raf;
     const clock = new THREE.Clock();
     const animate = () => {
@@ -367,6 +466,13 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
         halo.scale.setScalar(1 + ign * 4.2);
         halo.material.opacity = ign * 0.3;
       });
+
+      // Child breathing + session aura
+      const breath = 1 + Math.sin(t * 1.1) * 0.018;
+      cTorso.scale.set(breath, 1, breath);
+      cHead.position.y = 0.3 + Math.sin(t * 1.1) * 0.006;
+      auraMat.color.copy(podLight.color);
+      auraMat.opacity = THREE.MathUtils.lerp(auraMat.opacity, inSession ? 0.13 + Math.sin(t * 1.6) * 0.03 : 0, 0.05);
 
       // Cocoon glow — gentle breathing, brighter and warmer while a session runs
       cocoonMat.color.copy(podLight.color);
@@ -442,6 +548,8 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
+      renderer.domElement.removeEventListener("pointermove", onPointerMove);
+      renderer.domElement.removeEventListener("pointerleave", onPointerLeave);
       controls.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);

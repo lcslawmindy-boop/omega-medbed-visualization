@@ -19,6 +19,9 @@ import ParentEmergency from "@/components/brightsteps/parent/ParentEmergency";
 import { BS_NAV_SYSTEMS } from "@/data/brightstepsNav";
 import { POD_MODES } from "@/data/brightsteps";
 import { generateBsPackage } from "@/lib/bsSpecReport";
+import BsHoverLabel from "@/components/brightsteps/BsHoverLabel";
+import BsBiometrics from "@/components/brightsteps/BsBiometrics";
+import { playStartupChime } from "@/lib/startupChime";
 
 export default function BrightSteps() {
   const [mode, setMode] = useState("clinician");
@@ -32,6 +35,7 @@ export default function BrightSteps() {
   const [remaining, setRemaining] = useState(0);
   const [guideOpen, setGuideOpen] = useState(false);
   const [autoRotate, setAutoRotate] = useState(true);
+  const [hover, setHover] = useState(null);
   const [gated, setGated] = useState(() => localStorage.getItem("bs_gate_acknowledged") !== "true");
 
   const handleHighlight = (code) => {
@@ -46,6 +50,7 @@ export default function BrightSteps() {
   };
 
   const startSession = (cfg) => {
+    playStartupChime({ warm: true });
     setSession(cfg);
     setRemaining(cfg.dur * 60);
     setBuilderOpen(false);
@@ -116,7 +121,8 @@ export default function BrightSteps() {
       <main className="bs-main flex flex-col overflow-hidden">
         {/* 3D scene */}
         <div className="relative flex-none no-select" style={{ height: "48%", minHeight: 260 }}>
-          <BsScene activeCode={activeCode} view={view} modeColor={session ? session.color : POD_MODES[podModeIdx].color} autoRotate={autoRotate} sessionActive={!!session} />
+          <BsScene activeCode={activeCode} view={view} modeColor={session ? session.color : POD_MODES[podModeIdx].color} autoRotate={autoRotate} sessionActive={!!session} onHover={setHover} />
+          <BsHoverLabel hover={hover} />
           <BsSceneOverlay
             activeCode={activeCode}
             onHighlight={handleHighlight}
@@ -158,6 +164,7 @@ export default function BrightSteps() {
               <ParentTimeline />
             </>
           )}
+          <BsBiometrics />
           <BsEcosystem />
           <div className="font-mono text-center py-2" style={{ fontSize: 8, color: "var(--text-muted)", lineHeight: 1.6 }}>
             CONCEPT — NOT A MEDICAL DEVICE · NOT FOR MANUFACTURE<br />© 2026 Aethon Apex IP Holdings LLC
