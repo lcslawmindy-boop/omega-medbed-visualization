@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { BOM, BOM_SUBTOTALS } from "@/data/campaignFinance";
+import RestrictedSection from "@/components/security/RestrictedSection";
 
 const FILTERS = [
   ["all", "All"],
-  ["PRI", "Prioré PRI"],
+  ["PRI", "ZA-PRI"],
   ["BRH", "Helmet BRH"],
   ["VPO", "VPO"],
   ["GRD", "Grid GRD"],
@@ -54,6 +55,7 @@ export default function BomTab() {
         ))}
       </div>
 
+      <RestrictedSection label="CONFIGURATION — RESTRICTED" note="Component-level configuration and vendor detail are trade secrets. Full BOM released to credentialed partners under executed NDA.">
       <div className="mt-2.5 overflow-x-auto bs-scroll">
         <table className="w-full" style={{ borderCollapse: "collapse", minWidth: 420 }}>
           <thead>
@@ -83,6 +85,7 @@ export default function BomTab() {
           </tbody>
         </table>
       </div>
+      </RestrictedSection>
 
       <div className="grid gap-1.5 mt-2.5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}>
         {BOM_SUBTOTALS.map(([k, v]) => (

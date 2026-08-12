@@ -1,9 +1,11 @@
 import React from "react";
 import { PATENT_CLAIMS, IP_PROTECTIONS } from "@/data/brightstepsDossier";
+import RestrictedSection from "@/components/security/RestrictedSection";
 
 export default function IpPortfolioPanel() {
   return (
     <div className="space-y-3">
+      <RestrictedSection label="PATENT CLAIMS — RESTRICTED" note="Draft claim language is proprietary and withheld pending filing. Released to credentialed partners under executed NDA.">
       <div className="bs-card p-3" style={{ background: "var(--bg-card)" }}>
         <div className="font-display text-sky mb-2" style={{ fontSize: 10, letterSpacing: "0.12em" }}>ACE ADAPTIVE CONTROL — PATENT CLAIM SET (DRAFT)</div>
         <div className="space-y-2">
@@ -22,6 +24,7 @@ export default function IpPortfolioPanel() {
           })}
         </div>
       </div>
+      </RestrictedSection>
 
       <div className="bs-card p-3" style={{ background: "var(--bg-card)", borderLeft: "3px solid var(--gold)" }}>
         <div className="font-display mb-2" style={{ fontSize: 10, color: "var(--gold)", letterSpacing: "0.1em" }}>MUTUAL NDA — IP PROTECTION FRAMEWORK</div>
