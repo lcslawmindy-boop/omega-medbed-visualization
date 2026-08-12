@@ -182,6 +182,13 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
       nadHalos.push(halo);
     });
 
+    // Flowing warm light that travels crown → root along the resonator column
+    const flowMat = new THREE.MeshBasicMaterial({ color: 0xffd9a0, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+    const flowOrb = new THREE.Mesh(new THREE.SphereGeometry(0.13, 18, 16), flowMat);
+    pod.add(flowOrb);
+    const flowLight = new THREE.PointLight(0xffc98a, 0, 2.6);
+    pod.add(flowLight);
+
     // Cocoon glow — soft additive shell around the pod
     const cocoonMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.06, side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false });
     const cocoon = new THREE.Mesh(new THREE.SphereGeometry(1.18, 40, 28), cocoonMat);
@@ -451,21 +458,41 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
 
       // Chakra nodes — idle breathing, or crown-to-root ignition cascade during a session
       const inSession = sessionRef.current;
-      const CYCLE = 5.0, STEP = 0.5, GLOW = 1.6;
+      // Slow, overlapping bloom so the light pours downward instead of blinking
+      const CYCLE = 9.0, STEP = 0.85, GLOW = 3.0, DESCENT = 6 * STEP + GLOW * 0.5;
+      const cyc = t % CYCLE;
       nadNodes.forEach((n, i) => {
         let ign = 0;
         if (inSession) {
           const slot = (6 - i) * STEP; // crown first, root last
-          let p = (t % CYCLE) - slot;
-          if (p >= 0 && p < GLOW) ign = Math.sin((p / GLOW) * Math.PI) ** 1.5;
+          const p = cyc - slot;
+          if (p >= 0 && p < GLOW) {
+            const s = Math.sin((p / GLOW) * Math.PI);
+            ign = s * s; // soft, symmetric swell — no hard onset
+          }
         }
-        const breathe = 1 + Math.sin(t * 1.4 + n.userData.phase) * 0.08;
-        n.scale.setScalar(breathe + ign * 0.85);
-        n.material.userData.ign = ign;
+        const breathe = 1 + Math.sin(t * 1.1 + n.userData.phase) * 0.06;
+        n.scale.setScalar(breathe + ign * 0.6);
+        n.material.userData.ign = ign * 0.75;
         const halo = nadHalos[i];
-        halo.scale.setScalar(1 + ign * 4.2);
-        halo.material.opacity = ign * 0.3;
+        halo.scale.setScalar(1 + ign * 5.0);
+        halo.material.opacity = ign * 0.26;
       });
+
+      // Warm orb gliding from crown to root, fading in and out at the ends
+      if (inSession && cyc < DESCENT) {
+        const f = cyc / DESCENT; // 0 = crown, 1 = root
+        const crown = nadNodes[6].position, root = nadNodes[0].position;
+        flowOrb.position.lerpVectors(crown, root, f);
+        flowLight.position.copy(flowOrb.position);
+        const fade = Math.sin(f * Math.PI) ** 0.7;
+        flowMat.opacity = THREE.MathUtils.lerp(flowMat.opacity, 0.42 * fade, 0.15);
+        flowOrb.scale.setScalar(0.85 + fade * 0.6);
+        flowLight.intensity = THREE.MathUtils.lerp(flowLight.intensity, 1.5 * fade, 0.15);
+      } else {
+        flowMat.opacity = THREE.MathUtils.lerp(flowMat.opacity, 0, 0.12);
+        flowLight.intensity = THREE.MathUtils.lerp(flowLight.intensity, 0, 0.12);
+      }
 
       // Child breathing + session aura
       const breath = 1 + Math.sin(t * 1.1) * 0.018;
