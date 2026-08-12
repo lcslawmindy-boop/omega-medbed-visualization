@@ -5,6 +5,7 @@ const BASE = "https://media.base44.com/images/public/6a7c053f6098c206f62a3535";
 
 export const ENG_DOC_IMAGES = [
   { url: `${BASE}/363da9bea_ChatGPTImageAug11202610_02_37PM.png`, section: "assembly", title: "Exploded Isometric Assembly View", doc: "ZA-ENG-MB-OMEGA-A-EXP-001", rev: "Rev A · 2026-08-12 · Scale: NTS" },
+  { url: `${BASE}/8d06ac022_ChatGPTImageAug11202610_00_54PM.png`, section: "sectionaa", title: "Longitudinal Section A-A", doc: "ZA-ENG-MB-OMEGA-A-SEC-001", rev: "Rev A · 2026-08-12 · Scale: NTS" },
   { url: `${BASE}/4cf3d69a4_ChatGPTImageAug11202610_04_32PM.png`, section: "plan", title: "Plan View — Modality Zone Map", doc: "ZA-ENG-MB-OMEGA-A-PLN-001", rev: "Rev A · 2026-08-12 · Scale: 1:20" },
   { url: `${BASE}/6fc203896_ChatGPTImageAug11202610_18_40PM.png`, section: "specs", title: "System Specification & Callouts", doc: "ZA-ENG-MB-OMEGA-A-PRD", rev: "Rev A · 2026-08-12" },
   { url: `${BASE}/ad1a5b5ac_ChatGPTImageAug11202610_23_21PM.png`, section: "aatcs", title: "AATCS-P2 Adaptive Resonance Pod", doc: "AATCS-P2-EXP-001", rev: "Rev A · 2026-08-12" },
@@ -12,6 +13,7 @@ export const ENG_DOC_IMAGES = [
 
 export const DOC_SECTIONS = [
   { id: "assembly", label: "Assembly" },
+  { id: "sectionaa", label: "Section A-A" },
   { id: "plan", label: "Plan View" },
   { id: "specs", label: "Specifications" },
   { id: "aatcs", label: "AATCS-P2" },
