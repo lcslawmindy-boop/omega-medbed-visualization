@@ -10,6 +10,10 @@ import CampaignRoadmap from "./CampaignRoadmap";
 import CampaignFinancials from "./CampaignFinancials";
 import CampaignDonate from "./CampaignDonate";
 import InvestorPortal from "./InvestorPortal";
+import CampaignTeam from "./CampaignTeam";
+import CampaignResearch from "./CampaignResearch";
+import CampaignLegal from "./CampaignLegal";
+import CampaignFooter from "./CampaignFooter";
 
 export default function BsCampaign() {
   const [tier, setTier] = useState(null);
@@ -57,6 +61,10 @@ export default function BsCampaign() {
       )}
 
       <CampaignFaq />
+      <CampaignTeam />
+      <CampaignResearch />
+      <CampaignLegal />
+      <CampaignFooter />
     </div>
   );
 }
