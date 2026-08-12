@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { CAMPAIGN } from "@/data/brightstepsCampaign";
+import { CAMPAIGN, TIERS } from "@/data/brightstepsCampaign";
 import { generateEngDocument } from "@/lib/docPackageReport";
 import CampaignFunding from "./CampaignFunding";
 import CampaignTiers from "./CampaignTiers";
 import CampaignFaq from "./CampaignFaq";
+import CampaignTechnology from "./CampaignTechnology";
+import CampaignMission from "./CampaignMission";
 
 export default function BsCampaign() {
   const [tier, setTier] = useState(null);
@@ -31,6 +33,8 @@ export default function BsCampaign() {
       </div>
 
       <CampaignFunding />
+      <CampaignTechnology />
+      <CampaignMission onJoin={() => setTier(TIERS[0])} />
       <CampaignTiers onPledge={setTier} />
 
       {tier && (
