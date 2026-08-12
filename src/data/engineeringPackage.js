@@ -5,9 +5,13 @@
 //   { table: { cols: [..], widths: [..], rows: [[..]] } }
 //   { kv: [[k, v], ..] }
 
+import { BS_PRODUCT, BS_DOCUMENTS } from "@/data/brightstepsPackage";
+import { CAMPAIGN_DOC } from "@/data/brightstepsCampaign";
+
 export const PRODUCTS = [
   { id: "omega", name: "Omega MedBed", designator: "ZA-MB-Ω", prefix: "ZA-ENG-MB-OMEGA-A" },
   { id: "aatcs", name: "AATCS-P1 Adaptive Resonator Bed", designator: "AATCS-P1", prefix: "AATCS-P1" },
+  BS_PRODUCT,
 ];
 
 const DISCLAIMER =
@@ -889,6 +893,7 @@ const AATCS_DVT = {
 export const ENG_DOCUMENTS = [
   OMEGA_PRD, OMEGA_PDR, OMEGA_BOM, OMEGA_SOW, OMEGA_EVT, OMEGA_DVT,
   AATCS_PRD, AATCS_PDR, AATCS_BOM, AATCS_SOW, AATCS_EVT, AATCS_DVT,
+  ...BS_DOCUMENTS, CAMPAIGN_DOC,
 ];
 
 export const DOC_KIND_INFO = {
@@ -898,4 +903,5 @@ export const DOC_KIND_INFO = {
   SOW: { label: "Statement of Work", blurb: "Vendor scope, milestones, deliverables and acceptance" },
   EVT: { label: "Engineering Validation", blurb: "Functional test matrix — does the design work" },
   DVT: { label: "Design Validation", blurb: "Durability and margin test matrix — does it hold up" },
+  CAMPAIGN: { label: "Crowdfunding Campaign Brief", blurb: "Funding goal, use of funds, reward tiers and milestones" },
 };
