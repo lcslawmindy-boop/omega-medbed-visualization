@@ -9,6 +9,7 @@ import SceneOverlay from "@/components/medbed/SceneOverlay";
 import CenterPanel from "@/components/medbed/CenterPanel";
 import ModalityDetailModal from "@/components/medbed/ModalityDetailModal";
 import ProtocolBuilder from "@/components/medbed/ProtocolBuilder";
+import TelemetryOverlay from "@/components/medbed/TelemetryOverlay";
 import FirstVisitGate from "@/components/medbed/FirstVisitGate";
 import { MODALITIES, MODALITY_BY_CODE } from "@/data/modalities";
 
@@ -197,6 +198,7 @@ export default function OmegaMedBed() {
         <div className="relative flex-1 min-h-0">
           <MedBedScene activeCode={activeCode} view={view} onPickModality={setActiveCode} paused={paused} power={power} />
           <SceneOverlay activeCode={activeCode} onHighlight={setActiveCode} onView={setView} bootStage={bootStage} />
+          <TelemetryOverlay active={!!session} power={power} />
         </div>
         <CenterPanel
           activeCode={activeCode}
