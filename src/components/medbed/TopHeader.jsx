@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { MODALITIES } from "@/data/modalities";
 import TierBadge from "@/components/medbed/TierBadge";
 
@@ -24,9 +25,11 @@ const EXPORTS = [
   { k: "spec", label: "📊 Modality Spec Sheet" },
   { k: "zone", label: "🗺 Zone Map PDF" },
   { k: "protocol", label: "💾 Protocol JSON" },
+  { k: "engspec", label: "📐 Engineering Spec Sheet" },
 ];
 
 export default function TopHeader({ onExport, session, remaining, nominal, onSearchSelect, onOpenSettings }) {
+  const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [exportOpen, setExportOpen] = useState(false);
@@ -138,15 +141,25 @@ export default function TopHeader({ onExport, session, remaining, nominal, onSea
           )}
         </div>
 
+        <button
+          onClick={() => navigate("/engineering")}
+          className="font-display rounded-sm transition-colors hover:bg-elevated"
+          style={{ fontSize: 13, padding: "5px 8px", color: "var(--gold)", border: "1px solid var(--gold-dim)", background: "transparent", minWidth: 44, minHeight: 44 }}
+          title="Engineering Documentation"
+          aria-label="Engineering Documentation"
+        >
+          📐
+        </button>
         <span className="hidden lg:flex items-center gap-1.5 font-mono" style={{ fontSize: 10, color: "var(--green)" }}>
           <span className="pulse-dot inline-block w-1.5 h-1.5 rounded-full" style={{ background: "var(--green)" }} />
           BFAC ACTIVE
         </span>
         <button
+          onClick={() => navigate("/engineering")}
           className="font-display border rounded-sm hover:bg-elevated transition-colors hidden lg:inline-flex"
           style={{ borderColor: "var(--gold)", color: "var(--gold)", fontSize: 10, padding: "5px 10px", letterSpacing: "0.08em" }}
         >
-          📄 PRD DOC
+          📄 ENG DOCS
         </button>
 
         {/* Export dropdown */}

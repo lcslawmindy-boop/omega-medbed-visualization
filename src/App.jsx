@@ -8,6 +8,7 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 // Add page imports here
 import OmegaMedBed from './pages/OmegaMedBed';
+import EngineeringDocs from './pages/EngineeringDocs';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -37,6 +38,7 @@ const AuthenticatedApp = () => {
     <Routes>
       {/* Add your page Route elements here */}
       <Route path="/" element={<OmegaMedBed />} />
+      <Route path="/engineering" element={<EngineeringDocs />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

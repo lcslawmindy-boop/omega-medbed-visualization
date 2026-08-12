@@ -20,6 +20,7 @@ import { base44 } from "@/api/base44Client";
 import { MODALITIES, MODALITY_BY_CODE } from "@/data/modalities";
 import { POWER_WATTS } from "@/data/powerAllocation";
 import { generateSessionReport } from "@/lib/sessionReport";
+import { generateEngSpecReport } from "@/lib/engSpecReport";
 
 // 1-9,0 -> indices 0-9; A-E,G-H -> indices 10-16 (F reserved for fit)
 const KEY_INDEX = {
@@ -222,6 +223,10 @@ export default function OmegaMedBed() {
   const handleExport = (type) => {
     if (type === "session") {
       generateSessionReport({ session, power, activeCode, remaining });
+      return;
+    }
+    if (type === "engspec") {
+      generateEngSpecReport();
       return;
     }
     if (type === "protocol") {
