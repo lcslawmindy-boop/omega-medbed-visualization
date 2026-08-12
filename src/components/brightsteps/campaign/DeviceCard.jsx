@@ -1,16 +1,27 @@
 import React from "react";
 import DeviceVisual from "./DeviceVisual";
+import ClassifiedOverlay from "./ClassifiedOverlay";
 
 export default function DeviceCard({ d }) {
+  const locked = !!d.classified;
   return (
     <div
-      className="bs-card bs-fade-up overflow-hidden"
+      className="bs-card bs-fade-up overflow-hidden relative"
       style={{
         background: `linear-gradient(140deg, ${d.accent}1A 0%, var(--bg-panel) 55%)`,
         border: `1px solid ${d.accent}55`,
       }}
     >
-      <div className="grid" style={{ gridTemplateColumns: "1fr" }}>
+      {locked && <ClassifiedOverlay />}
+      <div
+        className="grid"
+        style={{
+          gridTemplateColumns: "1fr",
+          filter: locked ? "blur(7px)" : "none",
+          userSelect: locked ? "none" : "auto",
+          pointerEvents: locked ? "none" : "auto",
+        }}
+      >
         <div className="relative p-2" style={{ background: "#070B14", borderBottom: "1px solid var(--border)" }}>
           <span
             className="font-mono absolute rounded"
@@ -48,7 +59,7 @@ export default function DeviceCard({ d }) {
             ))}
           </ul>
 
-          {d.research && (
+          {d.research && !locked && (
             <div
               className="rounded mt-3 p-2 font-mono"
               style={{ fontSize: 8.5, lineHeight: 1.7, color: "#F59E0B", background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.35)" }}

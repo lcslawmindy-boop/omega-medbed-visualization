@@ -4,6 +4,7 @@ export const DEVICES = [
     key: "priore",
     name: "PRIORÉ MULTICHANNEL EM DEVICE",
     accent: "#9B30FF",
+    classified: true,
     story:
       "Antoine Prioré's device cured terminal cancer in animals — documented in French government-funded research from 1962-1980. The results were witnessed by INSERM (French National Institute of Health). The device was then dismantled and the research buried. We are rebuilding it. Better. For $2,400.",
     specs: [
@@ -51,6 +52,7 @@ export const DEVICES = [
     key: "vpo",
     name: "VPO ANENERGY PUMP",
     accent: "#C9A84C",
+    classified: true,
     story:
       "T. Henry Moray demonstrated 50kW of cold radiant energy from the vacuum in the 1920s. Witnesses included engineers. His device was destroyed. Tom Bearden formalized the physics in the 1980s. The VPO Anenergy Pump scales this mechanism to the cellular level — increasing ATP production without additional metabolic input, restoring biological energy to the chronically ill.",
     specs: [
@@ -72,6 +74,7 @@ export const DEVICES = [
     key: "grid",
     name: "SCALAR ENERGY GRID NODE",
     accent: "#0D9488",
+    classified: true,
     story:
       "The world's energy infrastructure represents $220 trillion in locked-in fossil fuel investment. The Scalar Energy Grid Node is the key that unlocks it — an open-system vacuum energy extractor that reduces grid draw by 30% in pilot community deployment, with city-scale clean energy generation as the next milestone. This is not alternative energy. This is the end of the energy problem.",
     specs: [
