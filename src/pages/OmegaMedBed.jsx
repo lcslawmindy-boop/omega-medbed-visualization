@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { jsPDF } from "jspdf";
 import TopHeader from "@/components/medbed/TopHeader";
@@ -15,7 +15,10 @@ import FirstVisitGate from "@/components/medbed/FirstVisitGate";
 import MobileNav from "@/components/medbed/MobileNav";
 import MobileSheet from "@/components/medbed/MobileSheet";
 import SettingsDrawer from "@/components/medbed/SettingsDrawer";
+import SessionHistoryModal from "@/components/medbed/SessionHistoryModal";
+import { base44 } from "@/api/base44Client";
 import { MODALITIES, MODALITY_BY_CODE } from "@/data/modalities";
+import { POWER_WATTS } from "@/data/powerAllocation";
 import { generateSessionReport } from "@/lib/sessionReport";
 
 // 1-9,0 -> indices 0-9; A-E,G-H -> indices 10-16 (F reserved for fit)
@@ -77,24 +80,74 @@ export default function OmegaMedBed() {
   const [bootStage, setBootStage] = useState(null);
   const [mobileTab, setMobileTab] = useState("chamber");
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const powerRef = useRef(0);
+  const samplesRef = useRef([]);
 
-  const startSession = (codes, dur) => {
-    setSession({ codes, endAt: Date.now() + dur * 1000, dur });
+  const startSession = (cfg) => {
+    samplesRef.current = [];
+    setSession({ ...cfg, startAt: Date.now(), endAt: Date.now() + cfg.dur * 1000 });
     setProtocolOpen(false);
     setMobileTab("chamber");
   };
 
-  // Session countdown + scripted power-up boot sequence
+  // Persist a completed/interrupted run with its config + telemetry snapshot.
+  const saveSessionLog = (sess, status) => {
+    const samples = samplesRef.current;
+    const pFinal = samples.length ? samples[samples.length - 1].power : powerRef.current;
+    const totalWatts = sess.codes.reduce((s, c) => s + (POWER_WATTS[c] || 0), 0);
+    base44.entities.SessionLog.create({
+      protocol_name: sess.name || "Untitled Protocol",
+      modalities: sess.codes,
+      modality_count: sess.codes.length,
+      duration_sec: sess.dur,
+      bfac: !!sess.bfac,
+      intensity: sess.intensity || {},
+      power_stability: +(pFinal * 100).toFixed(1),
+      scalar_field: +(pFinal * 12).toFixed(2),
+      thermal: +(22 + pFinal * 16).toFixed(1),
+      hrv: Math.round(60 - pFinal * 6),
+      spo2: +(96 + pFinal * 2.5).toFixed(1),
+      eeg_alpha: +(8 + pFinal * 4).toFixed(1),
+      gsr: +(2.5 - pFinal * 0.8).toFixed(2),
+      core_temp: +(36.5 + pFinal * 0.3).toFixed(2),
+      total_watts: totalWatts,
+      status,
+      started_at: new Date(sess.startAt).toISOString(),
+      ended_at: new Date().toISOString(),
+      samples: samples.slice(-30),
+    });
+  };
+
+  // Session countdown + scripted power-up boot sequence + telemetry sampling
   useEffect(() => {
     if (!session) return;
     const steps = session.codes.length;
+    let completed = false;
+
     const tick = () => {
       const rem = Math.max(0, Math.round((session.endAt - Date.now()) / 1000));
       setRemaining(rem);
-      if (rem <= 0) { setSession(null); setPower(0); setBootStage(null); }
+      if (rem <= 0) {
+        completed = true;
+        saveSessionLog(session, "completed");
+        setSession(null); setPower(0); setBootStage(null);
+      }
     };
     tick();
     const id = setInterval(tick, 1000);
+
+    // Telemetry sampling for the session history log
+    const sampleId = setInterval(() => {
+      const p = powerRef.current;
+      samplesRef.current.push({
+        t: Date.now() - session.startAt,
+        power: p,
+        scalar: +(p * 12).toFixed(2),
+        thermal: +(22 + p * 16).toFixed(1),
+      });
+      if (samplesRef.current.length > 60) samplesRef.current.shift();
+    }, 2000);
 
     const start = Date.now();
     setNominal(false);
@@ -102,6 +155,7 @@ export default function OmegaMedBed() {
     const applyStage = (s) => {
       setBootStage(s.label);
       setPower(s.power);
+      powerRef.current = s.power;
       setActiveCode(s.code);
     };
     applyStage(BOOT_STAGES[0]);
@@ -114,6 +168,7 @@ export default function OmegaMedBed() {
         clearInterval(bootId);
         setBootStage(null);
         setPower(1);
+        powerRef.current = 1;
         setNominal(true);
         setTimeout(() => setNominal(false), 2500);
         let i = 0;
@@ -124,7 +179,13 @@ export default function OmegaMedBed() {
       }
     }, 120);
 
-    return () => { clearInterval(id); clearInterval(bootId); if (cycleId) clearInterval(cycleId); };
+    return () => {
+      clearInterval(id);
+      clearInterval(sampleId);
+      clearInterval(bootId);
+      if (cycleId) clearInterval(cycleId);
+      if (!completed) saveSessionLog(session, "interrupted");
+    };
   }, [session]);
 
   // Keyboard shortcuts
@@ -213,7 +274,9 @@ export default function OmegaMedBed() {
 
   const handleMobileTab = (tab) => {
     if (tab === "protocol") { setProtocolOpen(!protocolOpen); return; }
+    if (tab === "history") { setProtocolOpen(false); setHistoryOpen(true); return; }
     if (protocolOpen) setProtocolOpen(false);
+    if (historyOpen) setHistoryOpen(false);
     setMobileTab(tab);
   };
 
@@ -244,6 +307,7 @@ export default function OmegaMedBed() {
             onSelect={setActiveCode}
             onOpenDetail={openDetail}
             onOpenProtocol={() => setProtocolOpen(true)}
+            onOpenHistory={() => setHistoryOpen(true)}
           />
         </div>
       </main>
@@ -255,16 +319,18 @@ export default function OmegaMedBed() {
           onSelect={setActiveCode}
           onOpenDetail={openDetail}
           onOpenProtocol={() => setProtocolOpen(true)}
+          onOpenHistory={() => setHistoryOpen(true)}
         />
       </MobileSheet>
       <MobileSheet open={mobileTab === "specs"} title="Specs & Terminals" onClose={() => setMobileTab("chamber")}>
         <SpecPanel mobile />
       </MobileSheet>
 
-      <MobileNav activeTab={protocolOpen ? "protocol" : mobileTab} onTab={handleMobileTab} />
+      <MobileNav activeTab={historyOpen ? "history" : protocolOpen ? "protocol" : mobileTab} onTab={handleMobileTab} />
 
       <ProtocolBuilder open={protocolOpen} onClose={() => setProtocolOpen(false)} onSessionStart={startSession} />
       <SettingsDrawer open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <SessionHistoryModal open={historyOpen} onClose={() => setHistoryOpen(false)} />
       {detailCode && (
         <ModalityDetailModal
           code={detailCode}

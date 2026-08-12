@@ -226,7 +226,7 @@ export default function ProtocolBuilder({ open, onClose, onSessionStart }) {
       {/* Footer actions */}
       <div className="px-3 py-2 border-t space-y-1.5 flex-none" style={{ borderColor: "var(--border)" }}>
         <button
-          onClick={() => onSessionStart(activeCodes, dur)}
+          onClick={() => onSessionStart({ name: name || "Untitled Protocol", codes: activeCodes, dur, bfac, intensity: { PBM: pbmI, FIT: fitT, MCT: mctI, PEMF: pemfMode, VAT: vatRange } })}
           className="w-full font-display rounded-sm transition-colors hover:brightness-110 min-h-[44px] lg:min-h-0 text-[14px] lg:text-[11px]"
           style={{ padding: "8px 0", background: "var(--gold)", color: "#000", letterSpacing: "0.08em" }}
         >

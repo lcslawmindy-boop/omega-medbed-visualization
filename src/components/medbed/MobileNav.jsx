@@ -5,6 +5,7 @@ const TABS = [
   { k: "systems", label: "Systems", icon: "☰" },
   { k: "specs", label: "Specs", icon: "▦" },
   { k: "protocol", label: "Protocol", icon: "⚙" },
+  { k: "history", label: "History", icon: "📜" },
 ];
 
 export default function MobileNav({ activeTab, onTab }) {

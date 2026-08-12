@@ -1,0 +1,113 @@
+{
+  "name": "SessionLog",
+  "type": "object",
+  "properties": {
+    "protocol_name": {
+      "type": "string"
+    },
+    "modalities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "modality_count": {
+      "type": "number"
+    },
+    "duration_sec": {
+      "type": "number"
+    },
+    "bfac": {
+      "type": "boolean"
+    },
+    "intensity": {
+      "type": "object",
+      "properties": {
+        "PBM": {
+          "type": "number"
+        },
+        "FIT": {
+          "type": "number"
+        },
+        "MCT": {
+          "type": "number"
+        },
+        "PEMF": {
+          "type": "string"
+        },
+        "VAT": {
+          "type": "string"
+        }
+      }
+    },
+    "power_stability": {
+      "type": "number"
+    },
+    "scalar_field": {
+      "type": "number"
+    },
+    "thermal": {
+      "type": "number"
+    },
+    "hrv": {
+      "type": "number"
+    },
+    "spo2": {
+      "type": "number"
+    },
+    "eeg_alpha": {
+      "type": "number"
+    },
+    "gsr": {
+      "type": "number"
+    },
+    "core_temp": {
+      "type": "number"
+    },
+    "total_watts": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "completed",
+        "interrupted"
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "samples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t": {
+            "type": "number"
+          },
+          "power": {
+            "type": "number"
+          },
+          "scalar": {
+            "type": "number"
+          },
+          "thermal": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "protocol_name",
+    "modalities",
+    "status",
+    "started_at",
+    "ended_at"
+  ]
+}

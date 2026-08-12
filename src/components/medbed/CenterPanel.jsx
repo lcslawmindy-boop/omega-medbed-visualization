@@ -12,7 +12,7 @@ const FILTERS = [
   { k: "T3", label: "T3" },
 ];
 
-export default function CenterPanel({ activeCode, onSelect, onOpenDetail, onOpenProtocol }) {
+export default function CenterPanel({ activeCode, onSelect, onOpenDetail, onOpenProtocol, onOpenHistory }) {
   const [filter, setFilter] = useState("ALL");
   const [view, setView] = useState("grid");
 
@@ -58,6 +58,13 @@ export default function CenterPanel({ activeCode, onSelect, onOpenDetail, onOpen
         </div>
 
         {/* Protocol builder */}
+        <button
+          onClick={onOpenHistory}
+          className="font-display rounded-sm transition-colors hover:brightness-125"
+          style={{ fontSize: 9, padding: "3px 8px", background: "var(--bg-elevated)", color: "var(--gold)", border: "1px solid var(--gold-dim)", letterSpacing: "0.06em" }}
+        >
+          📜 History
+        </button>
         <button
           onClick={onOpenProtocol}
           className="font-display rounded-sm transition-colors hover:brightness-125"
