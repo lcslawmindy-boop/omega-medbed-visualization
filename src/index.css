@@ -49,7 +49,14 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
   }
+  img, canvas, svg, video {
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
   body {
+    -webkit-user-select: none;
+    user-select: none;
     overflow: hidden;
     overscroll-behavior: none;
     -webkit-text-size-adjust: 100%;
@@ -135,6 +142,48 @@
   .select-text {
     -webkit-user-select: text;
     user-select: text;
+  }
+
+  /* IP protection — no copy, no image save/drag */
+  .wm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0.055;
+  }
+  .wm-tile {
+    position: absolute;
+    top: -30%;
+    left: -30%;
+    width: 160%;
+    height: 160%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 46px 60px;
+    transform: rotate(-28deg);
+    align-content: flex-start;
+  }
+  .wm-tile span {
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: #E6EDF3;
+    white-space: nowrap;
+  }
+  .copyright-badge {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    pointer-events: none;
+    text-align: center;
+    font-size: 7.5px;
+    letter-spacing: 0.14em;
+    padding: 3px 6px calc(3px + env(safe-area-inset-bottom));
+    color: rgba(230, 237, 243, 0.42);
+    background: rgba(0, 4, 8, 0.72);
   }
   .safe-top { padding-top: env(safe-area-inset-top); }
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }

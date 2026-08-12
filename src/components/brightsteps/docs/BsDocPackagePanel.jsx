@@ -2,8 +2,13 @@ import React from "react";
 import { DOC_KIND_INFO } from "@/data/engineeringPackage";
 import { BS_DOCUMENTS } from "@/data/brightstepsPackage";
 import { generateEngDocument, generateEngPackage } from "@/lib/docPackageReport";
+import PdfAccessGate from "@/components/security/PdfAccessGate";
 
 export default function BsDocPackagePanel() {
+  return <PdfAccessGate><BsDocPackageContent /></PdfAccessGate>;
+}
+
+function BsDocPackageContent() {
   return (
     <div>
       <div className="font-display text-sky mb-2" style={{ fontSize: 10, letterSpacing: "0.14em" }}>

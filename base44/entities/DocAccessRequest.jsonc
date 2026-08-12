@@ -1,0 +1,35 @@
+{
+  "name": "DocAccessRequest",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "organization": {
+      "type": "string"
+    },
+    "reason": {
+      "type": "string"
+    },
+    "donation_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "denied"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "full_name",
+    "email"
+  ]
+}

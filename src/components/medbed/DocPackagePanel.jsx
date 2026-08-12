@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { ENG_DOCUMENTS, PRODUCTS, DOC_KIND_INFO } from "@/data/engineeringPackage";
 import { generateEngDocument, generateEngPackage } from "@/lib/docPackageReport";
+import PdfAccessGate from "@/components/security/PdfAccessGate";
 
 export default function DocPackagePanel() {
+  return <PdfAccessGate><DocPackageContent /></PdfAccessGate>;
+}
+
+function DocPackageContent() {
   const [product, setProduct] = useState("omega");
   const docs = ENG_DOCUMENTS.filter((d) => d.product === product);
   const active = PRODUCTS.find((p) => p.id === product);

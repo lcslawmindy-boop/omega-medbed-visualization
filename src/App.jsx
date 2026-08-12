@@ -6,6 +6,7 @@ import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
+import ProtectionLayer from './components/security/ProtectionLayer';
 // Add page imports here
 import Home from './pages/Home';
 import OmegaMedBed from './pages/OmegaMedBed';
@@ -85,6 +86,7 @@ function App() {
         <Router>
           <ScrollToTop />
           <AuthenticatedApp />
+          <ProtectionLayer />
         </Router>
         <Toaster />
       </QueryClientProvider>
