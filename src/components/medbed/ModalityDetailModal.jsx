@@ -1,14 +1,12 @@
 import React from "react";
 import { MODALITY_BY_CODE } from "@/data/modalities";
 import { MODALITY_DETAILS } from "@/data/modalityDetails";
-
-const TIER_COLORS = { T1: "#10B981", T2: "#F59E0B", T3: "#EF4444" };
+import TierBadge from "@/components/medbed/TierBadge";
 
 export default function ModalityDetailModal({ code, onClose, onPrev, onNext }) {
   const mod = MODALITY_BY_CODE[code];
   const d = MODALITY_DETAILS[code] || {};
   if (!mod) return null;
-  const tierColor = TIER_COLORS[mod.tierCode];
 
   return (
     <div
@@ -52,9 +50,7 @@ export default function ModalityDetailModal({ code, onClose, onPrev, onNext }) {
           <span className="font-body" style={{ fontSize: 10, color: mod.color, border: `1px solid ${mod.color}`, background: `${mod.color}1a`, padding: "2px 8px", borderRadius: 3 }}>
             {mod.category}
           </span>
-          <span className="font-display" style={{ fontSize: 10, color: tierColor, border: `1px solid ${tierColor}`, background: `${tierColor}1a`, padding: "2px 8px", borderRadius: 3 }}>
-            {mod.tier}
-          </span>
+          <TierBadge tierCode={mod.tierCode} size="md" />
           <span className="font-mono" style={{ fontSize: 10, color: "var(--green)" }}>● ACTIVE</span>
           {mod.isMaster && (
             <span className="font-display" style={{ fontSize: 9, color: "var(--gold)", border: "1px solid var(--gold)", padding: "2px 8px", borderRadius: 3 }}>
@@ -101,9 +97,7 @@ export default function ModalityDetailModal({ code, onClose, onPrev, onNext }) {
           <div>
             <div className="font-display text-gold mb-2" style={{ fontSize: 10, letterSpacing: "0.12em" }}>RESEARCH BASIS</div>
             <div className="mb-2">
-              <span className="font-display" style={{ fontSize: 12, color: tierColor, border: `1px solid ${tierColor}`, background: `${tierColor}1a`, padding: "3px 10px", borderRadius: 3 }}>
-                {mod.tier}
-              </span>
+              <TierBadge tierCode={mod.tierCode} size="lg" />
             </div>
             <ul className="space-y-1.5">
               {(d.citations || []).map((c, i) => (

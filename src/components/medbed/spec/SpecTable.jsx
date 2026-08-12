@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const ROWS = [
   ["Designator", "ZA-MB-Ω"],
@@ -29,6 +29,44 @@ const ROWS = [
   ["Session Range", "30s – 45 min"],
 ];
 
+function CountUp({ value, delay }) {
+  const [display, setDisplay] = useState(value);
+
+  useEffect(() => {
+    const groups = String(value).match(/\d[\d,]*\.?\d*/g);
+    if (!groups || groups.length !== 1) {
+      setDisplay(value);
+      return;
+    }
+    const raw = groups[0];
+    const target = parseFloat(raw.replace(/,/g, ""));
+    const decimals = raw.includes(".") ? raw.split(".")[1].replace(/\D/g, "").length : 0;
+    const prefix = String(value).slice(0, String(value).indexOf(raw));
+    const suffix = String(value).slice(String(value).indexOf(raw) + raw.length);
+    const isInt = decimals === 0;
+
+    let raf;
+    const begin = setTimeout(() => {
+      const start = performance.now();
+      const dur = 1200;
+      const step = (now) => {
+        const p = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        const cur = target * eased;
+        const formatted = isInt ? Math.round(cur).toLocaleString() : cur.toFixed(decimals);
+        setDisplay(`${prefix}${formatted}${suffix}`);
+        if (p < 1) raf = requestAnimationFrame(step);
+        else setDisplay(`${prefix}${isInt ? Math.round(target).toLocaleString() : target.toFixed(decimals)}${suffix}`);
+      };
+      raf = requestAnimationFrame(step);
+    }, delay);
+
+    return () => { clearTimeout(begin); cancelAnimationFrame(raf); };
+  }, [value, delay]);
+
+  return <>{display}</>;
+}
+
 export default function SpecTable() {
   return (
     <div className="px-4 py-3">
@@ -48,7 +86,7 @@ export default function SpecTable() {
           >
             <div className="flex-1 px-3 text-muted">{k}</div>
             <div className="px-3 text-right" style={{ color: "var(--gold)" }}>
-              {v}
+              <CountUp value={v} delay={i * 70} />
             </div>
           </div>
         ))}

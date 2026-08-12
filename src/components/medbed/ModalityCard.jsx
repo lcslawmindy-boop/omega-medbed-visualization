@@ -1,9 +1,7 @@
 import React from "react";
-
-const TIER_COLORS = { T1: "#10B981", T2: "#F59E0B", T3: "#EF4444" };
+import TierBadge from "@/components/medbed/TierBadge";
 
 export default function ModalityCard({ mod, active, onClick, onOpenDetail }) {
-  const tierColor = TIER_COLORS[mod.tierCode];
   const accent = mod.isMaster ? "var(--gold)" : mod.color;
 
   return (
@@ -39,20 +37,7 @@ export default function ModalityCard({ mod, active, onClick, onOpenDetail }) {
             ★ MASTER
           </span>
         )}
-        <span
-          className="font-display"
-          style={{
-            fontSize: 8,
-            letterSpacing: "0.06em",
-            color: tierColor,
-            border: `1px solid ${tierColor}`,
-            background: `${tierColor}20`,
-            padding: "1px 6px",
-            borderRadius: 999,
-          }}
-        >
-          {mod.tierCode}
-        </span>
+        <TierBadge tierCode={mod.tierCode} />
       </div>
 
       {/* Name */}

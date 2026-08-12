@@ -24,6 +24,7 @@ export default function ModalitySidebar({ activeCode, onSelect, onOpenDetail }) 
               key={m.code}
               onClick={() => onSelect(m.code)}
               onDoubleClick={() => onOpenDetail && onOpenDetail(m.code)}
+              data-modcode={m.code}
               className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 transition-colors group"
               style={{
                 background: active ? "var(--bg-elevated)" : "transparent",

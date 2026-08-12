@@ -70,6 +70,16 @@ export default function SceneOverlay({ activeCode, onHighlight, onView }) {
           </button>
         ))}
       </div>
+
+      {/* Device classification badge (permanent, non-dismissible) */}
+      <div
+        className="absolute bottom-3 right-3 z-10 px-2.5 py-1 rounded-full"
+        style={{ background: "rgba(239,68,68,0.85)", color: "#fff" }}
+      >
+        <span className="font-body" style={{ fontSize: 8, letterSpacing: "0.04em", opacity: 0.95 }}>
+          CLASS III CONCEPT · FDA 21 CFR 880 · NOT FOR CLINICAL USE
+        </span>
+      </div>
     </>
   );
 }

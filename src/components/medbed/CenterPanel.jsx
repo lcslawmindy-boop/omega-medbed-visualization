@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { MODALITIES } from "@/data/modalities";
 import ModalityCard from "@/components/medbed/ModalityCard";
+import TierLegend from "@/components/medbed/TierLegend";
+import T3WarningBanner from "@/components/medbed/T3WarningBanner";
+import Attributions from "@/components/medbed/Attributions";
 
 const FILTERS = [
   { k: "ALL", label: "ALL" },
@@ -14,6 +17,7 @@ export default function CenterPanel({ activeCode, onSelect, onOpenDetail, onOpen
   const [view, setView] = useState("grid");
 
   const filtered = MODALITIES.filter((m) => filter === "ALL" || m.tierCode === filter);
+  const t3Visible = filtered.some((m) => m.tierRank === 3);
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -90,8 +94,12 @@ export default function CenterPanel({ activeCode, onSelect, onOpenDetail, onOpen
         </div>
       </div>
 
+      {/* T3 warning banner */}
+      <T3WarningBanner visible={t3Visible} />
+
       {/* Card grid */}
       <div className="flex-1 overflow-y-auto scroll-dark p-3" style={{ background: "var(--bg-primary)" }}>
+        <TierLegend />
         {view === "grid" ? (
           <div className="grid grid-cols-2 gap-3 2xl:grid-cols-3">
             {filtered.map((m) => (
@@ -105,6 +113,7 @@ export default function CenterPanel({ activeCode, onSelect, onOpenDetail, onOpen
             ))}
           </div>
         )}
+        <Attributions />
       </div>
     </div>
   );

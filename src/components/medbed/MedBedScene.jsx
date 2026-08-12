@@ -11,7 +11,7 @@ const VIEWS = {
   top: { pos: [0.01, 7, 0.01], tgt: [0, 0, 0] },
 };
 
-export default function MedBedScene({ activeCode, view, onPickModality }) {
+export default function MedBedScene({ activeCode, view, onPickModality, paused }) {
   const mountRef = useRef(null);
   const stateRef = useRef(null);
   const activeCodeRef = useRef(activeCode);
@@ -19,6 +19,10 @@ export default function MedBedScene({ activeCode, view, onPickModality }) {
 
   useEffect(() => { activeCodeRef.current = activeCode; applyHighlight(); }, [activeCode]);
   useEffect(() => { viewRef.current = view; applyView(); }, [view]);
+  useEffect(() => {
+    const s = stateRef.current;
+    if (s) s.controls.autoRotate = !paused;
+  }, [paused]);
 
   // Expose imperative helpers via refs on the state object
   const applyHighlight = () => {
