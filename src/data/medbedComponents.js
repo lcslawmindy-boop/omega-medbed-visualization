@@ -1,0 +1,22 @@
+// Hardware component / subsystem labels shown as hover tooltips on the 3D MedBed.
+export const MEDBED_COMPONENTS = {
+  chassis:        { label: "MAIN CHASSIS",             spec: "Welded aluminium monocoque · 4000×2600×600 mm", mods: [] },
+  plinth:         { label: "STEEL PLINTH",             spec: "Isolated base · vibration-damped mounts",       mods: [] },
+  guard:          { label: "TITANIUM CORNER GUARD",    spec: "Grade-5 Ti impact guard · 4× per chassis",      mods: [] },
+  mattress:       { label: "PATIENT SURFACE",          spec: "Medical-grade viscoelastic · antimicrobial shell", mods: ["VAT"] },
+  firBase:        { label: "FAR-INFRARED BASE PANEL",  spec: "5–14 µm emitters · 36–42 °C surface limit",     mods: ["FIT"] },
+  canopy:         { label: "CANOPY ARCH & RIBS",       spec: "Geodesic support frame · emitter mounting rail", mods: [] },
+  canopyInterior: { label: "CHROMOTHERAPY DOME",       spec: "Full-spectrum interior wash · 0–100% dimming",  mods: ["CHM"] },
+  ledPanel:       { label: "PHOTOBIOMODULATION ARRAY", spec: "630/660/810/850 nm · 60–100 mW/cm²",           mods: ["PBM"] },
+  eegDock:        { label: "EEG SENSOR DOCK",          spec: "5-channel dry electrode headset cradle",        mods: ["EEG"] },
+  electrodes:     { label: "ELECTRODE PORTS",          spec: "4× gold-plated biometric inputs · left rail",   mods: ["MCT"] },
+  column:         { label: "EQUIPMENT COLUMN",         spec: "Power, compute and drive electronics bay",      mods: [] },
+  portholeTop:    { label: "PLASMA / RIFE PORTHOLE",   spec: "Noble-gas tube viewport · upper bay",           mods: ["PRI"] },
+  portholeMid:    { label: "HARMONIC INDUCTION PORT",  spec: "Coil driver viewport · mid bay",                mods: ["HIT"] },
+  portholeLow:    { label: "VIBRO-ACOUSTIC PORT",      spec: "Transducer amplifier viewport · lower bay",     mods: ["VOR"] },
+  statusStrip:    { label: "STATUS INDICATOR STRIP",   spec: "18× channel-health LEDs · BFAC monitored",      mods: [] },
+  corona:         { label: "SCALAR FIELD CORONA",      spec: "5-ring resonator · phase-locked 7.83 Hz",       mods: ["GSC"] },
+  coronaCore:     { label: "RESONATOR CORE",           spec: "Central emitter node · field origin point",     mods: ["GSC"] },
+  orgone:         { label: "BIOFIELD SHIMMER LAYER",   spec: "Conceptual orgone accumulation volume",         mods: ["ORG"] },
+  floorGrid:      { label: "GLOBAL SCALING GRID",      spec: "Floor reference lattice · alignment aid",       mods: ["GSC"] },
+};

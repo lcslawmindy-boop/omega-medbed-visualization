@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { MODALITIES, MODALITY_BY_CODE } from "@/data/modalities";
+import { componentTooltipHtml } from "./hoverTooltip";
 
 // Zone key → modalities that occupy that 3D zone (some zones are shared)
 const ZONE_TO_MODALITIES = {};
@@ -134,6 +135,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     // MAIN CHASSIS
     const chassis = new THREE.Mesh(new THREE.BoxGeometry(4.0, 0.6, 2.6), charcoalMat);
     chassis.position.y = 0.3;
+    chassis.userData.hw = "chassis";
     scene.add(chassis);
 
     // Steel plinth
@@ -142,6 +144,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       new THREE.MeshStandardMaterial({ color: 0x050505, metalness: 0.5, roughness: 0.6 })
     );
     plinth.position.y = 0.0;
+    plinth.userData.hw = "plinth";
     scene.add(plinth);
 
     // Corner guards (titanium)
@@ -149,6 +152,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     [[-1.95, -1.25], [1.95, -1.25], [-1.95, 1.25], [1.95, 1.25]].forEach(([x, z]) => {
       const g = new THREE.Mesh(guardGeo, titaniumMat);
       g.position.set(x, 0.3, z);
+      g.userData.hw = "guard";
       scene.add(g);
     });
 
@@ -156,6 +160,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     const mattressMat = new THREE.MeshStandardMaterial({ color: 0x1c2333, roughness: 0.9 });
     const mattress = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.1, 2.4), mattressMat);
     mattress.position.set(0, 0.65, 0);
+    mattress.userData.hw = "mattress";
     scene.add(mattress);
     registerZone("mattress", mattressMat, 0, 0.5);
 
@@ -165,6 +170,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     });
     const firBase = new THREE.Mesh(new THREE.BoxGeometry(3.7, 0.04, 2.3), firMat);
     firBase.position.set(0, 0.58, 0);
+    firBase.userData.hw = "firBase";
     scene.add(firBase);
     registerZone("firBase", firMat, 0.15, 1.2);
 
@@ -173,6 +179,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     const canopy = new THREE.Mesh(new THREE.TorusGeometry(1.3, 0.08, 12, 32, Math.PI), canopyMat);
     canopy.position.set(0, 1.0, 0);
     canopy.rotation.z = Math.PI; // arch over top
+    canopy.userData.hw = "canopy";
     scene.add(canopy);
 
     // Canopy ribs (geodesic suggestion)
@@ -182,6 +189,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       rib.rotation.z = Math.PI;
       rib.rotation.y = (i / 5) * Math.PI;
       rib.scale.set(1, 0.7, 1);
+      rib.userData.hw = "canopy";
       scene.add(rib);
     }
     registerZone("canopy", canopyMat, 0, 0.4);
@@ -193,6 +201,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     const canopyInterior = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.2), canopyIntMat);
     canopyInterior.position.set(0, 1.6, 0);
     canopyInterior.rotation.x = -Math.PI / 2;
+    canopyInterior.userData.hw = "canopyInterior";
     scene.add(canopyInterior);
     registerZone("canopyInterior", canopyIntMat, 0.6, 1.4);
 
@@ -204,6 +213,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     ledPanel.position.set(0, 1.55, 0);
     ledPanel.rotation.x = -Math.PI / 2;
     ledPanel.scale.set(0.7, 0.7, 1);
+    ledPanel.userData.hw = "ledPanel";
     scene.add(ledPanel);
     registerZone("ledPanel", ledMat, 0.4, 1.4);
 
@@ -211,6 +221,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     const eegMat = new THREE.MeshStandardMaterial({ color: 0x050505, emissive: 0x34d399, emissiveIntensity: 0.25, metalness: 0.4, roughness: 0.5 });
     const eegDock = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.06, 24), eegMat);
     eegDock.position.set(0, 2.05, 0);
+    eegDock.userData.hw = "eegDock";
     scene.add(eegDock);
     registerZone("eegDock", eegMat, 0.25, 1.2);
 
@@ -220,6 +231,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       const port = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.04, 16), electrodeMat);
       port.position.set(-2.01, 0.4, -0.6 + i * 0.4);
       port.rotation.z = Math.PI / 2;
+      port.userData.hw = "electrodes";
       scene.add(port);
     }
     registerZone("electrodes", electrodeMat, 0.2, 1.0);
@@ -227,6 +239,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     // EQUIPMENT COLUMN (right side)
     const column = new THREE.Mesh(new THREE.BoxGeometry(0.6, 2.8, 0.5), charcoalMat);
     column.position.set(2.5, 1.4, 0);
+    column.userData.hw = "column";
     scene.add(column);
 
     // Portholes
@@ -237,6 +250,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       const p = new THREE.Mesh(new THREE.CircleGeometry(0.15, 24), mat);
       p.position.set(2.81, y, 0);
       p.rotation.y = Math.PI / 2;
+      p.userData.hw = zoneKey;
       scene.add(p);
       // brass ring
       const ring = new THREE.Mesh(new THREE.RingGeometry(0.15, 0.18, 24), titaniumMat);
@@ -256,6 +270,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       const sm = new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x10b981, emissiveIntensity: 0.6 });
       const strip = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.08, 0.02), sm);
       strip.position.set(2.81, 0.2 + i * 0.13, 0.2);
+      strip.userData.hw = "statusStrip";
       stripGroup.add(strip);
       stripMats.push(sm);
     }
@@ -276,6 +291,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       });
       const ring = new THREE.Mesh(new THREE.TorusGeometry(rad, 0.02, 10, 10), mat);
       ring.userData.spin = (ri % 2 === 0 ? 1 : -1) * (0.003 + ri * 0.0015);
+      ring.userData.hw = "corona";
       coronaGroup.add(ring);
       coronaRings.push(ring);
       coronaMats.push(mat);
@@ -290,6 +306,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
         const a = (n / 8) * Math.PI * 2;
         node.position.set(Math.cos(a) * rad, 0, Math.sin(a) * rad);
         node.userData.orbit = { rad, a, speed: (ri % 2 === 0 ? 1 : -1) * (0.004 + ri * 0.002) };
+        node.userData.hw = "corona";
         coronaGroup.add(node);
         coronaMats.push(nodeMat);
         registerZone("corona", nodeMat, 0.9, 1.7);
@@ -317,6 +334,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending,
     });
     const coronaCore = new THREE.Mesh(new THREE.SphereGeometry(0.14, 24, 24), coreMat);
+    coronaCore.userData.hw = "coronaCore";
     coronaGroup.add(coronaCore);
     const coronaLight = new THREE.PointLight(0xc9a84c, 0.6, 7);
     coronaGroup.add(coronaLight);
@@ -390,6 +408,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       const s = new THREE.Mesh(new THREE.SphereGeometry(0.015, 6, 6), om);
       s.position.set((Math.random() - 0.5) * 3.6, 0.7 + Math.random() * 1.2, (Math.random() - 0.5) * 2.2);
       s.userData.drift = { x: (Math.random() - 0.5) * 0.001, y: (Math.random() - 0.5) * 0.001, z: (Math.random() - 0.5) * 0.001 };
+      s.userData.hw = "orgone";
       orgoneGroup.add(s);
       orgoneMats.push(om);
     }
@@ -442,35 +461,33 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     };
     renderer.domElement.addEventListener("pointerdown", onPointerDown);
 
-    // Hover tooltip — show modality name(s) for the zone under the cursor
+    // Hover tooltip — label the chamber component / subsystem under the cursor
+    const hoverMeshes = [];
+    scene.traverse((obj) => { if (obj.isMesh && obj.userData?.hw) hoverMeshes.push(obj); });
+
     const tooltipEl = tooltipRef.current;
+    let hoverKey = null;
     const onPointerMove = (ev) => {
       if (!tooltipEl) return;
       const rect = renderer.domElement.getBoundingClientRect();
       pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
       pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
       raycaster.setFromCamera(pointer, camera);
-      const hits = raycaster.intersectObjects(pickMeshes, false);
-      let mods = null;
-      if (hits.length) {
-        const entry = zoneMeshMap.find((z) => z.mesh === hits[0].object);
-        if (entry) mods = ZONE_TO_MODALITIES[entry.zone];
-      }
-      if (mods && mods.length) {
+      const hits = raycaster.intersectObjects(hoverMeshes, false);
+      const key = hits.length ? hits[0].object.userData.hw : null;
+      const html = key ? componentTooltipHtml(key) : null;
+
+      if (html) {
+        if (key !== hoverKey) { tooltipEl.innerHTML = html; hoverKey = key; }
         tooltipEl.style.display = "block";
-        tooltipEl.style.left = `${ev.clientX - rect.left + 14}px`;
-        tooltipEl.style.top = `${ev.clientY - rect.top + 14}px`;
-        tooltipEl.innerHTML = mods
-          .map(
-            (m) => `<div style="display:flex;align-items:center;gap:6px;white-space:nowrap;">
-              <span style="width:6px;height:6px;border-radius:50%;background:${m.color};box-shadow:0 0 6px ${m.color};flex:none;"></span>
-              <span style="font-family:var(--font-display);font-size:10px;color:${m.color};letter-spacing:0.06em;">${m.code}</span>
-              <span style="font-family:var(--font-body);font-size:10px;color:var(--text-primary);">${m.name}</span>
-            </div>`
-          )
-          .join("");
+        const left = Math.min(ev.clientX - rect.left + 14, rect.width - 250);
+        tooltipEl.style.left = `${Math.max(6, left)}px`;
+        tooltipEl.style.top = `${Math.min(ev.clientY - rect.top + 14, rect.height - 70)}px`;
+        renderer.domElement.style.cursor = "pointer";
       } else {
+        hoverKey = null;
         tooltipEl.style.display = "none";
+        renderer.domElement.style.cursor = "grab";
       }
     };
     const onPointerLeave = () => { if (tooltipEl) tooltipEl.style.display = "none"; };
