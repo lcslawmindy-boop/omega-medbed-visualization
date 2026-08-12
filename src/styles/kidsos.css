@@ -44,6 +44,34 @@
   50% { transform: translateY(-6px); }
 }
 
+.kids-cheer { animation: kids-cheer 1.1s ease-in-out infinite; }
+@keyframes kids-cheer {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-14px) rotate(4deg); }
+}
+
+.kids-starfield { position: relative; }
+.kids-starfield::before {
+  content: "✨ ⭐ ✨ ⭐ ✨";
+  position: absolute;
+  inset: 0 0 auto;
+  text-align: center;
+  opacity: 0.55;
+  animation: kids-rain 2.6s linear infinite;
+}
+@keyframes kids-rain {
+  from { transform: translateY(-24px); opacity: 0; }
+  50% { opacity: 0.6; }
+  to { transform: translateY(120px); opacity: 0; }
+}
+
+/* SWITCH ACCESS SCANNING */
+.kids-scan-on {
+  outline: 4px solid #FDE68A !important;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 8px rgba(253, 230, 138, 0.18);
+}
+
 /* HIGH CONTRAST */
 .kids-contrast {
   --k-bg: #000000;

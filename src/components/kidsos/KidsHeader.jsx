@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { CHILD } from "@/data/kidsos";
+import Starr from "./Starr";
 
-export default function KidsHeader({ stars, online, queued, onParent }) {
+export default function KidsHeader({ profile, stars, online, queued, onParent }) {
   const [note, setNote] = useState(false);
   return (
-    <header className="flex items-center gap-3 px-4 py-3 kids-gap">
-      <span className="k-emoji kids-bounce" aria-hidden="true">⭐</span>
+    <header className="flex items-center gap-3 px-4 py-3 kids-gap relative">
+      <Starr size={48} name={profile.mascotName} />
       <div className="flex-1 min-w-0">
-        <div className="k-t-lg font-bold truncate">Hi {CHILD.name}! 👋</div>
+        <div className="k-t-lg font-bold truncate">Hi {profile.name || "friend"}! {profile.avatar} 👋</div>
         <div className="k-t-sm" style={{ color: "var(--k-muted)" }}>Your day starts here 🌟</div>
       </div>
 

@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { EMOTIONS } from "@/data/kidsos";
 import { logEvent } from "@/lib/kidsLog";
 import HoldButton from "./HoldButton";
+import { playCue } from "@/lib/kidsSound";
 
-export default function EmotionCheckin({ holdMs }) {
+export default function EmotionCheckin({ holdMs, sound }) {
   const [picked, setPicked] = useState(null);
   const [saved, setSaved] = useState(false);
 
   const save = (intensity) => {
     logEvent({ type: "emotion_checkin", emotion: picked.id, intensity, location_context: "home" });
+    playCue("emotion", sound);
     setSaved(true);
     setTimeout(() => { setSaved(false); setPicked(null); }, 2200);
   };

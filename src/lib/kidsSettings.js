@@ -6,6 +6,11 @@ export const DEFAULT_SETTINGS = {
   lowStim: false,
   sound: true,
   touchHoldMs: 100, // 100 | 300 | 500 | 1000
+  switchScan: false,
+  scanSpeedMs: 1500, // 1000 | 2000 | 3000
+  autoAdvanceSec: 0, // 0 = off, else 5–15
+  dimMin: 15,
+  lockMin: 30,
   pin: "1234",
   summaryTime: "16:00",
 };

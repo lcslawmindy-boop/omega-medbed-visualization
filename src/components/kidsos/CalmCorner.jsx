@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { CALM_TOOLS } from "@/data/kidsos";
 import { logEvent } from "@/lib/kidsLog";
 import HoldButton from "./HoldButton";
+import { playCue } from "@/lib/kidsSound";
 
-export default function CalmCorner({ holdMs }) {
+export default function CalmCorner({ holdMs, sound, autoAdvanceSec = 0 }) {
   const [tool, setTool] = useState(null);
   const [secs, setSecs] = useState(0);
   const startedAt = useRef(0);
@@ -12,9 +13,18 @@ export default function CalmCorner({ holdMs }) {
     if (!tool) return;
     startedAt.current = Date.now();
     setSecs(0);
+    playCue("calm", sound);
     const t = setInterval(() => setSecs((s) => s + 1), 1000);
     return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tool]);
+
+  // Auto-advance out of the tool for children who cannot tap independently
+  useEffect(() => {
+    if (!tool || !autoAdvanceSec || secs < autoAdvanceSec) return;
+    finish();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [secs, tool, autoAdvanceSec]);
 
   const finish = () => {
     logEvent({

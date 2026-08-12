@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { ROUTINE } from "@/data/kidsos";
 import { logEvent } from "@/lib/kidsLog";
 import HoldButton from "./HoldButton";
+import { playCue } from "@/lib/kidsSound";
 
-export default function RoutineCard({ holdMs, onStars }) {
+export default function RoutineCard({ holdMs, sound, onStars }) {
   const [done, setDone] = useState({});
   const total = ROUTINE.tasks.length;
   const count = Object.keys(done).length;
@@ -11,7 +12,8 @@ export default function RoutineCard({ holdMs, onStars }) {
   const complete = (task, index, status) => {
     if (done[task.id]) return;
     setDone((d) => ({ ...d, [task.id]: status }));
-    if (status === "complete") onStars(1);
+    if (status === "complete") { onStars(1); playCue("task", sound); setTimeout(() => playCue("star", sound), 380); }
+    else playCue("gentle", sound);
     logEvent({
       type: "routine_event",
       routine_id: ROUTINE.id,

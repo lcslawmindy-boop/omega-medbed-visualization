@@ -91,6 +91,32 @@ export default function ParentPanel({ settings, onChange, online, queued, onClos
               ))}
             </Row>
 
+            <Row label="Switch access scanning">
+              <Pill on={settings.switchScan} onClick={() => set({ switchScan: !settings.switchScan })}>
+                {settings.switchScan ? "On" : "Off"}
+              </Pill>
+              {[1000, 2000, 3000].map((ms) => (
+                <Pill key={ms} on={settings.scanSpeedMs === ms} onClick={() => set({ scanSpeedMs: ms })}>{ms / 1000}s</Pill>
+              ))}
+            </Row>
+            <Row label="Auto-advance">
+              {[0, 5, 10, 15].map((s) => (
+                <Pill key={s} on={settings.autoAdvanceSec === s} onClick={() => set({ autoAdvanceSec: s })}>{s ? `${s}s` : "Off"}</Pill>
+              ))}
+            </Row>
+
+            <div className="k-t-sm font-bold mt-3" style={{ color: "var(--k-sky)" }}>SESSION TIMEOUT</div>
+            <Row label="Dim screen after">
+              {[5, 15, 30].map((m) => (
+                <Pill key={m} on={settings.dimMin === m} onClick={() => set({ dimMin: m })}>{m} min</Pill>
+              ))}
+            </Row>
+            <Row label="Lock screen after">
+              {[15, 30, 60].map((m) => (
+                <Pill key={m} on={settings.lockMin === m} onClick={() => set({ lockMin: m })}>{m} min</Pill>
+              ))}
+            </Row>
+
             <div className="k-t-sm font-bold mt-3" style={{ color: "var(--k-sky)" }}>DATA & SYNC</div>
             <Row label={online ? (queued ? `${queued} events waiting to upload` : "Synced ✓ — all events uploaded") : `Offline — ${queued} events saved on this device`}>
               <Pill on={false} onClick={flushQueue}>Sync now</Pill>

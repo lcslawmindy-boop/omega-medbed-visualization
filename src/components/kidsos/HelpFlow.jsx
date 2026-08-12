@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { HELP_CATEGORIES, TRUSTED_ADULTS, RESPONSE_CARDS } from "@/data/kidsos";
 import { logEvent } from "@/lib/kidsLog";
 import HoldButton from "./HoldButton";
+import { playCue } from "@/lib/kidsSound";
 
-export default function HelpFlow({ holdMs, onClose }) {
+export default function HelpFlow({ holdMs, sound, adults, onClose }) {
+  const trusted = adults && adults.length ? adults : TRUSTED_ADULTS;
   const [category, setCategory] = useState(null);
   const [sent, setSent] = useState(false);
 
@@ -14,6 +16,7 @@ export default function HelpFlow({ holdMs, onClose }) {
       trusted_adult_requested: adult,
       alert_sent: true,
     });
+    playCue("task", sound);
     setSent(true);
   };
 
@@ -56,7 +59,7 @@ export default function HelpFlow({ holdMs, onClose }) {
           <>
             <h2 className="k-t-xl font-bold">Who should I tell?</h2>
             <div className="mt-3 grid gap-3 kids-gap" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))" }}>
-              {TRUSTED_ADULTS.map((a) => (
+              {trusted.map((a) => (
                 <HoldButton key={a} holdMs={holdMs} onActivate={() => send(a)} className="kids-card p-3 flex flex-col items-center" style={{ minHeight: 92 }}>
                   <span className="k-emoji" aria-hidden="true">🧡</span>
                   <span className="k-t-md font-bold mt-1">{a}</span>
@@ -66,6 +69,9 @@ export default function HelpFlow({ holdMs, onClose }) {
             <HoldButton holdMs={holdMs} onActivate={() => send("any grown-up")} className="kids-solid k-t-md font-bold w-full mt-3" style={{ background: "var(--k-sky)", color: "#04121F", minHeight: 52 }}>
               Tell any grown-up now
             </HoldButton>
+            <button type="button" onClick={() => setCategory(null)} className="kids-tap k-t-sm mt-3 px-3" style={{ color: "var(--k-muted)", minHeight: 44 }}>
+              ← go back
+            </button>
           </>
         )}
       </div>
