@@ -11,18 +11,18 @@ const VIEWS = {
   top: { pos: [0.01, 7, 0.01], tgt: [0, 0, 0] },
 };
 
-export default function MedBedScene({ activeCode, view, onPickModality, paused }) {
+export default function MedBedScene({ activeCode, view, onPickModality, paused, power }) {
   const mountRef = useRef(null);
   const stateRef = useRef(null);
   const activeCodeRef = useRef(activeCode);
   const viewRef = useRef(view);
+  const powerRef = useRef(0);
+  const pausedRef = useRef(false);
 
   useEffect(() => { activeCodeRef.current = activeCode; applyHighlight(); }, [activeCode]);
   useEffect(() => { viewRef.current = view; applyView(); }, [view]);
-  useEffect(() => {
-    const s = stateRef.current;
-    if (s) s.controls.autoRotate = !paused;
-  }, [paused]);
+  useEffect(() => { pausedRef.current = paused; }, [paused]);
+  useEffect(() => { powerRef.current = power || 0; }, [power]);
 
   // Expose imperative helpers via refs on the state object
   const applyHighlight = () => {
@@ -254,34 +254,106 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused }
     scene.add(stripGroup);
     stripMats.forEach((sm) => registerZone("statusStrip", sm, 0.6, 1.2));
 
-    // SCALAR FIELD CORONA — 3 concentric octagonal rings
+    // SCALAR FIELD CORONA — the centerpiece: multi-ring energy structure
     const coronaGroup = new THREE.Group();
+    coronaGroup.position.y = 2.3;
     const coronaMats = [];
-    const coronaColors = [0xc9a84c, 0x9b30ff, 0x3a6fff];
-    const coronaRadii = [0.5, 0.8, 1.1];
+    const coronaColors = [0xc9a84c, 0x9b30ff, 0x3a6fff, 0x10b981, 0xff3344];
+    const coronaRadii = [0.45, 0.7, 0.95, 1.2, 1.45];
+    const coronaRings = [];
     coronaRadii.forEach((rad, ri) => {
       const mat = new THREE.MeshStandardMaterial({
-        color: coronaColors[ri], emissive: coronaColors[ri], emissiveIntensity: 0.8,
-        transparent: true, opacity: 0.4,
+        color: coronaColors[ri], emissive: coronaColors[ri], emissiveIntensity: 1.0,
+        transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending,
       });
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(rad, 0.015, 8, 8), mat);
-      ring.position.y = 2.3;
-      ring.userData.spin = (ri % 2 === 0 ? 1 : -1) * (0.001 + ri * 0.0008);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(rad, 0.02, 10, 10), mat);
+      ring.userData.spin = (ri % 2 === 0 ? 1 : -1) * (0.003 + ri * 0.0015);
       coronaGroup.add(ring);
+      coronaRings.push(ring);
       coronaMats.push(mat);
-      // 8 nodes at vertices
+      registerZone("corona", mat, 0.9, 1.9);
+      // 8 glowing orbiting nodes per ring
       for (let n = 0; n < 8; n++) {
-        const node = new THREE.Mesh(
-          new THREE.SphereGeometry(0.03, 8, 8),
-          new THREE.MeshStandardMaterial({ color: coronaColors[ri], emissive: coronaColors[ri], emissiveIntensity: 1, transparent: true, opacity: 0.7 })
-        );
+        const nodeMat = new THREE.MeshStandardMaterial({
+          color: coronaColors[ri], emissive: coronaColors[ri], emissiveIntensity: 1.3,
+          transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending,
+        });
+        const node = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 12), nodeMat);
         const a = (n / 8) * Math.PI * 2;
-        node.position.set(Math.cos(a) * rad, 2.3, Math.sin(a) * rad);
+        node.position.set(Math.cos(a) * rad, 0, Math.sin(a) * rad);
+        node.userData.orbit = { rad, a, speed: (ri % 2 === 0 ? 1 : -1) * (0.004 + ri * 0.002) };
         coronaGroup.add(node);
+        coronaMats.push(nodeMat);
+        registerZone("corona", nodeMat, 0.9, 1.7);
+      }
+      // 4 radial spokes per ring
+      for (let s = 0; s < 4; s++) {
+        const spokeMat = new THREE.MeshStandardMaterial({
+          color: coronaColors[ri], emissive: coronaColors[ri], emissiveIntensity: 0.5,
+          transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending,
+        });
+        const spoke = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, rad, 6), spokeMat);
+        const a = (s / 4) * Math.PI * 2;
+        spoke.position.set(Math.cos(a) * rad / 2, 0, Math.sin(a) * rad / 2);
+        spoke.rotation.z = Math.PI / 2;
+        spoke.rotation.y = -a;
+        coronaGroup.add(spoke);
+        coronaMats.push(spokeMat);
+        registerZone("corona", spokeMat, 0.5, 1.3);
       }
     });
+
+    // Central pulsing energy core
+    const coreMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff, emissive: 0xc9a84c, emissiveIntensity: 1.6,
+      transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending,
+    });
+    const coronaCore = new THREE.Mesh(new THREE.SphereGeometry(0.14, 24, 24), coreMat);
+    coronaGroup.add(coronaCore);
+    const coronaLight = new THREE.PointLight(0xc9a84c, 0.6, 7);
+    coronaGroup.add(coronaLight);
+
+    // Upward energy beams (fade in with power)
+    const beamMats = [];
+    for (let b = 0; b < 6; b++) {
+      const beamMat = new THREE.MeshBasicMaterial({
+        color: 0xc9a84c, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+      });
+      const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.07, 1.4, 8, 1, true), beamMat);
+      const a = (b / 6) * Math.PI * 2;
+      beam.position.set(Math.cos(a) * 0.25, 0.7, Math.sin(a) * 0.25);
+      coronaGroup.add(beam);
+      beamMats.push(beamMat);
+    }
+
+    // Orbiting corona particle field
+    const coronaParticleCount = 320;
+    const cpGeo = new THREE.BufferGeometry();
+    const cpPos = new Float32Array(coronaParticleCount * 3);
+    const cpData = [];
+    for (let i = 0; i < coronaParticleCount; i++) {
+      const r = 0.4 + Math.random() * 1.15;
+      const a = Math.random() * Math.PI * 2;
+      const y = (Math.random() - 0.5) * 0.5;
+      cpPos[i * 3] = Math.cos(a) * r;
+      cpPos[i * 3 + 1] = y;
+      cpPos[i * 3 + 2] = Math.sin(a) * r;
+      cpData.push({ r, a, y, speed: 0.3 + Math.random() * 0.8, dir: Math.random() > 0.5 ? 1 : -1 });
+    }
+    cpGeo.setAttribute("position", new THREE.BufferAttribute(cpPos, 3));
+    const cpMat = new THREE.PointsMaterial({
+      color: 0xc9a84c, size: 0.035, transparent: true, opacity: 0.45,
+      blending: THREE.AdditiveBlending, sizeAttenuation: true,
+    });
+    const coronaParticles = new THREE.Points(cpGeo, cpMat);
+    coronaGroup.add(coronaParticles);
+
     scene.add(coronaGroup);
-    coronaMats.forEach((m) => registerZone("corona", m, 0.8, 1.6));
+
+    // Power ambient light (intensifies with power)
+    const powerLight = new THREE.PointLight(0xc9a84c, 0, 9);
+    powerLight.position.set(0, 1.2, 0);
+    scene.add(powerLight);
 
     // PLASMA GLOW PARTICLES (Rife)
     const plasmaCount = 200;
@@ -376,16 +448,52 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused }
     applyView();
 
     let raf;
+    let powerCur = 0;
     const clock = new THREE.Clock();
     const animate = () => {
       raf = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
       const dt = clock.getDelta();
 
-      // Corona rotation
-      coronaGroup.children.forEach((c) => {
-        if (c.userData.spin) c.rotation.y += c.userData.spin;
+      // Power ramp lerp toward target
+      powerCur = THREE.MathUtils.lerp(powerCur, powerRef.current, 0.045);
+
+      // Corona rings — spin faster with power, subtle tilt wobble
+      coronaRings.forEach((ring, i) => {
+        ring.rotation.y += ring.userData.spin * (1 + powerCur * 9);
+        ring.rotation.x = Math.sin(t * 0.5 + i) * 0.12 * (0.3 + powerCur);
       });
+      // Orbiting nodes
+      coronaGroup.children.forEach((c) => {
+        if (c.userData.orbit) {
+          c.userData.orbit.a += c.userData.orbit.speed * (1 + powerCur * 6);
+          c.position.x = Math.cos(c.userData.orbit.a) * c.userData.orbit.rad;
+          c.position.z = Math.sin(c.userData.orbit.a) * c.userData.orbit.rad;
+        }
+      });
+      // Central core pulse
+      const corePulse = 1 + Math.sin(t * 3) * 0.18;
+      coronaCore.scale.setScalar(corePulse * (1 + powerCur * 0.6));
+      coreMat.emissiveIntensity = 1.4 + powerCur * 2.8 + Math.sin(t * 3) * 0.25;
+      coronaLight.intensity = 0.6 + powerCur * 3.2;
+      // Corona orbiting particles
+      const cpa = cpGeo.attributes.position.array;
+      for (let i = 0; i < coronaParticleCount; i++) {
+        const d = cpData[i];
+        d.a += d.dir * d.speed * 0.01 * (1 + powerCur * 5);
+        cpa[i * 3] = Math.cos(d.a) * d.r;
+        cpa[i * 3 + 2] = Math.sin(d.a) * d.r;
+        cpa[i * 3 + 1] = d.y + Math.sin(t * 2 + i * 0.3) * 0.03;
+      }
+      cpGeo.attributes.position.needsUpdate = true;
+      cpMat.opacity = 0.35 + powerCur * 0.55;
+      cpMat.size = 0.025 + powerCur * 0.04;
+      // Energy beams
+      beamMats.forEach((bm, i) => {
+        bm.opacity = powerCur * 0.55 * (0.7 + Math.sin(t * 4 + i) * 0.3);
+      });
+      // Power ambient light floods the chamber
+      powerLight.intensity = powerCur * 2.8;
 
       // Plasma drift
       const pa = plasmaGeo.attributes.position.array;
@@ -416,16 +524,22 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused }
         sm.emissiveIntensity = 0.6 + Math.sin(t * 2 + i * 0.4) * 0.3;
       });
 
-      // Zone highlight easing
+      // Zone highlight easing — global power boosts all zones toward peak
       Object.values(zones).flat().forEach((mat) => {
         if (!mat.userData) return;
-        const target = mat.userData.targetIntensity ?? 0;
+        const base = mat.userData.baseEmissive ?? 0;
+        const boost = mat.userData.boost ?? 0;
+        const peak = mat.userData.peak ?? 1;
+        let target = base + boost * (peak - base) + powerCur * (peak - base) * 0.78;
+        if (target > peak * 1.35) target = peak * 1.35;
         mat.emissiveIntensity = THREE.MathUtils.lerp(mat.emissiveIntensity ?? 0, target, 0.08);
       });
 
       // Camera tween
       camera.position.lerp(camTarget, 0.06);
       controls.target.lerp(tgtTarget, 0.06);
+      controls.autoRotate = !pausedRef.current;
+      controls.autoRotateSpeed = 0.6 + powerCur * 1.8;
       controls.update();
 
       renderer.render(scene, camera);

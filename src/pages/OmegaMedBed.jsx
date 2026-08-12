@@ -27,6 +27,7 @@ export default function OmegaMedBed() {
   const [session, setSession] = useState(null);
   const [remaining, setRemaining] = useState(0);
   const [nominal, setNominal] = useState(false);
+  const [power, setPower] = useState(0);
 
   const openDetail = (code) => setDetailCode(code);
   const closeDetail = () => setDetailCode(null);
@@ -45,26 +46,38 @@ export default function OmegaMedBed() {
   // Session countdown + sequential modality activation (1.5s each)
   useEffect(() => {
     if (!session) return;
+    const steps = session.codes.length;
     const tick = () => {
       const rem = Math.max(0, Math.round((session.endAt - Date.now()) / 1000));
       setRemaining(rem);
-      if (rem <= 0) setSession(null);
+      if (rem <= 0) { setSession(null); setPower(0); }
     };
     tick();
     const id = setInterval(tick, 1000);
+
+    // Modality cycling (1.5s each)
     let idx = 0;
     setActiveCode(session.codes[0]);
-    setNominal(false);
     const cycleId = setInterval(() => {
       idx += 1;
-      if (idx >= session.codes.length) {
-        idx = 0;
+      setActiveCode(session.codes[idx % steps]);
+    }, 1500);
+
+    // Power ramp — dramatic 12s boot sequence to full power
+    let p = 0;
+    setPower(0);
+    setNominal(false);
+    const powerId = setInterval(() => {
+      p = Math.min(1, p + 1 / 60);
+      setPower(p);
+      if (p >= 1) {
+        clearInterval(powerId);
         setNominal(true);
         setTimeout(() => setNominal(false), 2500);
       }
-      setActiveCode(session.codes[idx % session.codes.length]);
-    }, 1500);
-    return () => { clearInterval(id); clearInterval(cycleId); };
+    }, 200);
+
+    return () => { clearInterval(id); clearInterval(cycleId); clearInterval(powerId); };
   }, [session]);
 
   // Keyboard shortcuts
@@ -160,7 +173,7 @@ export default function OmegaMedBed() {
         style={{ top: 60, bottom: 40, left: 280, right: 320, background: "var(--bg-primary)" }}
       >
         <div className="relative flex-1 min-h-0">
-          <MedBedScene activeCode={activeCode} view={view} onPickModality={setActiveCode} paused={paused} />
+          <MedBedScene activeCode={activeCode} view={view} onPickModality={setActiveCode} paused={paused} power={power} />
           <SceneOverlay activeCode={activeCode} onHighlight={setActiveCode} onView={setView} />
         </div>
         <CenterPanel
