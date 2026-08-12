@@ -616,7 +616,7 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
   }, []);
 
   return (
-    <div className="absolute inset-0" style={{ background: "#000408" }}>
+    <div className="absolute inset-0 no-select" style={{ background: "#000408" }}>
       <div ref={mountRef} className="absolute inset-0" />
       <div
         ref={tooltipRef}

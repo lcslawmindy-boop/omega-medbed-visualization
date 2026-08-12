@@ -4,7 +4,7 @@ import { MODALITIES } from "@/data/modalities";
 export default function ModalitySidebar({ activeCode, onSelect, onOpenDetail }) {
   return (
     <aside
-      className="fixed left-0 top-[60px] bottom-[40px] z-50 flex flex-col bg-panel border-r border-soft"
+      className="fixed left-0 top-[60px] bottom-[40px] z-50 hidden lg:flex flex-col bg-panel border-r border-soft no-select"
       style={{ width: 280, borderColor: "var(--border)" }}
     >
       <div className="px-4 py-3 border-b border-soft" style={{ borderColor: "var(--border)" }}>

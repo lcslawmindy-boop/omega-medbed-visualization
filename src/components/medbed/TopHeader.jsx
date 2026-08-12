@@ -26,7 +26,7 @@ const EXPORTS = [
   { k: "protocol", label: "💾 Protocol JSON" },
 ];
 
-export default function TopHeader({ onExport, session, remaining, nominal, onSearchSelect }) {
+export default function TopHeader({ onExport, session, remaining, nominal, onSearchSelect, onOpenSettings }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [exportOpen, setExportOpen] = useState(false);
@@ -51,11 +51,11 @@ export default function TopHeader({ onExport, session, remaining, nominal, onSea
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-[100] flex items-center bg-panel border-b border-soft"
-      style={{ height: 60, borderColor: "var(--border)" }}
+      className="fixed top-0 left-0 right-0 z-[100] flex items-center bg-panel border-b border-soft safe-top no-select"
+      style={{ height: 'calc(60px + env(safe-area-inset-top))', borderColor: "var(--border)" }}
     >
       {/* LEFT */}
-      <div className="flex items-center gap-3 px-4 h-full" style={{ minWidth: 320 }}>
+      <div className="flex items-center gap-3 px-4 h-full min-w-0 lg:min-w-[320px]">
         <ZarpMark />
         <div className="flex flex-col leading-tight">
           <span className="font-display font-bold text-gold" style={{ fontSize: 16, letterSpacing: "0.04em" }}>
@@ -65,7 +65,7 @@ export default function TopHeader({ onExport, session, remaining, nominal, onSea
             ZA-MB-Ω
           </span>
         </div>
-        <div className="h-8 w-px mx-2" style={{ background: "var(--border)" }} />
+        <div className="h-8 w-px mx-2 hidden md:block" style={{ background: "var(--border)" }} />
         <span className="font-body text-muted uppercase hidden md:inline" style={{ fontSize: 10, letterSpacing: "0.14em" }}>
           Zenith Apex Research Division
         </span>
@@ -143,7 +143,7 @@ export default function TopHeader({ onExport, session, remaining, nominal, onSea
           BFAC ACTIVE
         </span>
         <button
-          className="font-display border rounded-sm hover:bg-elevated transition-colors"
+          className="font-display border rounded-sm hover:bg-elevated transition-colors hidden lg:inline-flex"
           style={{ borderColor: "var(--gold)", color: "var(--gold)", fontSize: 10, padding: "5px 10px", letterSpacing: "0.08em" }}
         >
           📄 PRD DOC
@@ -182,6 +182,16 @@ export default function TopHeader({ onExport, session, remaining, nominal, onSea
             </>
           )}
         </div>
+
+        <button
+          onClick={onOpenSettings}
+          className="font-display rounded-sm transition-colors hover:bg-elevated"
+          style={{ fontSize: 14, padding: "5px 8px", color: "var(--gold)", border: "1px solid var(--gold-dim)", background: "transparent", minWidth: 44, minHeight: 44 }}
+          title="Settings"
+          aria-label="Settings"
+        >
+          ⚙
+        </button>
       </div>
     </header>
   );

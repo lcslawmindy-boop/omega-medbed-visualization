@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { jsPDF } from "jspdf";
 import TopHeader from "@/components/medbed/TopHeader";
 import LegalFooter from "@/components/medbed/LegalFooter";
@@ -11,6 +12,9 @@ import ModalityDetailModal from "@/components/medbed/ModalityDetailModal";
 import ProtocolBuilder from "@/components/medbed/ProtocolBuilder";
 import TelemetryOverlay from "@/components/medbed/TelemetryOverlay";
 import FirstVisitGate from "@/components/medbed/FirstVisitGate";
+import MobileNav from "@/components/medbed/MobileNav";
+import MobileSheet from "@/components/medbed/MobileSheet";
+import SettingsDrawer from "@/components/medbed/SettingsDrawer";
 import { MODALITIES, MODALITY_BY_CODE } from "@/data/modalities";
 import { generateSessionReport } from "@/lib/sessionReport";
 
@@ -34,29 +38,50 @@ const BOOT_STAGES = [
 const BOOT_END = BOOT_STAGES[BOOT_STAGES.length - 1].t + 1500;
 
 export default function OmegaMedBed() {
-  const [activeCode, setActiveCode] = useState("SFT");
+  // URL-bound state — back gesture/swipe closes dialogs instead of exiting the WebView.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeCode = searchParams.get("modality") || "SFT";
+  const detailCode = searchParams.get("detail") || null;
+  const protocolOpen = searchParams.get("protocol") === "true";
+
+  const updateParams = (mutator, replace) => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        mutator(next);
+        return next;
+      },
+      { replace }
+    );
+  };
+  const setActiveCode = (code) => updateParams((p) => p.set("modality", code), true);
+  const openDetail = (code) => updateParams((p) => p.set("detail", code), false);
+  const closeDetail = () => updateParams((p) => p.delete("detail"), true);
+  const cycleDetail = (dir) => {
+    const idx = MODALITIES.findIndex((m) => m.code === detailCode);
+    const next = MODALITIES[(idx + dir + MODALITIES.length) % MODALITIES.length].code;
+    updateParams((p) => p.set("detail", next), true);
+  };
+  const setProtocolOpen = (open) =>
+    updateParams((p) => {
+      if (open) p.set("protocol", "true");
+      else p.delete("protocol");
+    }, !open);
+
   const [view, setView] = useState("reset");
   const [paused, setPaused] = useState(false);
-  const [detailCode, setDetailCode] = useState(null);
-  const [protocolOpen, setProtocolOpen] = useState(false);
   const [session, setSession] = useState(null);
   const [remaining, setRemaining] = useState(0);
   const [nominal, setNominal] = useState(false);
   const [power, setPower] = useState(0);
   const [bootStage, setBootStage] = useState(null);
+  const [mobileTab, setMobileTab] = useState("chamber");
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
-  const openDetail = (code) => setDetailCode(code);
-  const closeDetail = () => setDetailCode(null);
-  const cycleDetail = (dir) => {
-    setDetailCode((cur) => {
-      const idx = MODALITIES.findIndex((m) => m.code === cur);
-      const next = (idx + dir + MODALITIES.length) % MODALITIES.length;
-      return MODALITIES[next].code;
-    });
-  };
   const startSession = (codes, dur) => {
     setSession({ codes, endAt: Date.now() + dur * 1000, dur });
     setProtocolOpen(false);
+    setMobileTab("chamber");
   };
 
   // Session countdown + scripted power-up boot sequence
@@ -71,7 +96,6 @@ export default function OmegaMedBed() {
     tick();
     const id = setInterval(tick, 1000);
 
-    // Scripted staged boot sequence — drives power, focus modality, and stage label
     const start = Date.now();
     setNominal(false);
     let cycleId = null;
@@ -92,7 +116,6 @@ export default function OmegaMedBed() {
         setPower(1);
         setNominal(true);
         setTimeout(() => setNominal(false), 2500);
-        // Post-boot: continue cycling through session modalities at full power
         let i = 0;
         cycleId = setInterval(() => {
           i += 1;
@@ -110,12 +133,12 @@ export default function OmegaMedBed() {
       const tag = e.target && e.target.tagName;
       if (tag === "INPUT" || tag === "TEXTAREA") return;
       if (e.key === "Escape") {
-        if (detailCode) setDetailCode(null);
+        if (detailCode) closeDetail();
         else if (protocolOpen) setProtocolOpen(false);
         return;
       }
       const k = e.key.toLowerCase();
-      if (k === "s") { setProtocolOpen((o) => !o); return; }
+      if (k === "s") { setProtocolOpen(!protocolOpen); return; }
       if (e.key === " ") { e.preventDefault(); setPaused((p) => !p); return; }
       if (k === "r") { setView("reset"); return; }
       if (k === "f") { setView("front"); return; }
@@ -188,32 +211,60 @@ export default function OmegaMedBed() {
     doc.save(`ZA-MB-Omega_${type}.pdf`);
   };
 
+  const handleMobileTab = (tab) => {
+    if (tab === "protocol") { setProtocolOpen(!protocolOpen); return; }
+    if (protocolOpen) setProtocolOpen(false);
+    setMobileTab(tab);
+  };
+
   return (
     <div className="fixed inset-0 bg-primary overflow-hidden" style={{ background: "var(--bg-primary)" }}>
       <FirstVisitGate />
-      <TopHeader onExport={handleExport} session={!!session} remaining={remaining} nominal={nominal} onSearchSelect={handleSearchSelect} />
+      <TopHeader
+        onExport={handleExport}
+        session={!!session}
+        remaining={remaining}
+        nominal={nominal}
+        onSearchSelect={handleSearchSelect}
+        onOpenSettings={() => setSettingsOpen(true)}
+      />
       <ModalitySidebar activeCode={activeCode} onSelect={setActiveCode} onOpenDetail={openDetail} />
       <SpecPanel />
 
-      {/* Center scene area */}
-      <main
-        className="absolute flex flex-col overflow-hidden"
-        style={{ top: 60, bottom: 40, left: 280, right: 320, background: "var(--bg-primary)" }}
-      >
-        <div className="relative flex-1 min-h-0">
+      {/* Center scene area — full-bleed on mobile, sidebar-offset on desktop */}
+      <main className="main-area flex flex-col overflow-hidden" style={{ background: "var(--bg-primary)" }}>
+        <div className="relative flex-1 min-h-0 no-select">
           <MedBedScene activeCode={activeCode} view={view} onPickModality={setActiveCode} paused={paused} power={power} />
           <SceneOverlay activeCode={activeCode} onHighlight={setActiveCode} onView={setView} bootStage={bootStage} />
           <TelemetryOverlay active={!!session} power={power} />
         </div>
+        <div className="hidden lg:flex flex-col flex-1 min-h-0">
+          <CenterPanel
+            activeCode={activeCode}
+            onSelect={setActiveCode}
+            onOpenDetail={openDetail}
+            onOpenProtocol={() => setProtocolOpen(true)}
+          />
+        </div>
+      </main>
+
+      {/* Mobile drawer sheets for Systems List & Specs */}
+      <MobileSheet open={mobileTab === "systems"} title="Systems List" onClose={() => setMobileTab("chamber")}>
         <CenterPanel
           activeCode={activeCode}
           onSelect={setActiveCode}
           onOpenDetail={openDetail}
           onOpenProtocol={() => setProtocolOpen(true)}
         />
-      </main>
+      </MobileSheet>
+      <MobileSheet open={mobileTab === "specs"} title="Specs & Terminals" onClose={() => setMobileTab("chamber")}>
+        <SpecPanel mobile />
+      </MobileSheet>
+
+      <MobileNav activeTab={protocolOpen ? "protocol" : mobileTab} onTab={handleMobileTab} />
 
       <ProtocolBuilder open={protocolOpen} onClose={() => setProtocolOpen(false)} onSessionStart={startSession} />
+      <SettingsDrawer open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       {detailCode && (
         <ModalityDetailModal
           code={detailCode}

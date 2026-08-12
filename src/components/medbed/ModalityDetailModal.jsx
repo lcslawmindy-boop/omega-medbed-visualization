@@ -10,19 +10,19 @@ export default function ModalityDetailModal({ code, onClose, onPrev, onNext }) {
 
   return (
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center fade-in"
+      className="fixed inset-0 z-[200] flex items-center justify-center fade-in no-select"
       style={{ background: "rgba(0,4,8,0.95)" }}
       onClick={onClose}
     >
       <div
-        className="relative overflow-y-auto scroll-dark"
+        className="relative overflow-y-auto scroll-dark select-text"
         style={{ maxWidth: 800, width: "92%", maxHeight: "90vh", background: "var(--bg-card)", border: "1px solid var(--gold)", borderRadius: 6, padding: 32 }}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-gold hover:text-white transition-colors"
-          style={{ fontSize: 24, lineHeight: 1 }}
+          className="absolute top-3 right-3 text-gold hover:text-white transition-colors flex items-center justify-center"
+          style={{ fontSize: 24, lineHeight: 1, minWidth: 44, minHeight: 44 }}
           aria-label="Close"
         >
           ✕
@@ -155,13 +155,13 @@ export default function ModalityDetailModal({ code, onClose, onPrev, onNext }) {
 
         {/* Navigation */}
         <div className="flex items-center justify-between mt-4">
-          <button onClick={onPrev} className="font-display rounded-sm transition-colors hover:brightness-125" style={{ fontSize: 10, padding: "6px 12px", background: "var(--bg-panel)", color: "var(--gold)", border: "1px solid var(--gold-dim)" }}>
+          <button onClick={onPrev} className="font-display rounded-sm transition-colors hover:brightness-125 min-h-[44px] lg:min-h-0 text-[14px] lg:text-[10px]" style={{ padding: "6px 14px", background: "var(--bg-panel)", color: "var(--gold)", border: "1px solid var(--gold-dim)" }}>
             ← Previous
           </button>
-          <button onClick={onClose} className="font-display rounded-sm transition-colors hover:brightness-110" style={{ fontSize: 10, padding: "6px 18px", background: "var(--gold)", color: "#000" }}>
+          <button onClick={onClose} className="font-display rounded-sm transition-colors hover:brightness-110 min-h-[44px] lg:min-h-0 text-[14px] lg:text-[10px]" style={{ padding: "6px 20px", background: "var(--gold)", color: "#000" }}>
             ✕ Close
           </button>
-          <button onClick={onNext} className="font-display rounded-sm transition-colors hover:brightness-125" style={{ fontSize: 10, padding: "6px 12px", background: "var(--bg-panel)", color: "var(--gold)", border: "1px solid var(--gold-dim)" }}>
+          <button onClick={onNext} className="font-display rounded-sm transition-colors hover:brightness-125 min-h-[44px] lg:min-h-0 text-[14px] lg:text-[10px]" style={{ padding: "6px 14px", background: "var(--bg-panel)", color: "var(--gold)", border: "1px solid var(--gold-dim)" }}>
             Next →
           </button>
         </div>

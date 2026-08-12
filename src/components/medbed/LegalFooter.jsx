@@ -6,8 +6,8 @@ const LEGAL =
 export default function LegalFooter() {
   return (
     <footer
-      className="fixed bottom-0 left-0 right-0 z-[100] flex flex-col bg-panel"
-      style={{ height: 40, borderTop: "1px solid var(--red-dark)" }}
+      className="fixed bottom-0 left-0 right-0 z-[100] hidden lg:flex flex-col bg-panel safe-bottom no-select"
+      style={{ height: 'calc(40px + env(safe-area-inset-bottom))', borderTop: "1px solid var(--red-dark)" }}
     >
       <div className="overflow-hidden flex items-center" style={{ height: 26 }}>
         <div className="marquee-track font-body" style={{ fontSize: 8, color: "var(--text-muted)", padding: "3px 0", letterSpacing: "0.04em" }}>

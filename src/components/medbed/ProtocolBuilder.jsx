@@ -103,13 +103,13 @@ export default function ProtocolBuilder({ open, onClose, onSessionStart }) {
 
   return (
     <aside
-      className="fixed z-[120] flex flex-col fade-in"
-      style={{ top: 60, bottom: 40, right: 0, width: 320, background: "var(--bg-elevated)", borderLeft: "2px solid var(--gold)" }}
+      className="fixed z-[120] flex flex-col fade-in panel-edges no-select inset-x-0 lg:inset-x-auto lg:right-0 lg:w-[320px]"
+      style={{ background: "var(--bg-elevated)", borderLeft: "2px solid var(--gold)" }}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2 border-b flex-none" style={{ borderColor: "var(--border)" }}>
         <div className="font-display text-gold" style={{ fontSize: 12, letterSpacing: "0.1em" }}>SESSION PROTOCOL BUILDER</div>
-        <button onClick={onClose} className="text-gold hover:text-white transition-colors" style={{ fontSize: 18 }}>✕</button>
+        <button onClick={onClose} className="text-gold hover:text-white transition-colors" style={{ fontSize: 18, minWidth: 44, minHeight: 44 }}>✕</button>
       </div>
 
       <div className="flex-1 overflow-y-auto scroll-dark px-3 py-2 space-y-3">
@@ -118,11 +118,11 @@ export default function ProtocolBuilder({ open, onClose, onSessionStart }) {
           <div className="font-mono text-muted uppercase mb-1" style={{ fontSize: 8, letterSpacing: "0.1em" }}>PROTOCOL PRESETS</div>
           <div className="flex flex-wrap gap-1">
             {Object.keys(PRESETS).map((p) => (
-              <button key={p} onClick={() => applyPreset(PRESETS[p])} className="font-display rounded-sm transition-colors hover:brightness-125" style={{ fontSize: 8, padding: "3px 6px", background: "var(--bg-panel)", color: "var(--gold)", border: "1px solid var(--gold-dim)" }}>
+              <button key={p} onClick={() => applyPreset(PRESETS[p])} className="font-display rounded-sm transition-colors hover:brightness-125 min-h-[44px] lg:min-h-0 text-[14px] lg:text-[8px]" style={{ padding: "3px 10px", background: "var(--bg-panel)", color: "var(--gold)", border: "1px solid var(--gold-dim)" }}>
                 {p}
               </button>
             ))}
-            <button onClick={() => applyPreset([])} className="font-display rounded-sm" style={{ fontSize: 8, padding: "3px 6px", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border)" }}>
+            <button onClick={() => applyPreset([])} className="font-display rounded-sm min-h-[44px] lg:min-h-0 text-[14px] lg:text-[8px]" style={{ padding: "3px 10px", background: "transparent", color: "var(--text-muted)", border: "1px solid var(--border)" }}>
               Custom
             </button>
           </div>
@@ -133,8 +133,8 @@ export default function ProtocolBuilder({ open, onClose, onSessionStart }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Protocol Name..."
-          className="w-full rounded-sm outline-none"
-          style={{ background: "var(--bg-panel)", border: "1px solid var(--gold-dim)", color: "#fff", fontSize: 11, padding: "6px 8px" }}
+          className="w-full rounded-sm outline-none min-h-[44px] lg:min-h-0 text-[14px] lg:text-[11px]"
+          style={{ background: "var(--bg-panel)", border: "1px solid var(--gold-dim)", color: "#fff", padding: "6px 8px" }}
         />
 
         {/* Duration */}
@@ -146,7 +146,7 @@ export default function ProtocolBuilder({ open, onClose, onSessionStart }) {
           <input type="range" min={30} max={2700} step={30} value={dur} onChange={(e) => setDur(Number(e.target.value))} className="w-full" style={{ accentColor: "var(--gold)" }} />
           <div className="flex gap-1 mt-1">
             {[300, 900, 1800, 2700].map((s) => (
-              <button key={s} onClick={() => setDur(s)} className="font-display rounded-sm flex-1 transition-colors" style={{ fontSize: 8, padding: "3px 0", background: dur === s ? "var(--gold)" : "var(--bg-panel)", color: dur === s ? "#000" : "var(--text-muted)", border: "1px solid var(--border)" }}>
+              <button key={s} onClick={() => setDur(s)} className="font-display rounded-sm flex-1 transition-colors min-h-[44px] lg:min-h-0 text-[14px] lg:text-[8px]" style={{ padding: "3px 0", background: dur === s ? "var(--gold)" : "var(--bg-panel)", color: dur === s ? "#000" : "var(--text-muted)", border: "1px solid var(--border)" }}>
                 {s / 60}min
               </button>
             ))}
@@ -157,7 +157,7 @@ export default function ProtocolBuilder({ open, onClose, onSessionStart }) {
         <div className="rounded-sm p-2" style={{ background: "var(--bg-panel)", border: "1px solid var(--border)" }}>
           <div className="flex items-center justify-between">
             <span className="font-display text-gold" style={{ fontSize: 9, letterSpacing: "0.08em" }}>CLOSED-LOOP ADAPTATION</span>
-            <button onClick={() => setBfac((b) => !b)} className="font-mono rounded-sm transition-colors" style={{ fontSize: 9, padding: "2px 8px", background: bfac ? "var(--green)" : "var(--bg-elevated)", color: bfac ? "#000" : "var(--text-muted)", border: `1px solid ${bfac ? "var(--green)" : "var(--border)"}` }}>
+            <button onClick={() => setBfac((b) => !b)} className="font-mono rounded-sm transition-colors min-h-[44px] lg:min-h-0 text-[14px] lg:text-[9px]" style={{ padding: "2px 12px", background: bfac ? "var(--green)" : "var(--bg-elevated)", color: bfac ? "#000" : "var(--text-muted)", border: `1px solid ${bfac ? "var(--green)" : "var(--border)"}` }}>
               {bfac ? "ON" : "OFF"}
             </button>
           </div>
@@ -177,15 +177,15 @@ export default function ProtocolBuilder({ open, onClose, onSessionStart }) {
                   <div className="flex items-center gap-2 py-1">
                     <button
                       onClick={() => toggle(m.code)}
-                      className="flex-shrink-0 rounded-sm transition-colors"
-                      style={{ width: 30, fontSize: 8, padding: "2px 0", background: on ? "var(--green)" : "var(--bg-panel)", color: on ? "#000" : "var(--text-muted)", border: `1px solid ${on ? "var(--green)" : "var(--border)"}` }}
+                      className="flex-shrink-0 rounded-sm transition-colors min-w-[44px] min-h-[44px] lg:min-w-[30px] lg:min-h-0 text-[12px] lg:text-[8px]"
+                      style={{ padding: "2px 0", background: on ? "var(--green)" : "var(--bg-panel)", color: on ? "#000" : "var(--text-muted)", border: `1px solid ${on ? "var(--green)" : "var(--border)"}` }}
                     >
                       {on ? "ON" : "OFF"}
                     </button>
                     <span className="font-display" style={{ fontSize: 9, width: 34, color: m.color }}>{m.code}</span>
                     <span className="font-body flex-1 truncate" style={{ fontSize: 9, color: on ? "var(--text-primary)" : "var(--text-muted)" }}>{m.name}</span>
                     {hasIntensity && on && (
-                      <button onClick={() => setExpanded(expanded === m.code ? null : m.code)} className="font-mono" style={{ fontSize: 8, color: "var(--gold)" }}>
+                      <button onClick={() => setExpanded(expanded === m.code ? null : m.code)} className="font-mono min-w-[44px] min-h-[44px] lg:min-w-0 lg:min-h-0 flex items-center justify-center" style={{ fontSize: 14, color: "var(--gold)" }}>
                         {expanded === m.code ? "▲" : "▼"}
                       </button>
                     )}
@@ -227,16 +227,16 @@ export default function ProtocolBuilder({ open, onClose, onSessionStart }) {
       <div className="px-3 py-2 border-t space-y-1.5 flex-none" style={{ borderColor: "var(--border)" }}>
         <button
           onClick={() => onSessionStart(activeCodes, dur)}
-          className="w-full font-display rounded-sm transition-colors hover:brightness-110"
-          style={{ fontSize: 11, padding: "8px 0", background: "var(--gold)", color: "#000", letterSpacing: "0.08em" }}
+          className="w-full font-display rounded-sm transition-colors hover:brightness-110 min-h-[44px] lg:min-h-0 text-[14px] lg:text-[11px]"
+          style={{ padding: "8px 0", background: "var(--gold)", color: "#000", letterSpacing: "0.08em" }}
         >
           ▶ START SIMULATION
         </button>
         <div className="flex gap-1.5">
-          <button onClick={save} className="flex-1 font-display rounded-sm transition-colors hover:brightness-125" style={{ fontSize: 9, padding: "6px 0", background: "var(--bg-panel)", color: "var(--gold)", border: "1px solid var(--gold-dim)" }}>
+          <button onClick={save} className="flex-1 font-display rounded-sm transition-colors hover:brightness-125 min-h-[44px] lg:min-h-0 text-[14px] lg:text-[9px]" style={{ padding: "6px 0", background: "var(--bg-panel)", color: "var(--gold)", border: "1px solid var(--gold-dim)" }}>
             💾 Save
           </button>
-          <button onClick={exportPdf} className="flex-1 font-display rounded-sm transition-colors hover:brightness-125" style={{ fontSize: 9, padding: "6px 0", background: "var(--bg-panel)", color: "var(--gold)", border: "1px solid var(--gold-dim)" }}>
+          <button onClick={exportPdf} className="flex-1 font-display rounded-sm transition-colors hover:brightness-125 min-h-[44px] lg:min-h-0 text-[14px] lg:text-[9px]" style={{ padding: "6px 0", background: "var(--bg-panel)", color: "var(--gold)", border: "1px solid var(--gold-dim)" }}>
             📤 Export PDF
           </button>
         </div>

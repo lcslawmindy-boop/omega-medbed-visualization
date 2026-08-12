@@ -51,7 +51,16 @@
   }
   body {
     overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
   }
+  button, [role="button"] {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .scroll-dark { overscroll-behavior: contain; }
 }
 
 @layer utilities {
@@ -116,5 +125,34 @@
   .mod-card.active {
     border-color: var(--gold) !important;
     box-shadow: 0 0 20px rgba(201, 168, 76, 0.3) !important;
+  }
+
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  .select-text {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+  .safe-top { padding-top: env(safe-area-inset-top); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+  /* Responsive main area: full-bleed under the header on mobile, sidebar-offset on desktop */
+  .main-area {
+    position: absolute;
+    top: calc(60px + env(safe-area-inset-top));
+    bottom: calc(56px + env(safe-area-inset-bottom));
+    left: 0;
+    right: 0;
+  }
+  .panel-edges {
+    top: calc(60px + env(safe-area-inset-top));
+    bottom: calc(56px + env(safe-area-inset-bottom));
+  }
+  @media (min-width: 1024px) {
+    .main-area { top: 60px; bottom: 40px; left: 280px; right: 320px; }
+    .panel-edges { top: 60px; bottom: 40px; }
   }
 }
