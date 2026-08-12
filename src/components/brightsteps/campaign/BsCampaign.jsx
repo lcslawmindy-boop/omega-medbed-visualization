@@ -6,6 +6,8 @@ import CampaignTiers from "./CampaignTiers";
 import CampaignFaq from "./CampaignFaq";
 import CampaignTechnology from "./CampaignTechnology";
 import CampaignMission from "./CampaignMission";
+import CampaignRoadmap from "./CampaignRoadmap";
+import CampaignFinancials from "./CampaignFinancials";
 
 export default function BsCampaign() {
   const [tier, setTier] = useState(null);
@@ -35,6 +37,8 @@ export default function BsCampaign() {
       <CampaignFunding />
       <CampaignTechnology />
       <CampaignMission onJoin={() => setTier(TIERS[0])} />
+      <CampaignRoadmap />
+      <CampaignFinancials />
       <CampaignTiers onPledge={setTier} />
 
       {tier && (
