@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { BS_MODES } from "@/data/brightsteps";
+import BsSearch from "./BsSearch";
 
 function BsMark() {
   return (
@@ -12,7 +13,7 @@ function BsMark() {
   );
 }
 
-export default function BsHeader({ mode, onMode, onSessionLog, onExport, onProtocol, session, remaining }) {
+export default function BsHeader({ mode, onMode, onSessionLog, onExport, onProtocol, session, remaining, onSearchSelect }) {
   const clock = `${String(Math.floor(remaining / 60)).padStart(2, "0")}:${String(remaining % 60).padStart(2, "0")}`;
   const navigate = useNavigate();
   return (
@@ -60,6 +61,7 @@ export default function BsHeader({ mode, onMode, onSessionLog, onExport, onProto
             SESSION ACTIVE — {clock}
           </span>
         )}
+        <BsSearch onSelect={onSearchSelect} />
         <button
           onClick={onProtocol}
           className="font-display rounded-md transition-colors"

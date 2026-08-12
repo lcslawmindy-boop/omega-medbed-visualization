@@ -59,6 +59,12 @@
 }
 .bs-root .bs-pulse { animation: bs-glow 2.2s ease-in-out infinite; }
 
+@keyframes bs-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.bs-root .bs-card { animation: bs-fade-up 380ms ease-out both; }
+
 .bs-root .bs-main {
   position: absolute;
   top: calc(64px + env(safe-area-inset-top));

@@ -9,6 +9,7 @@ import BsSceneOverlay from "@/components/brightsteps/BsSceneOverlay";
 import BsSystemCards from "@/components/brightsteps/BsSystemCards";
 import BsEcosystem from "@/components/brightsteps/BsEcosystem";
 import BsSessionLogModal from "@/components/brightsteps/BsSessionLogModal";
+import BsFirstVisitGate from "@/components/brightsteps/BsFirstVisitGate";
 import BsSystemDetailModal from "@/components/brightsteps/detail/BsSystemDetailModal";
 import BsProtocolBuilder from "@/components/brightsteps/protocol/BsProtocolBuilder";
 import ParentSystemCards from "@/components/brightsteps/parent/ParentSystemCards";
@@ -29,6 +30,9 @@ export default function BrightSteps() {
   const [builderOpen, setBuilderOpen] = useState(false);
   const [session, setSession] = useState(null);
   const [remaining, setRemaining] = useState(0);
+  const [guideOpen, setGuideOpen] = useState(false);
+  const [autoRotate, setAutoRotate] = useState(true);
+  const [gated, setGated] = useState(() => localStorage.getItem("bs_gate_acknowledged") !== "true");
 
   const handleHighlight = (code) => {
     setActiveCode(code);
@@ -65,6 +69,35 @@ export default function BrightSteps() {
     return () => { clearInterval(seq); clearInterval(tick); };
   }, [session]);
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    if (gated) return;
+    const KEYS = { "1": "PBM", "2": "PEMF", "3": "VAT", "4": "FIT", "5": "BIN", "6": "NAD", "7": "GSC", "8": "MCT", "9": "VOR", "0": "CHM", A: "EEG", B: "BIO" };
+    const onKey = (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      const k = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+      if (KEYS[k]) { handleHighlight(KEYS[k]); return; }
+      if (e.key === "Escape") { setDetailCode(null); setBuilderOpen(false); setLogOpen(false); setGuideOpen(false); return; }
+      if (e.code === "Space") { e.preventDefault(); setAutoRotate((r) => !r); return; }
+      if (k === "F") setView("fit");
+      else if (k === "R") setView("reset");
+      else if (k === "M") setMode((m) => (m === "clinician" ? "parent" : m === "parent" ? "technical" : "clinician"));
+      else if (k === "S") setBuilderOpen(true);
+      else if (k === "G") setDetailCode("BIO");
+      else if (k === "H") setGuideOpen(true);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [gated]);
+
+  if (gated) {
+    return (
+      <div className="bs-root fixed inset-0 overflow-hidden">
+        <BsFirstVisitGate onAccept={() => setGated(false)} />
+      </div>
+    );
+  }
+
   return (
     <div className="bs-root fixed inset-0 overflow-hidden">
       <BsHeader
@@ -75,14 +108,15 @@ export default function BrightSteps() {
         onProtocol={() => setBuilderOpen(true)}
         session={!!session}
         remaining={remaining}
+        onSearchSelect={handleHighlight}
       />
-      <BsSidebar activeCode={activeCode} onSelect={handleHighlight} onDetails={setDetailCode} />
+      <BsSidebar activeCode={activeCode} onSelect={handleHighlight} onDetails={setDetailCode} guideOpen={guideOpen} onGuide={setGuideOpen} />
       <BsSpecPanel mode={mode} />
 
       <main className="bs-main flex flex-col overflow-hidden">
         {/* 3D scene */}
         <div className="relative flex-none no-select" style={{ height: "48%", minHeight: 260 }}>
-          <BsScene activeCode={activeCode} view={view} modeColor={session ? session.color : POD_MODES[podModeIdx].color} />
+          <BsScene activeCode={activeCode} view={view} modeColor={session ? session.color : POD_MODES[podModeIdx].color} autoRotate={autoRotate} />
           <BsSceneOverlay
             activeCode={activeCode}
             onHighlight={handleHighlight}

@@ -5,6 +5,8 @@ import { BS_POWER } from "@/data/brightstepsSpec";
 import { generateBsPackage } from "@/lib/bsSpecReport";
 import ProtocolCard from "./ProtocolCard";
 import SystemToggles from "./SystemToggles";
+import ClinicianGate from "./ClinicianGate";
+import BsToast from "../BsToast";
 
 const WATTS = Object.fromEntries(BS_POWER.map((p) => [p.code, p.watts]));
 const initialOn = () =>
@@ -45,6 +47,15 @@ export default function BsProtocolBuilder({ open, onClose, onStart }) {
   const [dur, setDur] = useState(25);
   const [adaptive, setAdaptive] = useState(true);
   const [alerts, setAlerts] = useState({ start: true, complete: true, safety: true, feed: false });
+  const [gateOpen, setGateOpen] = useState(false);
+  const [override, setOverride] = useState(false);
+  const [ageToast, setAgeToast] = useState(false);
+  const [authLog, setAuthLog] = useState([]);
+  const [manual, setManual] = useState(60);
+
+  useEffect(() => {
+    if (open && !age) setAgeToast(true);
+  }, [open, age]);
 
   useEffect(() => {
     if (!age) return;
@@ -61,7 +72,7 @@ export default function BsProtocolBuilder({ open, onClose, onStart }) {
   const barColor = watts > 1150 ? "var(--coral)" : watts > 1000 ? "var(--amber)" : "var(--sky)";
 
   const saveJson = () => {
-    const blob = new Blob([JSON.stringify({ device: "BS-ATP-Ω", age, profiles, protocol: proto ? proto.name : null, duration_min: dur, systems: codes, adaptive, alerts, est_watts: watts }, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify({ device: "BS-ATP-Ω", age, profiles, protocol: proto ? proto.name : null, duration_min: dur, systems: codes, adaptive, alerts, est_watts: watts, clinician_override: override, manual_intensity: override ? manual : null, authorization_log: authLog }, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -86,6 +97,11 @@ export default function BsProtocolBuilder({ open, onClose, onStart }) {
             <path d="M7 16.5c0-2.6 1.8-4.2 4-4.2s4 1.6 4 4.2" fill="#38BDF8" />
           </svg>
           <span className="font-display flex-1 text-sky" style={{ fontSize: 12, letterSpacing: "0.07em" }}>SESSION PROTOCOL BUILDER</span>
+          {override && (
+            <span className="font-display rounded-full px-2 py-1" style={{ fontSize: 8, color: "var(--amber)", border: "1px solid var(--amber)", letterSpacing: "0.06em" }}>
+              ● CLINICIAN OVERRIDE ACTIVE
+            </span>
+          )}
           <button onClick={onClose} className="text-sky" style={{ fontSize: 14, minWidth: 32, minHeight: 32 }} aria-label="Close">✕</button>
         </div>
 
@@ -93,7 +109,7 @@ export default function BsProtocolBuilder({ open, onClose, onStart }) {
           {/* PATIENT SETUP */}
           <div>
             <div className="font-display text-sky mb-1.5" style={{ fontSize: 9.5, letterSpacing: "0.12em" }}>AGE GROUP (REQUIRED)</div>
-            <div className="flex flex-wrap gap-1.5">
+            <div id="bs-age-pills" className="flex flex-wrap gap-1.5">
               {AGE_GROUPS.map((a) => (
                 <Pill key={a} label={`${a} yrs`} on={age === a} color="var(--sky)" onClick={() => setAge(a)} />
               ))}
@@ -159,12 +175,23 @@ export default function BsProtocolBuilder({ open, onClose, onStart }) {
           <div>
             <div className="font-display mb-1" style={{ fontSize: 9.5, color: "var(--green)", letterSpacing: "0.12em" }}>KIDS-OS ADAPTATION</div>
             <div className="flex gap-1.5">
-              <Pill label="KIDS-OS ADAPTIVE" on={adaptive} color="var(--green)" onClick={() => setAdaptive(true)} />
-              <Pill label="MANUAL (PIN)" on={!adaptive} color="var(--amber)" onClick={() => setAdaptive(false)} />
+              <Pill label="KIDS-OS ADAPTIVE" on={adaptive} color="var(--green)" onClick={() => { setAdaptive(true); setOverride(false); }} />
+              <Pill label="MANUAL (PIN)" on={!adaptive} color="var(--amber)" onClick={() => setGateOpen(true)} />
             </div>
             <div className="font-body mt-1" style={{ fontSize: 8.5, color: "var(--text-muted)" }}>
-              {adaptive ? "All intensities auto-managed by ACE." : "Clinician only — authorization PIN required at session start."}
+              {adaptive ? "All intensities auto-managed by ACE." : "Clinician override active — pediatric auto-scaling disabled."}
             </div>
+            {override && (
+              <div className="mt-2">
+                <div className="font-display" style={{ fontSize: 9, color: "var(--amber)", letterSpacing: "0.1em" }}>MANUAL MASTER INTENSITY — {manual}%</div>
+                <input
+                  type="range" min={10} max={100} value={manual}
+                  onChange={(e) => setManual(Number(e.target.value))}
+                  className="w-full mt-1" style={{ accentColor: "var(--amber)" }}
+                  aria-label="Manual master intensity"
+                />
+              </div>
+            )}
           </div>
 
           {/* POWER */}
@@ -206,6 +233,23 @@ export default function BsProtocolBuilder({ open, onClose, onStart }) {
           </div>
         </div>
       </aside>
+
+      {ageToast && (
+        <BsToast
+          message="⚠ Select child's age group first — KIDS-OS parameter scaling requires age group selection"
+          actionLabel="Select Age Group →"
+          onAction={() => { setAgeToast(false); document.getElementById("bs-age-pills")?.scrollIntoView({ block: "center", behavior: "smooth" }); }}
+          onDismiss={() => setAgeToast(false)}
+        />
+      )}
+
+      {gateOpen && (
+        <ClinicianGate
+          onCancel={() => setGateOpen(false)}
+          onAuthorized={() => { setGateOpen(false); setOverride(true); setAdaptive(false); }}
+          onLog={(entry) => setAuthLog((l) => [...l, entry])}
+        />
+      )}
     </>
   );
 }

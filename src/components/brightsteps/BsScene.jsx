@@ -8,9 +8,10 @@ const VIEWS = {
   front: { pos: [0, 1.4, 7.5], tgt: [0, 1.1, 0] },
   side: { pos: [7, 1.6, 0.5], tgt: [0, 1.1, 0] },
   top: { pos: [0.01, 8, 0.01], tgt: [0, 0.5, 0] },
+  fit: { pos: [0, 3.4, 10.5], tgt: [0.8, 1.0, 0] },
 };
 
-export default function BsScene({ activeCode, view, modeColor }) {
+export default function BsScene({ activeCode, view, modeColor, autoRotate = true }) {
   const mountRef = useRef(null);
   const stateRef = useRef(null);
   const activeRef = useRef(activeCode);
@@ -322,7 +323,8 @@ export default function BsScene({ activeCode, view, modeColor }) {
 
     const camTarget = camera.position.clone();
     const tgtTarget = controls.target.clone();
-    stateRef.current = { zones, camTarget, tgtTarget, canopyMat, podLight, rimMat };
+    controls.autoRotate = autoRotate;
+    stateRef.current = { zones, camTarget, tgtTarget, canopyMat, podLight, rimMat, controls };
     applyHighlight();
     applyView();
     applyModeColor();
@@ -412,6 +414,11 @@ export default function BsScene({ activeCode, view, modeColor }) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const s = stateRef.current;
+    if (s && s.controls) s.controls.autoRotate = !!autoRotate;
+  }, [autoRotate]);
 
   return <div ref={mountRef} className="absolute inset-0 no-select" style={{ background: "#070B14" }} />;
 }

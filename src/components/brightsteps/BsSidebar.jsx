@@ -16,10 +16,9 @@ function BsMark() {
   );
 }
 
-export default function BsSidebar({ activeCode, onSelect, onDetails }) {
+export default function BsSidebar({ activeCode, onSelect, onDetails, guideOpen, onGuide }) {
   const [age, setAge] = useState("7-9");
   const [intensity, setIntensity] = useState("STANDARD");
-  const [guideOpen, setGuideOpen] = useState(false);
 
   return (
     <>
@@ -53,14 +52,14 @@ export default function BsSidebar({ activeCode, onSelect, onDetails }) {
 
         {/* BOTTOM STATS */}
         <div className="flex-none">
-          <SidebarStats onHowItWorks={() => setGuideOpen(true)} />
+          <SidebarStats onHowItWorks={() => onGuide(true)} />
           <div className="px-2.5 py-2 font-mono" style={{ fontSize: 8, color: "var(--text-muted)", borderTop: "1px solid var(--border)", lineHeight: 1.6 }}>
             AATCS-P1 · Rev A · 2026-08-12<br />CONCEPT — NOT FOR MANUFACTURE
           </div>
         </div>
       </aside>
 
-      <HowItWorksModal open={guideOpen} onClose={() => setGuideOpen(false)} />
+      <HowItWorksModal open={guideOpen} onClose={() => onGuide(false)} />
     </>
   );
 }
