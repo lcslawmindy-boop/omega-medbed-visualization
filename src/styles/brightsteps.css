@@ -30,9 +30,10 @@
 .bs-root .font-kid { font-family: var(--font-kid); }
 .bs-root .text-sky { color: var(--sky); }
 
+.bs-root button { border-radius: 10px; }
 .bs-root .bs-card {
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 16px;
   transition: border-color 250ms ease, box-shadow 250ms ease, transform 250ms ease;
 }
 .bs-root .bs-card:hover {
@@ -64,6 +65,20 @@
   to { opacity: 1; transform: translateY(0); }
 }
 .bs-root .bs-card { animation: bs-fade-up 380ms ease-out both; }
+
+/* Parent mode — softer, warmer, pediatric-office feel */
+.bs-parent { font-family: var(--font-kid); }
+.bs-parent .bs-card {
+  border-radius: 20px;
+  border-color: rgba(45, 212, 191, 0.28);
+  background: linear-gradient(160deg, #17293f 0%, #12203a 100%) !important;
+  box-shadow: 0 4px 18px rgba(4, 10, 22, 0.5);
+}
+.bs-parent .bs-card:hover {
+  border-color: var(--mint);
+  box-shadow: 0 6px 22px rgba(45, 212, 191, 0.18);
+}
+.bs-parent button { border-radius: 999px; }
 
 .bs-root .bs-main {
   position: absolute;

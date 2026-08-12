@@ -116,7 +116,7 @@ export default function BrightSteps() {
       <main className="bs-main flex flex-col overflow-hidden">
         {/* 3D scene */}
         <div className="relative flex-none no-select" style={{ height: "48%", minHeight: 260 }}>
-          <BsScene activeCode={activeCode} view={view} modeColor={session ? session.color : POD_MODES[podModeIdx].color} autoRotate={autoRotate} />
+          <BsScene activeCode={activeCode} view={view} modeColor={session ? session.color : POD_MODES[podModeIdx].color} autoRotate={autoRotate} sessionActive={!!session} />
           <BsSceneOverlay
             activeCode={activeCode}
             onHighlight={handleHighlight}
@@ -127,7 +127,7 @@ export default function BrightSteps() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-h-0 overflow-y-auto bs-scroll p-3 space-y-4" style={{ borderTop: "1px solid var(--border)" }}>
+        <div className={`flex-1 min-h-0 overflow-y-auto bs-scroll p-3 space-y-4 ${mode === "parent" ? "bs-parent" : ""}`} style={{ borderTop: "1px solid var(--border)" }}>
           {mode === "parent" && <ParentEmergency />}
           {mode === "parent" && (
             <div className="bs-card p-3" style={{ background: "var(--bg-card)", borderLeft: "3px solid var(--teal)" }}>

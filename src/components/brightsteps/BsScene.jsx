@@ -11,9 +11,10 @@ const VIEWS = {
   fit: { pos: [0, 3.4, 10.5], tgt: [0.8, 1.0, 0] },
 };
 
-export default function BsScene({ activeCode, view, modeColor, autoRotate = true }) {
+export default function BsScene({ activeCode, view, modeColor, autoRotate = true, sessionActive = false }) {
   const mountRef = useRef(null);
   const stateRef = useRef(null);
+  const sessionRef = useRef(sessionActive);
   const activeRef = useRef(activeCode);
   const viewRef = useRef(view);
   const modeColorRef = useRef(modeColor);
@@ -49,6 +50,7 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
     s.rimMat.emissive.copy(c).lerp(new THREE.Color("#38BDF8"), 0.5);
   };
 
+  useEffect(() => { sessionRef.current = sessionActive; }, [sessionActive]);
   useEffect(() => { activeRef.current = activeCode; applyHighlight(); }, [activeCode]);
   useEffect(() => { viewRef.current = view; applyView(); }, [view]);
   useEffect(() => { modeColorRef.current = modeColor; applyModeColor(); }, [modeColor]);
@@ -157,19 +159,32 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
     pod.add(pbm);
     registerZone("pbm", pbmMat, 0.4, 1.5);
 
-    // 7 chakra resonators in an arc on interior ceiling (NAD)
+    // 7 chakra resonator spheres — vertical column along the seated spine (root i=0 → crown i=6)
     const chakra = [0xef4444, 0xf97316, 0xfacc15, 0x34d399, 0x38bdf8, 0x6366f1, 0xa78bfa];
     const nadNodes = [];
+    const nadHalos = [];
     chakra.forEach((c, i) => {
       const mat = new THREE.MeshStandardMaterial({ color: c, emissive: c, emissiveIntensity: 0.7 });
-      const a = -Math.PI * 0.35 + (i / 6) * Math.PI * 0.7;
-      const node = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), mat);
-      node.position.set(Math.sin(a) * 1.35, 0.85 + Math.cos(a) * 0.35, 0.35);
+      const f = i / 6;
+      const node = new THREE.Mesh(new THREE.SphereGeometry(0.085, 20, 20), mat);
+      node.position.set(0, -0.45 + f * 0.92, -0.12 - f * 0.28);
       node.userData.phase = i * 0.6;
       pod.add(node);
       nadNodes.push(node);
       registerZone("nad", mat, 0.7, 1.6);
+
+      const haloMat = new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const halo = new THREE.Mesh(new THREE.SphereGeometry(0.085, 16, 16), haloMat);
+      halo.position.copy(node.position);
+      pod.add(halo);
+      nadHalos.push(halo);
     });
+
+    // Cocoon glow — soft additive shell around the pod
+    const cocoonMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.06, side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false });
+    const cocoon = new THREE.Mesh(new THREE.SphereGeometry(1.18, 40, 28), cocoonMat);
+    cocoon.scale.set(2.05, 1.7, 1.9);
+    pod.add(cocoon);
 
     // Seat (reclined 15°)
     const seatMat = new THREE.MeshStandardMaterial({ color: 0x1a2a44, roughness: 0.9 });
@@ -335,11 +350,31 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
       raf = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
 
-      // Chakra nodes breathe
-      nadNodes.forEach((n) => {
-        const s = 1 + Math.sin(t * 1.4 + n.userData.phase) * 0.08;
-        n.scale.setScalar(s);
+      // Chakra nodes — idle breathing, or crown-to-root ignition cascade during a session
+      const inSession = sessionRef.current;
+      const CYCLE = 5.0, STEP = 0.5, GLOW = 1.6;
+      nadNodes.forEach((n, i) => {
+        let ign = 0;
+        if (inSession) {
+          const slot = (6 - i) * STEP; // crown first, root last
+          let p = (t % CYCLE) - slot;
+          if (p >= 0 && p < GLOW) ign = Math.sin((p / GLOW) * Math.PI) ** 1.5;
+        }
+        const breathe = 1 + Math.sin(t * 1.4 + n.userData.phase) * 0.08;
+        n.scale.setScalar(breathe + ign * 0.85);
+        n.material.userData.ign = ign;
+        const halo = nadHalos[i];
+        halo.scale.setScalar(1 + ign * 4.2);
+        halo.material.opacity = ign * 0.3;
       });
+
+      // Cocoon glow — gentle breathing, brighter and warmer while a session runs
+      cocoonMat.color.copy(podLight.color);
+      cocoonMat.opacity = THREE.MathUtils.lerp(
+        cocoonMat.opacity,
+        (inSession ? 0.15 : 0.06) + Math.sin(t * 0.9) * 0.02,
+        0.05
+      );
 
       // Binaural expanding rings
       const bl = 1 + ((t % 2.3) / 2.3);
@@ -379,7 +414,7 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
         const { baseEmissive, peak, boost } = mat.userData;
         const target = baseEmissive + boost * (peak - baseEmissive);
         if (mat.emissiveIntensity !== undefined) {
-          mat.emissiveIntensity = THREE.MathUtils.lerp(mat.emissiveIntensity, target, 0.08);
+          mat.emissiveIntensity = THREE.MathUtils.lerp(mat.emissiveIntensity, target, 0.08) + (mat.userData.ign || 0) * 2.6;
         } else if (mat.opacity !== undefined) {
           mat.opacity = THREE.MathUtils.lerp(mat.opacity, target, 0.08);
         }
