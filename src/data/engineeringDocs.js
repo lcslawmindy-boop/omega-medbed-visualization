@@ -16,6 +16,7 @@ export const DOC_SECTIONS = [
   { id: "specs", label: "Specifications" },
   { id: "aatcs", label: "AATCS-P2" },
   { id: "modalities", label: "Modalities" },
+  { id: "documents", label: "Documents" },
 ];
 
 export const BOM_METRICS = [

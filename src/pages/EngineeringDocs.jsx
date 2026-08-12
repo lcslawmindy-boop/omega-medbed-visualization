@@ -4,6 +4,7 @@ import { Image } from "@/components/ui/image";
 import { MODALITIES } from "@/data/modalities";
 import { ENG_DOC_IMAGES, BOM_METRICS, SYSTEM_SPECS, DOC_SECTIONS } from "@/data/engineeringDocs";
 import DocLightbox from "@/components/medbed/DocLightbox";
+import DocPackagePanel from "@/components/medbed/DocPackagePanel";
 
 export default function EngineeringDocs() {
   const navigate = useNavigate();
@@ -45,7 +46,12 @@ export default function EngineeringDocs() {
       </div>
 
       <div className="flex-1 overflow-y-auto scroll-dark p-3 space-y-3 select-text">
-        {section === "modalities" ? (
+        {section === "documents" ? (
+          <>
+            <SectionTitle>ENGINEERING DOCUMENT PACKAGE</SectionTitle>
+            <DocPackagePanel />
+          </>
+        ) : section === "modalities" ? (
           <>
             <SectionTitle>SYSTEM SPECIFICATIONS</SectionTitle>
             <div className="rounded-sm overflow-hidden" style={{ border: "1px solid var(--border)", background: "var(--bg-panel)" }}>
