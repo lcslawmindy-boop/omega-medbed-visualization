@@ -28,7 +28,7 @@ export default function OmegaMedBed() {
     <div className="fixed inset-0 bg-primary overflow-hidden" style={{ background: "var(--bg-primary)" }}>
       <TopHeader onExport={handleExport} />
       <ModalitySidebar activeCode={activeCode} onSelect={setActiveCode} />
-      <SpecPanel activeCode={activeCode} />
+      <SpecPanel />
 
       {/* Center scene area */}
       <main
