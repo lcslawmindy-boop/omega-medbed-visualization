@@ -22,6 +22,7 @@ import { generateBsPackage } from "@/lib/bsSpecReport";
 import BsHoverLabel from "@/components/brightsteps/BsHoverLabel";
 import BsBiometrics from "@/components/brightsteps/BsBiometrics";
 import BsDossier from "@/components/brightsteps/dossier/BsDossier";
+import BsShowcase from "@/components/brightsteps/BsShowcase";
 import { playStartupChime } from "@/lib/startupChime";
 
 export default function BrightSteps() {
@@ -166,6 +167,7 @@ export default function BrightSteps() {
             </>
           )}
           <BsBiometrics />
+          <BsShowcase />
           {mode !== "parent" && <BsDossier />}
           <BsEcosystem />
           <div className="font-mono text-center py-2" style={{ fontSize: 8, color: "var(--text-muted)", lineHeight: 1.6 }}>
