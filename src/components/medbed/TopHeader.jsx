@@ -16,7 +16,12 @@ function ZarpMark() {
   );
 }
 
-export default function TopHeader({ onExport }) {
+export default function TopHeader({ onExport, session, remaining }) {
+  const fmt = (s) => {
+    const m = Math.floor(s / 60);
+    const ss = s % 60;
+    return `${String(m).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
+  };
   return (
     <header
       className="fixed top-0 left-0 right-0 z-[100] flex items-center bg-panel border-b border-soft"
@@ -40,11 +45,18 @@ export default function TopHeader({ onExport }) {
       </div>
 
       {/* CENTER TICKER */}
-      <div className="flex-1 h-full overflow-hidden flex items-center" style={{ background: "var(--red-dark)" }}>
+      <div className="relative flex-1 h-full overflow-hidden flex items-center" style={{ background: "var(--red-dark)" }}>
         <div className="marquee-track font-display text-white" style={{ fontSize: 9, letterSpacing: "0.1em", padding: "4px 0" }}>
           {TICKER_TEXT}
           {TICKER_TEXT}
         </div>
+        {session && (
+          <div className="absolute left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-3 py-1 rounded-sm" style={{ background: "var(--gold)", color: "#000" }}>
+            <span className="pulse-dot inline-block w-1.5 h-1.5 rounded-full" style={{ background: "#000" }} />
+            <span className="font-display font-bold" style={{ fontSize: 10, letterSpacing: "0.1em" }}>SESSION ACTIVE</span>
+            <span className="font-mono font-bold" style={{ fontSize: 12 }}>{fmt(remaining)}</span>
+          </div>
+        )}
       </div>
 
       {/* RIGHT */}

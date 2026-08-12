@@ -1,0 +1,201 @@
+// Full technical record per modality — drives the Modality Detail Modal.
+export const MODALITY_DETAILS = {
+  PBM: {
+    parameters: { frequency: "660 / 810 / 850 nm NIR", delivery: "Overhead + lateral LED array (5×5 grid)", power: "100–120 mW/cm²", safety: "Eye exposure < 10s cumulative; retina shutter", range: "Full-body envelope", precision: "±2 nm wavelength" },
+    mechanismFull: "Photobiomodulation excites cytochrome c oxidase (Complex IV) in the mitochondrial electron transport chain, increasing ATP synthesis and releasing nitric oxide. 810 nm penetrates transcranially for TBI; 660 nm targets systemic hemoglobin; 850 nm reaches deep musculature. Dual-wavelength pulse modulation enables frequency-specific protocols.",
+    citations: [
+      { ref: "Hamblin M. (2018) — Photobiomodulation for TBI", class: "Tier 1" },
+      { ref: "NeuroThera FDA 510(k) K073565 — transcranial 810 nm", class: "FDA" },
+      { ref: "Vielight Neuro — clinical PBM headset", class: "Tier 1" },
+    ],
+    integration: { zone: "Overhead + lateral (full-body)", bfac: "Skin temp + HRV gate intensity", interactions: "Synergistic with MCT (ATP pathway); synced with CHM color cycles", interlocks: "Eye-safety shutter; FIT thermal ceiling 55°C" },
+    bfacSensors: ["Skin Temp", "HRV"],
+  },
+  PEMF: {
+    parameters: { frequency: "0.5–4 Hz delta + 7.83 Hz Schumann", delivery: "2×2 Helmholtz under-mattress matrix", power: "1–50 Gauss", safety: "Pacemaker exclusion; < 200 μT at chest", range: "Full supine body", precision: "±0.01 Hz" },
+    mechanismFull: "Time-varying magnetic fields induce micro-currents in tissue via Faraday induction, modulating cellular membrane potential and Ca²⁺ binding. Delta-band entrains deep-sleep neuroinduction; the 7.83 Hz Schumann resonance provides grounding resonance. Uniform field is achieved through phased Helmholtz coil pairs beneath the mattress.",
+    citations: [
+      { ref: "Orthofix FDA 510(k) — PEMF bone healing", class: "FDA" },
+      { ref: "Bemer — microcirculation PEMF", class: "Tier 1" },
+      { ref: "Pall M. (2013) — EMF therapeutic mechanisms", class: "Tier 1" },
+    ],
+    integration: { zone: "Under-mattress (full body)", bfac: "EEG + HRV gate frequency band", interactions: "Pairs with VAT for somatic entrainment", interlocks: "Pacemaker screen; MCT galvanic isolation" },
+    bfacSensors: ["EEG", "HRV"],
+  },
+  VAT: {
+    parameters: { frequency: "20–528 Hz", delivery: "8-transducer mattress-embedded array", power: "0.1–2 mm peak displacement", safety: "Vestibular ceiling 40 Hz sustained", range: "Full dorsal surface", precision: "±0.5 Hz" },
+    mechanismFull: "Low-frequency sinusoidal energy is delivered as haptic vibration through the memory-foam mattress, driving somatic tremor facilitation (TRE) at 20–40 Hz and sensory integration / parasympathetic shift at 40–528 Hz. Full dorsal contact ensures whole-body mechanotransduction to interstitial fluid and fascia.",
+    citations: [
+      { ref: "NHS — Vibroacoustic Therapy clinical evidence", class: "Tier 1" },
+      { ref: "Vibroacoustic Therapy Association — standards", class: "Tier 1" },
+      { ref: "Levine P. — Somatic Experiencing / TRE", class: "Tier 2" },
+    ],
+    integration: { zone: "Mattress (dorsal)", bfac: "GSR + HRV gate amplitude", interactions: "Synergistic with PEMF and NAD bija frequencies", interlocks: "Vestibular monitor; FIT vibration isolation" },
+    bfacSensors: ["GSR", "HRV"],
+  },
+  FIT: {
+    parameters: { frequency: "5–14 μm wavelength", delivery: "Side-wall + under-mattress carbon-fiber panels", power: "37–55 °C", safety: "TCO 60 °C hard cutoff; NTC ×3", range: "Tri-surface body envelope", precision: "±0.5 °C" },
+    mechanismFull: "Far-infrared radiation at 5–14 μm penetrates 1–3 mm into dermis, raising core temperature mildly and inducing profuse sweating, cardiovascular conditioning, and detoxification pathways. Carbon-fiber panels provide uniform longwave IR with NTC thermistors at three patient contact points and a hard thermal cutoff at 60 °C.",
+    citations: [
+      { ref: "Beever R. (2009) — FIR sauna meta-analysis", class: "Tier 1" },
+      { ref: "Scoon G. (2008) — FIR cardiovascular study", class: "Tier 1" },
+      { ref: "NIH — Far-infrared saunas for cardiovascular risk", class: "Tier 1" },
+    ],
+    integration: { zone: "Side-wall + under-mattress", bfac: "Skin temp gates target; HRV ceiling", interactions: "Pre-warms for PBM; isolated from VAT vibration", interlocks: "TCO 60 °C; NTC triple-redundant" },
+    bfacSensors: ["Skin Temp", "HRV"],
+  },
+  SFT: {
+    parameters: { frequency: "10–40 kHz carrier", delivery: "8-pair octagonal bifilar coil array", power: "< 5 W per coil pair", safety: "E=0 / B=0 scalar null check", range: "Octagonal patient envelope", precision: "Phase-locked ±0.05°" },
+    mechanismFull: "Counter-phased bifilar coils cancel the transverse E and B fields, leaving a longitudinal scalar potential gradient (∇φ ≠ 0) per Bearden's theory. Phase-conjugate replicas are hypothesized to reverse cellular entropy. The Prioré F1×F2×F3→Fz derivative modulation is impressed on the carrier to imprint a structured virtual-state template.",
+    citations: [
+      { ref: "Bearden T. — Scalar Electromagnetics", class: "Tier 3" },
+      { ref: "Prioré — ONR Report R-5-78 (1978)", class: "Tier 3" },
+      { ref: "Bedini — coil conditioning notes", class: "Tier 3" },
+    ],
+    integration: { zone: "Octagonal corona (envelope)", bfac: "Phase-lock monitor; EEG gating", interactions: "Carrier host for PRI modulation", interlocks: "Null-field confirmation before energize" },
+    bfacSensors: ["EEG"],
+  },
+  MCT: {
+    parameters: { frequency: "1–999 μA DC", delivery: "4-channel gold-plated electrode ports", power: "Sub-threshold < 1 mA", safety: "GFCI 10 μA trip; crowbar 1000 μA", range: "Head / torso / limb zones", precision: "±0.5 μA" },
+    mechanismFull: "Sub-threshold microcurrent mimics endogenous bioelectric currents, stimulating ATP synthesis and cellular membrane repair at current densities below sensory perception. Gold-plated electrodes at armrest and headrest provide four independent channels with GFCI ground-fault interruption and a hard crowbar cap at 1000 μA.",
+    citations: [
+      { ref: "Alpha-Stim FDA 510(k) — microcurrent", class: "FDA" },
+      { ref: "Sota Instruments — microcurrent devices", class: "Tier 1" },
+      { ref: "Cheng N. (1982) — ATP stimulation by microcurrent", class: "Tier 1" },
+    ],
+    integration: { zone: "Armrest + headrest electrodes", bfac: "GSR + skin temp gate current", interactions: "Galvanic isolation from PEMF; spark-free with HIT", interlocks: "GFCI 10 μA; crowbar 1000 μA" },
+    bfacSensors: ["GSR", "Skin Temp"],
+  },
+  HIT: {
+    parameters: { frequency: "99.99% H₂ gas", delivery: "Canopy inhalation — PEM electrolyzer", power: "150–300 mL/min", safety: "MQ-8 sensor; 25% LEL shutdown", range: "Sealed canopy atmosphere", precision: "±2 mL/min" },
+    mechanismFull: "Molecular hydrogen acts as a selective antioxidant, scavenging cytotoxic hydroxyl radicals (·OH) without neutralizing beneficial signaling ROS. A PEM electrolyzer generates 99.99% H₂ delivered via canopy at 150–300 mL/min. MQ-8 hydrogen sensing with 25% LEL auto-shutdown and spark-free interlock against MCT.",
+    citations: [
+      { ref: "Ohsawa I. (2007) — H₂ as selective antioxidant", class: "Tier 2" },
+      { ref: "Japan H₂ therapy trials — cardiac arrest", class: "Tier 2" },
+      { ref: "China H₂ clinical trials — metabolic syndrome", class: "Tier 2" },
+    ],
+    integration: { zone: "Canopy (inhalation)", bfac: "SpO₂ + HRV gate flow rate", interactions: "Spark-free interlock with MCT; separate from OZO", interlocks: "MQ-8 25% LEL; MCT isolation" },
+    bfacSensors: ["SpO₂", "HRV"],
+  },
+  NIA: {
+    parameters: { frequency: "10⁶–10⁷ ions/cm³", delivery: "Canopy corona emitter + HEPA", power: "5–8 kV corona", safety: "Ozone interlock 0.03 ppm", range: "Sealed canopy atmosphere", precision: "±5% ion density" },
+    mechanismFull: "A canopy-mounted corona discharge emitter at 5–8 kV generates a high density of negative air ions. HEPA and activated-carbon filtration maintain canopy atmosphere purity. An ozone sensor interlocks at 0.03 ppm to prevent oxidative byproduct accumulation. Negative ions are associated with parasympathetic shift and serotonin modulation.",
+    citations: [
+      { ref: "Journal of Negative Ions — atmospheric ion research", class: "Tier 2" },
+      { ref: "Hawkins L. (1981) — ion effects on mood", class: "Tier 2" },
+      { ref: "Krueger A. — air ion bioeffects", class: "Tier 2" },
+    ],
+    integration: { zone: "Canopy (atmosphere)", bfac: "GSR + skin temp gate density", interactions: "Ozone interlock shared with OZO sensor", interlocks: "O₃ 0.03 ppm shutoff" },
+    bfacSensors: ["GSR", "Skin Temp"],
+  },
+  BIO: {
+    parameters: { frequency: "100 ms control cycle", delivery: "ARM Cortex-A72 + STM32H7 + TF Lite", power: "5 V logic", safety: "< 100 ms cutoff engine", range: "All 18 modalities", precision: "10 ms latency" },
+    mechanismFull: "The Biometric AI Closed-Loop controller fuses HRV, SpO₂, EEG, GSR, and skin-temperature streams at a 100 ms cycle, running TensorFlow Lite inference on an ARM Cortex-A72 supervisory core with an STM32H7 real-time safety coprocessor. It performs adaptive dosimetry across all 18 modalities and can cut any channel in under 100 ms when thresholds are breached.",
+    citations: [
+      { ref: "FDA — Closed-loop physiological control guidance", class: "Tier 1" },
+      { ref: "TensorFlow Lite — edge inference", class: "Tier 1" },
+      { ref: "ISO 14971 — medical device risk management", class: "Tier 1" },
+    ],
+    integration: { zone: "Master controller (all zones)", bfac: "IS the BFAC engine", interactions: "Supervises all 18 modalities", interlocks: "< 100 ms hard cutoff; watchdog" },
+    bfacSensors: ["HRV", "SpO₂", "EEG", "GSR", "Skin Temp"],
+  },
+  PRI: {
+    parameters: { frequency: "F1 9.4–21.4 / F2 64–76 / F3 9.7–39.6 Hz", delivery: "Bedini-conditioned electron tubes", power: "< 10 W carrier", safety: "Phase-coherence monitor", range: "Whole-body irradiation", precision: "Phase-locked triplet" },
+    mechanismFull: "Antoine Prioré's three-channel modulation multiplies F1, F2, and F3 to produce a derivative carrier Fz carrying a structured virtual-state template. The phase-conjugate re-irradiation of the patient's own emission delta is hypothesized to reverse pathological information states. Bedini-conditioned electron tubes provide the carrier substrate.",
+    citations: [
+      { ref: "Prioré — French Patent 1,342,772 (1962)", class: "Tier 3" },
+      { ref: "Prioré — ONR Report R-5-78", class: "Tier 3" },
+      { ref: "Bedini — electron tube conditioning", class: "Tier 3" },
+    ],
+    integration: { zone: "Porthole / tube array", bfac: "Phase-coherence gate; EEG monitor", interactions: "Modulation host for SFT scalar carrier", interlocks: "Coherence-loss shutdown" },
+    bfacSensors: ["EEG"],
+  },
+  RIF: {
+    parameters: { frequency: "12.5 Hz – 6.1×10¹⁴ Hz", delivery: "Plasma tube + quartz UV applicators", power: "< 50 W broadband", safety: "UV exposure timer; occlude eyes", range: "24 Lisitsyn trigger windows", precision: "±0.1 Hz mortal rate" },
+    mechanismFull: "Royal Rife's mortal oscillatory rates are applied via a Lisitsyn trigger-window table across 24 frequency windows. Quartz-windowed UV applicators (200–400 nm) deliver the Kaznacheyev photon template for cytopathogenic reversal. A plasma tube array provides broadband pathogen devitalization through resonant destruction.",
+    citations: [
+      { ref: "Rife — 1934 USC trial records", class: "Tier 3" },
+      { ref: "Lisitsyn — trigger-window spectroscopy", class: "Tier 3" },
+      { ref: "Kaznacheyev — cytopathogenic photon effect", class: "Tier 3" },
+    ],
+    integration: { zone: "Plasma array + UV applicators", bfac: "EEG + skin temp gate exposure", interactions: "UV isolated from PBM visible; shares plasma with PRI", interlocks: "UV timer; eye occlusion" },
+    bfacSensors: ["EEG", "Skin Temp"],
+  },
+  ORG: {
+    parameters: { frequency: "Passive (no frequency)", delivery: "20-layer alternating felt/steel", power: "Passive accumulator", safety: "Ventilation required", range: "Patient chamber envelope", precision: "≥ 1.0 °F ΔT" },
+    mechanismFull: "Wilhelm Reich's orgone accumulator envelope alternates 20 layers of organic sheep-wool felt and metallic galvanized steel to concentrate ambient biofield energy around the patient. A measurable temperature differential (≥ 1.0 °F per Grad, 1965) is used as the operational metric. The accumulator is passive and requires no power.",
+    citations: [
+      { ref: "Reich W. — Orgone accumulator", class: "Tier 3" },
+      { ref: "Grad B. (1965) — Int. J. Biometeorology", class: "Tier 3" },
+      { ref: "DeMeo J. — Orgone accumulator handbook", class: "Tier 3" },
+    ],
+    integration: { zone: "Chamber envelope (passive)", bfac: "Skin temp ΔT monitor", interactions: "Always-on passive layer; no interlock", interlocks: "Ventilation sensor" },
+    bfacSensors: ["Skin Temp"],
+  },
+  VOR: {
+    parameters: { frequency: "4.0 °C ± 0.5 phase boundary", delivery: "Corrugated Repulsine impeller · 40 L", power: "Peltier + compressor hybrid", safety: "Overflow + temp floor 2 °C", range: "40 L structured water", precision: "±0.5 °C" },
+    mechanismFull: "Viktor Schauberger's implosion vortex spins water at its 4 °C maximum-density phase boundary in a corrugated Repulsine impeller, producing centripetal negentropic ordering. The structured water is consumed pre-session. Peltier and compressor hybrid cooling maintains the narrow temperature band required for the phase-boundary effect.",
+    citations: [
+      { ref: "Schauberger V. — Repulsine archives", class: "Tier 3" },
+      { ref: "Coats C. — Living Energies (Schauberger)", class: "Tier 3" },
+      { ref: "Structured water literature", class: "Tier 3" },
+    ],
+    integration: { zone: "Porthole reservoir", bfac: "Consumption log; skin temp", interactions: "Pre-session only; no live interaction", interlocks: "Temp floor 2 °C; overflow" },
+    bfacSensors: ["Skin Temp"],
+  },
+  NAD: {
+    parameters: { frequency: "LAM 256 / VAM 288 / RAM 320 / YAM 341 / HAM 384 / OM 426 Hz", delivery: "Canopy acoustic array + bone conduction", power: "60–80 dB SPL", safety: "SPL ceiling 85 dB", range: "7 chakra correspondence points", precision: "±0.5 Hz" },
+    mechanismFull: "Sanskrit bija syllable formant frequencies are applied at the seven chakra correspondence points (endocrine glands). The 50 Sanskrit letters map to the 50 petals of the six lower chakras. The Tomatis Method pathway (cochlea → vagus → limbic) routes the acoustic stimulus, with the Mahamrityunjaya regenerative band at 12.5–39.6 Hz.",
+    citations: [
+      { ref: "Vedic Nada Brahma — traditional source", class: "Tier 2" },
+      { ref: "Tomatis A. (1950s–90s) — Audio-Psycho-Phonology", class: "Tier 2" },
+      { ref: "Chakra correspondence literature", class: "Tier 2" },
+    ],
+    integration: { zone: "Canopy acoustic + bone conduction", bfac: "EEG + HRV gate frequency", interactions: "Synced with CHM color cycles", interlocks: "SPL 85 dB ceiling" },
+    bfacSensors: ["EEG", "HRV"],
+  },
+  GSC: {
+    parameters: { frequency: "5 Hz / 101 Hz / 2032 Hz / 40.8 kHz", delivery: "Piezoelectric G-Elements (PZT-5H)", power: "< 1 W per element", safety: "EM isolation shield", range: "Whole-body resonance", precision: "±0.01 Hz node lock" },
+    mechanismFull: "Dr. Hartmut Müller's Global Scaling Theory posits standing gravitational wave nodes at characteristic frequencies. EM-isolated PZT-5H nanocrystal G-Elements resonate at < 1 W each, bringing the body into resonance with global standing-wave nodes. G-Com® demonstrated 2,500 km transmission at < 1 W, cited Oct 27, 2001.",
+    citations: [
+      { ref: "Müller H. — Global Scaling Theory (1982)", class: "Tier 3" },
+      { ref: "G-Com® — Oct 27, 2001 demonstration", class: "Tier 3" },
+      { ref: "PZT-5H nanocrystal resonator specs", class: "Tier 3" },
+    ],
+    integration: { zone: "Floor grid resonators", bfac: "HRV + EEG resonance gate", interactions: "Resonance host for NAD/VAT", interlocks: "EM isolation verify" },
+    bfacSensors: ["HRV", "EEG"],
+  },
+  CHM: {
+    parameters: { frequency: "7 chakra colors (WLED full-spectrum)", delivery: "Programmable canopy WLED array", power: "10–100 lux per channel", safety: "Blue-light < 100 lux at eye", range: "7 color channels", precision: "±1 nm color" },
+    mechanismFull: "A programmable white-LED canopy array delivers seven discrete color channels mapped to the chakra system: red (root), orange (sacral), yellow (solar plexus), green (heart), blue (throat), indigo (third eye), violet (crown). Color sequences are synchronized to the session protocol and the NAD bija frequencies for combined chromo-acoustic effect.",
+    citations: [
+      { ref: "Chromotherapy literature — color therapy", class: "Tier 2" },
+      { ref: "Color psychology studies", class: "Tier 2" },
+      { ref: "Ayro LED color therapy", class: "Tier 2" },
+    ],
+    integration: { zone: "Canopy interior", bfac: "GSR + HRV gate color", interactions: "Synced with NAD bija frequencies", interlocks: "Blue-light eye limit" },
+    bfacSensors: ["GSR", "HRV"],
+  },
+  OZO: {
+    parameters: { frequency: "Medical-grade O₃ 0.5–5%", delivery: "Ear + rectal insufflation", power: "O₂ feed gas generator", safety: "Auto-off 0.05 ppm ambient", range: "0.5–5% concentration", precision: "±0.1% concentration" },
+    mechanismFull: "An ozone generator fed by medical O₂ produces O₃ at therapeutic concentrations (0.5–5%) for ear and rectal insufflation. Ozone is used for pathogen-load reduction and tissue oxygenation. Ambient ozone monitoring auto-shuts at 0.05 ppm. The channel is separate from the HIT hydrogen pathway.",
+    citations: [
+      { ref: "International Ozone Association — standards", class: "Tier 2" },
+      { ref: "Bocci V. — Ozone therapy", class: "Tier 2" },
+      { ref: "Madrid O₃ consensus", class: "Tier 2" },
+    ],
+    integration: { zone: "Insufflation ports", bfac: "SpO₂ + skin temp gate dose", interactions: "Separate from HIT; shares O₃ sensor with NIA", interlocks: "0.05 ppm ambient shutoff" },
+    bfacSensors: ["SpO₂", "Skin Temp"],
+  },
+  EEG: {
+    parameters: { frequency: "19-channel 10–20 system", delivery: "Canopy-mounted EEG headset dock", power: "0.5–100 Hz band", safety: "Impedance check < 5 kΩ", range: "Real-time FFT", precision: "24-bit ADC" },
+    mechanismFull: "A 19-channel EEG headset (canopy-mounted dock) records the 10–20 montage with real-time FFT analysis. Alpha-theta neurofeedback training facilitates trauma release; PTSD hyperarousal is detected via the alpha/delta ratio. The stream is integrated into the BIO closed-loop for adaptive modulation of PBM, PEMF, and NAD.",
+    citations: [
+      { ref: "BrainMaster FDA 510(k) — EEG neurofeedback", class: "FDA" },
+      { ref: "NeuroField — qEEG neurofeedback", class: "Tier 1" },
+      { ref: "Peniston E. — alpha-theta protocol", class: "Tier 1" },
+    ],
+    integration: { zone: "Canopy dock (neural)", bfac: "Feeds BIO directly", interactions: "Drives PBM/PEMF/NAD adaptation", interlocks: "Impedance < 5 kΩ; artifact reject" },
+    bfacSensors: ["EEG"],
+  },
+};

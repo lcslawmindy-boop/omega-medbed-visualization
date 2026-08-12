@@ -1,7 +1,7 @@
 import React from "react";
 import { MODALITIES } from "@/data/modalities";
 
-export default function ModalitySidebar({ activeCode, onSelect }) {
+export default function ModalitySidebar({ activeCode, onSelect, onOpenDetail }) {
   return (
     <aside
       className="fixed left-0 top-[60px] bottom-[40px] z-50 flex flex-col bg-panel border-r border-soft"
@@ -23,6 +23,7 @@ export default function ModalitySidebar({ activeCode, onSelect }) {
             <button
               key={m.code}
               onClick={() => onSelect(m.code)}
+              onDoubleClick={() => onOpenDetail && onOpenDetail(m.code)}
               className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 transition-colors group"
               style={{
                 background: active ? "var(--bg-elevated)" : "transparent",

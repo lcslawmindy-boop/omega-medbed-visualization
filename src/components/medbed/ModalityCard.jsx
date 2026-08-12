@@ -2,7 +2,7 @@ import React from "react";
 
 const TIER_COLORS = { T1: "#10B981", T2: "#F59E0B", T3: "#EF4444" };
 
-export default function ModalityCard({ mod, active, onClick }) {
+export default function ModalityCard({ mod, active, onClick, onOpenDetail }) {
   const tierColor = TIER_COLORS[mod.tierCode];
   const accent = mod.isMaster ? "var(--gold)" : mod.color;
 
@@ -91,12 +91,13 @@ export default function ModalityCard({ mod, active, onClick }) {
       {/* Footer */}
       <div className="flex items-center justify-between pt-2 mt-2.5 border-t border-soft" style={{ borderColor: "var(--border)" }}>
         <span className="font-mono" style={{ fontSize: 9, color: "var(--green)" }}>● ACTIVE</span>
-        <span
-          className="font-mono"
+        <button
+          onClick={(e) => { e.stopPropagation(); onOpenDetail && onOpenDetail(mod.code); }}
+          className="font-mono hover:text-gold transition-colors"
           style={{ fontSize: 9, color: "var(--text-muted)", border: "1px solid var(--border)", padding: "1px 6px", borderRadius: 3 }}
         >
           ⓘ Full Detail
-        </span>
+        </button>
       </div>
     </div>
   );

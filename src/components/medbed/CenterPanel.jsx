@@ -9,7 +9,7 @@ const FILTERS = [
   { k: "T3", label: "T3" },
 ];
 
-export default function CenterPanel({ activeCode, onSelect }) {
+export default function CenterPanel({ activeCode, onSelect, onOpenDetail, onOpenProtocol }) {
   const [filter, setFilter] = useState("ALL");
   const [view, setView] = useState("grid");
 
@@ -53,6 +53,15 @@ export default function CenterPanel({ activeCode, onSelect }) {
           </span>
         </div>
 
+        {/* Protocol builder */}
+        <button
+          onClick={onOpenProtocol}
+          className="font-display rounded-sm transition-colors hover:brightness-125"
+          style={{ fontSize: 9, padding: "3px 8px", background: "var(--bg-elevated)", color: "var(--gold)", border: "1px solid var(--gold-dim)", letterSpacing: "0.06em" }}
+        >
+          ⚙ Protocol Builder
+        </button>
+
         {/* View toggle */}
         <div className="flex items-center gap-1">
           {[
@@ -86,13 +95,13 @@ export default function CenterPanel({ activeCode, onSelect }) {
         {view === "grid" ? (
           <div className="grid grid-cols-2 gap-3 2xl:grid-cols-3">
             {filtered.map((m) => (
-              <ModalityCard key={m.code} mod={m} active={m.code === activeCode} onClick={() => onSelect(m.code)} />
+              <ModalityCard key={m.code} mod={m} active={m.code === activeCode} onClick={() => onSelect(m.code)} onOpenDetail={onOpenDetail} />
             ))}
           </div>
         ) : (
           <div className="flex flex-col gap-2">
             {filtered.map((m) => (
-              <ModalityCard key={m.code} mod={m} active={m.code === activeCode} onClick={() => onSelect(m.code)} />
+              <ModalityCard key={m.code} mod={m} active={m.code === activeCode} onClick={() => onSelect(m.code)} onOpenDetail={onOpenDetail} />
             ))}
           </div>
         )}

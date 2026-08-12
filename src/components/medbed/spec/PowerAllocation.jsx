@@ -1,15 +1,10 @@
 import React from "react";
 import { MODALITY_BY_CODE } from "@/data/modalities";
+import { POWER_WATTS, MAX_WATTS } from "@/data/powerAllocation";
 
-// Approximate watt allocations totaling ~3.5kW
-const ALLOC = [
-  ["PBM", 800], ["FIT", 600], ["HIT", 400], ["PEMF", 300], ["VAT", 250],
-  ["SFT", 200], ["RIF", 200], ["NIA", 150], ["PRI", 150], ["EEG", 100],
-  ["BIO", 100], ["MCT", 80], ["CHM", 70], ["GSC", 50], ["VOR", 50],
-  ["NAD", 30], ["OZO", 20], ["ORG", 0],
-];
+const ALLOC = Object.entries(POWER_WATTS);
 const MAX_W = 800;
-const TOTAL = ALLOC.reduce((s, [, w]) => s + w, 0);
+const TOTAL = MAX_WATTS;
 
 export default function PowerAllocation() {
   return (
