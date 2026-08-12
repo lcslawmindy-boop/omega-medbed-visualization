@@ -29,7 +29,7 @@ export default function BrightSteps() {
     <div className="bs-root fixed inset-0 overflow-hidden">
       <BsHeader mode={mode} onMode={setMode} onSessionLog={() => setLogOpen(true)} onExport={generateBsPackage} />
       <BsSidebar activeCode={activeCode} onSelect={handleHighlight} />
-      <BsSpecPanel podModeIdx={podModeIdx} />
+      <BsSpecPanel mode={mode} />
 
       <main className="bs-main flex flex-col overflow-hidden">
         {/* 3D scene */}
