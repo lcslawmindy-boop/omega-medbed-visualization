@@ -11,7 +11,7 @@ export const MEDBED_COMPONENTS = {
   eegDock:        { label: "EEG SENSOR DOCK",          spec: "5-channel dry electrode headset cradle",        mods: ["EEG"] },
   electrodes:     { label: "ELECTRODE PORTS",          spec: "4× gold-plated biometric inputs · left rail",   mods: ["MCT"] },
   column:         { label: "EQUIPMENT COLUMN",         spec: "Power, compute and drive electronics bay",      mods: [] },
-  portholeTop:    { label: "PLASMA / RIFE PORTHOLE",   spec: "Noble-gas tube viewport · upper bay",           mods: ["PRI"] },
+  portholeTop:    { label: "PLASMA EMITTER PORTHOLE",  spec: "Noble-gas tube viewport · upper bay",           mods: ["PRI"] },
   portholeMid:    { label: "HARMONIC INDUCTION PORT",  spec: "Coil driver viewport · mid bay",                mods: ["HIT"] },
   portholeLow:    { label: "VIBRO-ACOUSTIC PORT",      spec: "Transducer amplifier viewport · lower bay",     mods: ["VOR"] },
   statusStrip:    { label: "STATUS INDICATOR STRIP",   spec: "18× channel-health LEDs · BFAC monitored",      mods: [] },

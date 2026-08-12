@@ -75,10 +75,10 @@ const OMEGA_PRD = {
       ["CHM", "Chromotherapy", "WLED full-spectrum · 7-color programmable", "T2"],
       ["OZO", "Ozone Therapy", "0.5–5% O₃ · auto-off at 0.05 ppm ambient", "T2"],
       ["SFT", "Scalar Field / Phase-Conjugate", "10–40 kHz carrier · 8-pair bifilar octagon", "T3"],
-      ["PRI", "Prioré Multichannel Modulator", "F1×F2×F3→Fz · conditioned electron tubes", "T3"],
-      ["RIF", "Rife / Lisitsyn Frequency", "12.5 Hz – 6.1×10¹⁴ Hz · 24 Lisitsyn windows", "T3"],
-      ["ORG", "Reich Orgone Accumulator", "20-layer organic/metallic · ΔT ≥ 1.0 °F / 30 min", "T3"],
-      ["VOR", "Schauberger Vortex Water", "4.0 °C ± 0.5 °C · Repulsine impeller · 40 L", "T3"],
+      ["PRI", "ZA-PRI Multichannel Modulator", "F1×F2×F3→Fz · conditioned electron tubes", "T3"],
+      ["RIF", "ZA-RIF Frequency Windows", "12.5 Hz – 6.1×10¹⁴ Hz · 24 trigger windows", "T3"],
+      ["ORG", "ZA-ORG Biofield Accumulator", "20-layer organic/metallic · ΔT ≥ 1.0 °F / 30 min", "T3"],
+      ["VOR", "ZA-VOR Implosion Vortex Water", "4.0 °C ± 0.5 °C · implosion impeller · 40 L", "T3"],
       ["GSC", "Global Scaling Resonator", "5/101/2032 Hz · 40.8 kHz · PZT-5H G-Elements", "T3"],
     ] } },
 
@@ -202,13 +202,13 @@ const OMEGA_PDR = {
 
     { h: "6. Long-Lead Items" },
     { list: [
-      "Bedini-conditioned electron tube set (PRI) — 16 weeks",
+      "Conditioned electron tube set (PRI) — 16 weeks",
       "PZT-5H nanocrystal G-Elements (GSC) — 14 weeks",
       "OCXO frequency reference, ± 0.01 Hz — 12 weeks",
       "Custom bifilar coil winding, 8-pair octagon (SFT) — 12 weeks",
       "19-channel EEG front-end module — 10 weeks",
       "PEM hydrogen electrolyzer stack — 10 weeks",
-      "Corrugated Repulsine impeller, machined (VOR) — 10 weeks",
+      "Corrugated implosion impeller, machined (VOR) — 10 weeks",
     ] },
 
     { h: "7. PDR Exit Criteria" },
@@ -278,7 +278,7 @@ const OMEGA_BOM = {
     { table: { cols: ["Item", "Description", "Qty", "Spec"], widths: [50, 230, 40, 192], rows: [
       ["3.01", "PEM hydrogen electrolyzer", "1", "HIT · 99.99%, 150–300 mL/min"],
       ["3.02", "Ozone generator, medical grade", "1", "OZO · 0.5–5%"],
-      ["3.03", "Repulsine vortex impeller, corrugated", "1", "VOR · machined stainless"],
+      ["3.03", "Implosion vortex impeller, corrugated", "1", "VOR · machined stainless"],
       ["3.04", "Water reservoir, 40 L", "1", "VOR · insulated, food grade"],
       ["3.05", "Peltier + compressor hybrid chiller", "1", "VOR · 4.0 °C ± 0.5 °C"],
       ["3.06", "HEPA + activated carbon filter", "2", "NIA · canopy atmosphere"],

@@ -1,10 +1,33 @@
 import React from "react";
+import { usePdfAccess } from "@/lib/usePdfAccess";
 
 /**
- * Blurs and locks proprietary content (patent claims, trade secrets,
- * component configuration) behind a CLASSIFIED seal.
+ * Tiered IP protection for proprietary content (patent claims, trade secrets,
+ * component configuration):
+ *  - PUBLIC — content is blurred and locked behind a CLASSIFIED seal
+ *  - INVESTOR (approved NDA request or qualifying donation) — full view
+ *  - MASTER ADMIN — full view
  */
 export default function RestrictedSection({ label = "IP RESTRICTED — NDA REQUIRED", note, children }) {
+  const { loading, allowed, user } = usePdfAccess();
+
+  if (!loading && allowed) {
+    return (
+      <div className="relative">
+        <div
+          className="font-mono inline-block rounded mb-1.5"
+          style={{
+            fontSize: 8, letterSpacing: "0.16em", padding: "3px 8px",
+            color: "#86EFAC", background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.4)",
+          }}
+        >
+          {user?.role === "admin" ? "MASTER ADMIN CLEARANCE" : "INVESTOR NDA CLEARANCE"} — UNLOCKED
+        </div>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div className="relative overflow-hidden rounded-xl">
       <div
@@ -32,8 +55,9 @@ export default function RestrictedSection({ label = "IP RESTRICTED — NDA REQUI
         >
           {label}
         </div>
-        <div className="font-mono mt-2" style={{ fontSize: 9, color: "var(--text-muted)", maxWidth: 320, lineHeight: 1.7 }}>
-          {note || "Patent claims, trade secrets and hardware configuration are withheld. Access is limited to credentialed partners under executed NDA."}
+        <div className="font-mono mt-2" style={{ fontSize: 9, color: "var(--text-muted)", maxWidth: 340, lineHeight: 1.7 }}>
+          {note || "Patent claims, trade secrets and hardware configuration are withheld from public view."}
+          {" "}Investors: request NDA access via the Engineering Docs access request, or contact aethonapexip@gmail.com.
         </div>
       </div>
     </div>

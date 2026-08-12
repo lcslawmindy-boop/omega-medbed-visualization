@@ -18,7 +18,7 @@ export const FOUNDER = {
     "Founder, Zenith Apex Research Division",
     "Founder, Zenith Defense Systems (ZDS)",
     "IP portfolio: 4 core device architectures, 10 patent claims, 6 trade secrets",
-    "Research documentation: Bearden, Prioré, Rife, Reich, Schauberger, Tesla, Müller framework integration",
+    "Research documentation: integrated archival research framework — named sources disclosed on request under NDA",
     "Accepting LOI submissions: PDR · PRD · BOM · SOW · EVT · DVT validation for prototype builds",
     "Seeking silicon system partner: BrightSteps OS learning tablet, wearable band, BFAC + ACE control stack",
     "In talks with hardware manufacturing partners (AATCS-P1 EVT)",
@@ -52,63 +52,65 @@ export const OPEN_ROLES = [
   },
 ];
 
+const WITHHELD = "Full citation withheld — disclosed to credentialed partners on request under NDA.";
+
 export const RESEARCH_SOURCES = [
   {
-    title: "PRIORÉ FRENCH PATENT 1,342,772",
+    title: "ZA-SRC-01 — EUROPEAN STATE PROGRAM PATENT",
     color: GOLD,
     type: "Patent",
     date: "1962",
-    country: "France",
-    body: "Antoine Prioré's original French patent documenting the 3-channel EM modulation architecture used in the healing device that cured terminal cancer in animals. Witnessed by INSERM. Funded by French government. Results suppressed.",
-    citation: "Prioré, A. (1962). French Patent 1,342,772.",
+    country: "Europe",
+    body: "Original national patent documenting the 3-channel EM modulation architecture used in a state-funded healing device program that documented tumour regression in animal models. Witnessed by a national medical research institute. Program closed; results suppressed. Originator identity withheld.",
+    citation: WITHHELD,
   },
   {
-    title: "ONR LONDON BRANCH REPORT R-5-78",
+    title: "ZA-SRC-02 — DECLASSIFIED NAVAL RESEARCH REPORT",
     color: "#38BDF8",
     type: "Government Document",
     date: "1978",
-    body: "US Office of Naval Research London Branch classified report documenting Prioré's experimental results and recommending further investigation. Declassified.",
-    citation: "ONR London Branch Report R-5-78 (1978). Declassified US Government Document.",
+    body: "Declassified US naval research office report documenting the ZA-SRC-01 program's experimental results and recommending further investigation.",
+    citation: WITHHELD,
   },
   {
-    title: "BEARDEN: GRAVITOBIOLOGY",
+    title: "ZA-SRC-03 — SCALAR EM TECHNICAL FRAMEWORK",
     color: "#9B30FF",
     type: "Technical Book",
     date: "1991",
-    body: "T.E. Bearden's comprehensive documentation of scalar EM physics, biological effects of ELF carrier modulation, and the theoretical framework for phase-conjugate healing mechanisms.",
-    citation: "Bearden, T.E. (1991). Gravitobiology. Tesla Book Company.",
+    body: "Comprehensive documentation of scalar EM physics, biological effects of ELF carrier modulation, and the theoretical framework for phase-conjugate healing mechanisms. Author identity withheld.",
+    citation: WITHHELD,
   },
   {
-    title: "KAZNACHEYEV CYTOPATHOGENIC STUDIES",
+    title: "ZA-SRC-04 — SOVIET CYTOPATHOGENIC STUDIES",
     color: "#EF4444",
     type: "Soviet Research",
     date: "1974",
-    body: "Soviet biophysicist Kaznacheyev documented that cytopathogenic effects — cellular damage patterns — could be transmitted between cells via UV photon channels, without direct physical contact. Basis for Rife UV quartz applicator mechanism.",
-    citation: "Kaznacheyev et al. (1974). Cytopathogenic mirror effect.",
+    body: "Soviet biophysics program documented that cytopathogenic effects — cellular damage patterns — could be transmitted between cells via UV photon channels, without direct physical contact. Basis for the ZA-RIF UV quartz applicator mechanism.",
+    citation: WITHHELD,
   },
   {
-    title: "RIFE 1934 USC CLINICAL TRIAL",
+    title: "ZA-SRC-05 — 1934 UNIVERSITY CLINICAL TRIAL",
     color: "#EF4444",
     type: "Clinical Record",
     date: "1934",
-    body: "Royal Raymond Rife's 1934 clinical trial at the University of Southern California — 16 terminal cancer patients treated with mortal oscillatory rate frequencies. Reported: 14 of 16 recovered. Records subsequently disappeared.",
-    citation: "USC BX Virus Clinical Trial (1934). American Cancer Society records.",
+    body: "A 1934 clinical trial at a major US university — 16 terminal cancer patients treated with resonant frequency devices. Reported: 14 of 16 recovered. Records subsequently disappeared. Originator identity withheld.",
+    citation: WITHHELD,
   },
   {
-    title: "GRAD (1965) ORGONE ΔT",
+    title: "ZA-SRC-06 — PEER-REVIEWED ΔT CHAMBER STUDY",
     color: "#F59E0B",
     type: "Peer-Reviewed",
     date: "1965",
-    body: "Dr. Bernard Grad's controlled experiment at McGill University demonstrating measurable temperature differential in Reich orgone accumulator chambers. Published in peer-reviewed literature.",
-    citation: "Grad, B. (1965). Int. J. Biometeorology, 9(2), 147-153.",
+    body: "Controlled university experiment demonstrating measurable temperature differential in layered biofield accumulator chambers. Published in peer-reviewed literature.",
+    citation: WITHHELD,
   },
   {
-    title: "MÜLLER GLOBAL SCALING",
+    title: "ZA-SRC-07 — GLOBAL SCALING FRAMEWORK",
     color: "#7C3AED",
     type: "Theory",
     date: "1982",
-    body: "Dr. Hartmut Müller's mathematical framework demonstrating standing gravitational wave nodes in the global resonance spectrum. G-Com® demonstrated 2,500km transmission at <1W using these nodes in 2001.",
-    citation: "Müller, H. (1982). Global Scaling Theory.",
+    body: "Mathematical framework demonstrating standing gravitational wave nodes in the global resonance spectrum. A 2001 demonstration achieved 2,500km transmission at <1W using these nodes. Author identity withheld.",
+    citation: WITHHELD,
   },
   {
     title: "NASA LED PBM STUDY",
@@ -119,27 +121,27 @@ export const RESEARCH_SOURCES = [
     citation: "Whelan, H. et al. (2001). NASA Technical Report.",
   },
   {
-    title: "SCHAUBERGER REPULSINE ARCHIVES",
+    title: "ZA-SRC-09 — IMPLOSION VORTEX ARCHIVES",
     color: "#22D3EE",
     type: "Engineering Archive",
     date: "1940s",
-    body: "Viktor Schauberger's implosion vortex engineering — the physical basis for the Vortex Water unit in the Omega MedBed. Documented results in Austrian and German engineering records.",
-    citation: "Schauberger, V. (1940s). Repulsine engineering archives.",
+    body: "Implosion vortex engineering archives — the physical basis for the Vortex Water unit in the Omega MedBed. Documented results in Austrian and German engineering records. Originator identity withheld.",
+    citation: WITHHELD,
   },
 ];
 
-export const ATTRIBUTION = `COMPLETE ATTRIBUTION NOTICE: All third-party works referenced — including works by Bearden, Tesla, Prioré, Rife, Reich, Schauberger, Russell, Mills, LaViolette, Podkletnov, Hutchison, Moray, Waddington, Evans, Maxwell, Müller, Kaznacheyev, Grad, and others — remain the exclusive copyright of their respective authors, estates, or publishing institutions. Content is referenced under the Fair Use doctrine (17 U.S.C. § 107) for educational, research, commentary, and criticism purposes. Aethon Apex IP Holdings LLC / Zenith Apex LLC claims no ownership of any third-party source material.`;
+export const ATTRIBUTION = `COMPLETE ATTRIBUTION NOTICE: All third-party works referenced remain the exclusive copyright of their respective authors, estates, or publishing institutions. Named source identities and full citations are withheld from public view for source protection and are disclosed to credentialed partners on request under NDA. Content is referenced under the Fair Use doctrine (17 U.S.C. § 107) for educational, research, commentary, and criticism purposes. Aethon Apex IP Holdings LLC / Zenith Apex LLC claims no ownership of any third-party source material.`;
 
 export const DISCLAIMERS = [
   {
     title: "RESEARCH DISCLAIMER",
     color: "#F59E0B",
-    body: "Third-party experimental results referenced on this platform — including ONR London Branch Report R-5-78, Kaznacheyev cytopathogenic studies, Prioré animal experiments, and Rife mortal oscillatory rate research — are historical research documentation and do not constitute medical claims. This content describes documented experimental outcomes in laboratory settings — not clinical treatments. Consult a licensed physician for any medical decisions.",
+    body: "Third-party experimental results referenced on this platform — including declassified government reports and archival program records (ZA-SRC series, named sources withheld) — are historical research documentation and do not constitute medical claims. This content describes documented experimental outcomes in laboratory settings — not clinical treatments. Consult a licensed physician for any medical decisions.",
   },
   {
     title: "DEVICE CLASSIFICATION NOTICE",
     color: "#EF4444",
-    body: "All devices described — including the Prioré Multichannel EM Device, Cranial Scalar Healing Helmet, VPO Anenergy Pump, Scalar Energy Grid Node, Omega MedBed ZA-MB-Ω, and BrightSteps ASD Therapy Pod BS-ATP-Ω — are research prototypes and conceptual engineering frameworks only. No device described has been approved by the FDA, FCC, or any regulatory authority for medical, therapeutic, commercial, or consumer use. All devices are subject to manufacturer validation, IRB approval, and applicable regulatory clearance before any patient use.",
+    body: "All devices described — including the ZA-PRI Multichannel EM Device, Cranial Scalar Healing Helmet, VPO Anenergy Pump, Scalar Energy Grid Node, Omega MedBed ZA-MB-Ω, and BrightSteps ASD Therapy Pod BS-ATP-Ω — are research prototypes and conceptual engineering frameworks only. No device described has been approved by the FDA, FCC, or any regulatory authority for medical, therapeutic, commercial, or consumer use. All devices are subject to manufacturer validation, IRB approval, and applicable regulatory clearance before any patient use.",
   },
   {
     title: "INVESTMENT DISCLAIMER",
