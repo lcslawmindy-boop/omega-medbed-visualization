@@ -19,6 +19,7 @@ function ZarpMark() {
 }
 
 const EXPORTS = [
+  { k: "session", label: "📊 Session Telemetry Report" },
   { k: "prd", label: "📄 Full PRD PDF" },
   { k: "spec", label: "📊 Modality Spec Sheet" },
   { k: "zone", label: "🗺 Zone Map PDF" },

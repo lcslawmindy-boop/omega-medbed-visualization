@@ -12,6 +12,7 @@ import ProtocolBuilder from "@/components/medbed/ProtocolBuilder";
 import TelemetryOverlay from "@/components/medbed/TelemetryOverlay";
 import FirstVisitGate from "@/components/medbed/FirstVisitGate";
 import { MODALITIES, MODALITY_BY_CODE } from "@/data/modalities";
+import { generateSessionReport } from "@/lib/sessionReport";
 
 // 1-9,0 -> indices 0-9; A-E,G-H -> indices 10-16 (F reserved for fit)
 const KEY_INDEX = {
@@ -54,7 +55,7 @@ export default function OmegaMedBed() {
     });
   };
   const startSession = (codes, dur) => {
-    setSession({ codes, endAt: Date.now() + dur * 1000 });
+    setSession({ codes, endAt: Date.now() + dur * 1000, dur });
     setProtocolOpen(false);
   };
 
@@ -135,6 +136,10 @@ export default function OmegaMedBed() {
   };
 
   const handleExport = (type) => {
+    if (type === "session") {
+      generateSessionReport({ session, power, activeCode, remaining });
+      return;
+    }
     if (type === "protocol") {
       const data = {
         device: "ZA-MB-Ω",
