@@ -10,6 +10,7 @@ import ScrollToTop from './components/ScrollToTop';
 import OmegaMedBed from './pages/OmegaMedBed';
 import EngineeringDocs from './pages/EngineeringDocs';
 import BrightSteps from './pages/BrightSteps';
+import SessionDashboard from './pages/SessionDashboard';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -41,6 +42,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<OmegaMedBed />} />
       <Route path="/engineering" element={<EngineeringDocs />} />
       <Route path="/brightsteps" element={<BrightSteps />} />
+      <Route path="/dashboard" element={<SessionDashboard />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
