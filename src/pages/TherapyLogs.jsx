@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { base44 } from "@/api/base44Client";
 import PageShell from "@/components/shell/PageShell";
 import BsBiometrics from "@/components/brightsteps/BsBiometrics";
+import BaselineGoalChart from "@/components/therapy/BaselineGoalChart";
 
 export default function TherapyLogs() {
   const [rows, setRows] = useState([]);
@@ -23,6 +24,8 @@ export default function TherapyLogs() {
 
   return (
     <PageShell title="THERAPY LOGS" subtitle="Past sessions · protocol detail · biometric baseline vs goal">
+      {!loading && rows.length > 0 && <BaselineGoalChart sessions={rows} />}
+
       <input
         value={q}
         onChange={(e) => setQ(e.target.value)}
