@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 // Add page imports here
+import Home from './pages/Home';
 import OmegaMedBed from './pages/OmegaMedBed';
 import EngineeringDocs from './pages/EngineeringDocs';
 import BrightSteps from './pages/BrightSteps';
@@ -52,7 +53,8 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       {/* Add your page Route elements here */}
-      <Route path="/" element={<OmegaMedBed />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/omega" element={<OmegaMedBed />} />
       <Route path="/engineering" element={<EngineeringDocs />} />
       <Route path="/brightsteps" element={<BrightSteps />} />
       <Route path="/dashboard" element={<SessionDashboard />} />
