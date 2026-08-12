@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import { stampPdfWatermark } from "@/lib/pdfWatermark";
 
 // Fetch a remote image and return { dataUrl, width, height, format }
 async function loadImage(url) {
@@ -41,6 +42,7 @@ function addSheet(doc, img, item, first) {
   const w = img.w * scale;
   const h = img.h * scale;
   doc.addImage(img.dataUrl, img.format, (pw - w) / 2, top, w, h);
+  stampPdfWatermark(doc, { light: true });
 
   doc.setTextColor(125, 133, 144);
   doc.setFontSize(7);
@@ -80,6 +82,7 @@ export async function downloadInvestorPackage(items, onProgress) {
   doc.text("Aethon Apex IP Holdings LLC — Confidential", pw / 2, ph / 2 + 10, { align: "center" });
   doc.setFontSize(7);
   doc.text("CONCEPT — NOT A MEDICAL DEVICE · NOT FOR MANUFACTURE", pw / 2, ph - 8, { align: "center" });
+  stampPdfWatermark(doc, { light: true });
 
   for (let i = 0; i < items.length; i++) {
     if (onProgress) onProgress(i + 1, items.length);

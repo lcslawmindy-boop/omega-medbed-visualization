@@ -153,6 +153,17 @@
     overflow: hidden;
     opacity: 0.055;
   }
+  /* Repeating Aethon Apex logo watermark over all pages and images */
+  .wm-logo-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9997;
+    pointer-events: none;
+    background-repeat: repeat;
+    background-size: 180px 180px;
+    opacity: 0.05;
+    mix-blend-mode: screen;
+  }
   .wm-tile {
     position: absolute;
     top: -30%;

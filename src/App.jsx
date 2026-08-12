@@ -29,6 +29,7 @@ import HardwareGallery from './pages/HardwareGallery';
 import Supporters from './pages/Supporters';
 import CommunityForum from './pages/CommunityForum';
 import ThankYou from './pages/ThankYou';
+import BrandMarks from './pages/BrandMarks';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -78,6 +79,7 @@ const AuthenticatedApp = () => {
       <Route path="/supporters" element={<Supporters />} />
       <Route path="/forum" element={<CommunityForum />} />
       <Route path="/ThankYou" element={<ThankYou />} />
+      <Route path="/brand" element={<BrandMarks />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

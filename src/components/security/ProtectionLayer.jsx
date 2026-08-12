@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-
-const NOTICE = "© 2026 AETHON APEX IP HOLDINGS LLC — ALL RIGHTS RESERVED · CONFIDENTIAL";
+import { WATERMARK_LOGO, COPYRIGHT_NOTICE as NOTICE } from "@/data/brandLogos";
 
 /**
  * Site-wide IP protection: blocks copy / cut / right-click / image drag,
@@ -28,6 +27,11 @@ export default function ProtectionLayer() {
 
   return (
     <>
+      <div
+        className="wm-logo-overlay"
+        aria-hidden="true"
+        style={{ backgroundImage: `url(${WATERMARK_LOGO})` }}
+      />
       <div className="wm-overlay" aria-hidden="true">
         <div className="wm-tile">
           {Array.from({ length: 40 }).map((_, i) => (

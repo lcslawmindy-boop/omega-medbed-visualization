@@ -12,6 +12,7 @@ const LINKS = [
   { to: "/clinical-trials", label: "TRIALS" },
   { to: "/supporters", label: "SUPPORTERS" },
   { to: "/forum", label: "FORUM" },
+  { to: "/brand", label: "BRAND" },
   { to: "/kidsos", label: "KIDS-OS" },
 ];
 

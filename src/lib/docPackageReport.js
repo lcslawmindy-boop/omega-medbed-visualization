@@ -1,5 +1,6 @@
 import { jsPDF } from "jspdf";
 import { ENG_DOCUMENTS, PRODUCTS } from "@/data/engineeringPackage";
+import { stampPdfWatermark } from "@/lib/pdfWatermark";
 
 const W = 595;
 const H = 842;
@@ -14,6 +15,7 @@ function newDoc() {
 }
 
 function drawFooter(doc, meta, page) {
+  stampPdfWatermark(doc);
   doc.setDrawColor(220, 220, 220);
   doc.setLineWidth(0.5);
   doc.line(M, H - 42, W - M, H - 42);
