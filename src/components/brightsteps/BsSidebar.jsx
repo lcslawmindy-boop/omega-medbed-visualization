@@ -16,7 +16,7 @@ function BsMark() {
   );
 }
 
-export default function BsSidebar({ activeCode, onSelect }) {
+export default function BsSidebar({ activeCode, onSelect, onDetails }) {
   const [age, setAge] = useState("7-9");
   const [intensity, setIntensity] = useState("STANDARD");
   const [guideOpen, setGuideOpen] = useState(false);
@@ -47,7 +47,7 @@ export default function BsSidebar({ activeCode, onSelect }) {
         {/* SYSTEM LIST */}
         <div className="flex-1 pr-2 pb-2">
           {BS_NAV_SYSTEMS.map((s) => (
-            <SystemRow key={s.code} sys={s} active={s.code === activeCode} onSelect={onSelect} />
+            <SystemRow key={s.code} sys={s} active={s.code === activeCode} onSelect={onSelect} onDetails={onDetails} />
           ))}
         </div>
 

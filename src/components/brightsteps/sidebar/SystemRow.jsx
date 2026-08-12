@@ -2,12 +2,13 @@ import React from "react";
 
 const TIER_COLOR = { T1: "var(--green)", T2: "var(--amber)", T3: "var(--coral)" };
 
-export default function SystemRow({ sys, active, onSelect }) {
+export default function SystemRow({ sys, active, onSelect, onDetails }) {
   const dot = sys.status === "amber" ? "var(--amber)" : "var(--green)";
   return (
     <button
       data-bscode={sys.code}
       onClick={() => onSelect(sys.code)}
+      onDoubleClick={() => onDetails(sys.code)}
       className="bs-sys-row w-full flex items-center gap-2 text-left"
       style={{
         height: 56,
@@ -40,6 +41,16 @@ export default function SystemRow({ sys, active, onSelect }) {
             MASTER CONTROLLER
           </span>
         )}
+      </span>
+      <span
+        role="button"
+        tabIndex={0}
+        aria-label={`${sys.code} details`}
+        onClick={(e) => { e.stopPropagation(); onDetails(sys.code); }}
+        className="font-display flex-none rounded"
+        style={{ fontSize: 8, padding: "3px 4px", color: "var(--sky)", border: "1px solid var(--sky-dim)" }}
+      >
+        📐
       </span>
       <span className="flex-none flex flex-col items-end gap-1">
         <span

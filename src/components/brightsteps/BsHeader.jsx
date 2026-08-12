@@ -12,7 +12,8 @@ function BsMark() {
   );
 }
 
-export default function BsHeader({ mode, onMode, onSessionLog, onExport }) {
+export default function BsHeader({ mode, onMode, onSessionLog, onExport, onProtocol, session, remaining }) {
+  const clock = `${String(Math.floor(remaining / 60)).padStart(2, "0")}:${String(remaining % 60).padStart(2, "0")}`;
   const navigate = useNavigate();
   return (
     <header
@@ -53,6 +54,19 @@ export default function BsHeader({ mode, onMode, onSessionLog, onExport }) {
       </div>
 
       <div className="flex items-center gap-2 flex-none">
+        {session && (
+          <span className="font-display rounded-md flex items-center gap-1.5 px-2 py-1" style={{ fontSize: 9.5, background: "var(--sky)", color: "#04121F", letterSpacing: "0.06em" }}>
+            <span className="bs-pulse inline-block rounded-full" style={{ width: 6, height: 6, background: "#04121F" }} />
+            SESSION ACTIVE — {clock}
+          </span>
+        )}
+        <button
+          onClick={onProtocol}
+          className="font-display rounded-md transition-colors"
+          style={{ fontSize: 9.5, padding: "7px 10px", color: "var(--sky)", border: "1px solid var(--sky-dim)", letterSpacing: "0.06em", minHeight: 36 }}
+        >
+          ⚙ PROTOCOL BUILDER
+        </button>
         <button
           onClick={onSessionLog}
           className="font-display rounded-md transition-colors hidden md:inline-flex"
