@@ -2,6 +2,7 @@ import React from "react";
 import "@/styles/brightsteps.css";
 import { CRISES } from "@/data/crisisData";
 import HomeHero from "@/components/home/HomeHero";
+import FeatureVideos from "@/components/home/FeatureVideos";
 import CrisisCard from "@/components/home/CrisisCard";
 import SolutionSection from "@/components/home/SolutionSection";
 import JourneyLink from "@/components/home/JourneyLink";
@@ -23,6 +24,9 @@ export default function Home() {
     <div className="bs-root fixed inset-0 overflow-y-auto bs-scroll">
       <div className="mx-auto p-3 space-y-3" style={{ maxWidth: 1100 }}>
         <HomeHero />
+
+        <Divider id="films" n="01" label="FEATURED FILMS" color="var(--gold)" />
+        <FeatureVideos />
 
         {CRISES.map((c) => (
           <CrisisCard key={c.id} c={c} />
