@@ -45,6 +45,8 @@
   box-shadow: 0 0 18px rgba(56, 189, 248, 0.3) !important;
 }
 
+.bs-root .bs-sys-row:hover { background: var(--bg-elevated) !important; filter: brightness(1.25); }
+
 .bs-root .bs-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
 .bs-root .bs-scroll::-webkit-scrollbar-track { background: var(--bg-panel); }
 .bs-root .bs-scroll::-webkit-scrollbar-thumb { background: var(--sky-dim); border-radius: 3px; }
