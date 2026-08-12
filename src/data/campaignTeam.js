@@ -22,33 +22,33 @@ export const FOUNDER = {
     "Accepting LOI submissions: PDR · PRD · BOM · SOW · EVT · DVT validation for prototype builds",
     "Seeking silicon system partner: BrightSteps OS learning tablet, wearable band, BFAC + ACE control stack",
     "In talks with hardware manufacturing partners (AATCS-P1 EVT)",
-    "Seeking angel investors and venture capital — invest@aethonapex.com",
+    "Seeking angel investors and venture capital — aethonapexip@gmail.com",
     "Legal domicile: Henderson, Nevada 89002",
   ],
-  emails: ["mindy@aethonapex.com", "invest@aethonapex.com"],
+  emails: ["aethonapexip@gmail.com"],
 };
 
 export const OPEN_ROLES = [
   {
     role: "CHIEF ENGINEERING OFFICER",
     status: "[POSITION OPEN]",
-    body: "Seeking: Bioelectromagnetics engineer with scalar EM, DDS, or FPGA experience. Mission-critical hire. Join us: careers@aethonapex.com",
+    body: "Seeking: Bioelectromagnetics engineer with scalar EM, DDS, or FPGA experience. Mission-critical hire. Join us: aethonapexip@gmail.com",
     cta: "APPLY →",
-    mail: "careers@aethonapex.com",
+    mail: "aethonapexip@gmail.com",
   },
   {
     role: "CLINICAL RESEARCH DIRECTOR",
     status: "[POSITION OPEN]",
     body: "Seeking: MD or PhD with IRB trial experience in electromagnetic medicine, oncology, or neurology.",
     cta: "APPLY →",
-    mail: "careers@aethonapex.com",
+    mail: "aethonapexip@gmail.com",
   },
   {
     role: "IP & REGULATORY COUNSEL",
     status: "[SEEKING PARTNER FIRM]",
     body: "Seeking: Patent law firm specializing in bioelectromagnetics, medical devices, and frontier technology IP. Pro-bono or equity-for-services partnership preferred for Phase 1.",
     cta: "PARTNER WITH US →",
-    mail: "invest@aethonapex.com",
+    mail: "aethonapexip@gmail.com",
   },
 ];
 
@@ -159,4 +159,4 @@ export const FOOTER_COLUMNS = [
   { title: "GET INVOLVED", links: ["Donate to the Mission", "Investor Inquiry", "Partner With Us", "Careers"] },
 ];
 
-export const FOOTER_EMAILS = ["invest@aethonapex.com", "mindy@aethonapex.com", "research@aethonapex.com"];
+export const FOOTER_EMAILS = ["aethonapexip@gmail.com"];

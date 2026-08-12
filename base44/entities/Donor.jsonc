@@ -1,0 +1,41 @@
+{
+  "name": "Donor",
+  "type": "object",
+  "properties": {
+    "display_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "photo_url": {
+      "type": "string"
+    },
+    "comment": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "tier": {
+      "type": "string"
+    },
+    "badge": {
+      "type": "string"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true
+    },
+    "purchase_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "display_name",
+    "amount"
+  ]
+}

@@ -10,6 +10,8 @@ const LINKS = [
   { to: "/investor-portal", label: "INVESTORS" },
   { to: "/engineering", label: "ENGINEERING" },
   { to: "/clinical-trials", label: "TRIALS" },
+  { to: "/supporters", label: "SUPPORTERS" },
+  { to: "/forum", label: "FORUM" },
   { to: "/kidsos", label: "KIDS-OS" },
 ];
 

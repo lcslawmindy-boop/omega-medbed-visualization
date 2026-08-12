@@ -1,12 +1,35 @@
 import React, { useState } from "react";
 import { LEGAL_NOTE } from "@/data/campaignDonation";
+import { CONTACT_EMAIL } from "@/data/contact";
+import { base44 } from "@/api/base44Client";
 
 export default function DonationModal({ open, amount, freq, onClose }) {
-  const [form, setForm] = useState({ name: "", email: "", amount: amount || "", card: "" });
-  const [sent, setSent] = useState(false);
+  const [value, setValue] = useState(amount || "");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
   if (!open) return null;
 
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const checkout = async () => {
+    const n = Number(value);
+    if (!n || n < 1) {
+      setError("Enter an amount of $1 or more.");
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      const res = await base44.functions.invoke("create-checkout", { productId: "donation", amount: n });
+      const url = res.data?.redirectUrl;
+      if (url) {
+        window.location.href = url;
+        return;
+      }
+      setError(res.data?.error || "Could not start checkout.");
+    } catch (e) {
+      setError("Could not start checkout. Please try again.");
+    }
+    setBusy(false);
+  };
 
   return (
     <div
@@ -23,43 +46,38 @@ export default function DonationModal({ open, amount, freq, onClose }) {
           <div className="font-display" style={{ fontSize: 13, color: "var(--gold)", letterSpacing: "0.12em" }}>SECURE CONTRIBUTION</div>
           <button onClick={onClose} className="font-display" style={{ fontSize: 14, color: "var(--text-muted)", minHeight: 36, minWidth: 36 }}>✕</button>
         </div>
-        <div className="font-mono" style={{ fontSize: 9, color: "var(--text-muted)" }}>{freq} · USD</div>
+        <div className="font-mono" style={{ fontSize: 9, color: "var(--text-muted)" }}>{freq} · USD · Secure card payment</div>
 
-        {sent ? (
-          <div className="font-body mt-4" style={{ fontSize: 11, color: "var(--text-primary)", lineHeight: 1.65 }}>
-            Thank you. Payment processing is not connected yet — your details were not submitted and no card was charged. Contact invest@aethonapex.com to arrange a contribution before launch.
-          </div>
-        ) : (
-          <div className="mt-3 space-y-2">
-            {[
-              ["Full name", "name", "text"],
-              ["Email", "email", "email"],
-              ["Amount (USD)", "amount", "text"],
-              ["Card number", "card", "text"],
-            ].map(([label, key, type]) => (
-              <label key={key} className="block">
-                <span className="font-display block" style={{ fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.1em" }}>{label.toUpperCase()}</span>
-                <input
-                  type={type}
-                  value={form[key]}
-                  onChange={set(key)}
-                  className="w-full bg-transparent rounded font-mono outline-none mt-1"
-                  style={{ fontSize: 11, color: "var(--text-primary)", border: "1px solid var(--border)", padding: "10px 10px", minHeight: 40 }}
-                />
-              </label>
-            ))}
-            <button
-              onClick={() => setSent(true)}
-              className="font-display rounded w-full"
-              style={{ fontSize: 11, padding: "13px 12px", minHeight: 46, letterSpacing: "0.08em", background: "linear-gradient(90deg,#C9A84C,#F2DC9B)", color: "#1B1405" }}
-            >
-              CONTRIBUTE ${Number(form.amount || 0).toLocaleString()}
-            </button>
-          </div>
-        )}
+        <label className="block mt-3">
+          <span className="font-display block" style={{ fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.1em" }}>AMOUNT (USD)</span>
+          <input
+            inputMode="decimal"
+            value={value}
+            onChange={(e) => setValue(e.target.value.replace(/[^\d.]/g, ""))}
+            className="w-full bg-transparent rounded font-mono outline-none mt-1"
+            style={{ fontSize: 13, color: "var(--gold)", border: "1px solid var(--border)", padding: "10px", minHeight: 42 }}
+          />
+        </label>
+
+        <p className="font-body" style={{ fontSize: 9.5, color: "var(--text-muted)", lineHeight: 1.65, margin: "8px 0 0" }}>
+          Your name, email and card details are entered on the secure payment page. When the payment
+          clears, your donor badge is issued automatically and you can add your picture and comment
+          to the Supporter Wall.
+        </p>
+
+        {error && <div className="font-mono mt-2" style={{ fontSize: 9.5, color: "var(--red)" }}>{error}</div>}
+
+        <button
+          onClick={checkout}
+          disabled={busy}
+          className="font-display rounded w-full mt-3"
+          style={{ fontSize: 11, padding: "13px 12px", minHeight: 46, letterSpacing: "0.08em", background: "linear-gradient(90deg,#C9A84C,#F2DC9B)", color: "#1B1405", opacity: busy ? 0.6 : 1 }}
+        >
+          {busy ? "OPENING SECURE CHECKOUT…" : `CONTRIBUTE $${Number(value || 0).toLocaleString()}`}
+        </button>
 
         <p className="font-body" style={{ fontSize: 9, color: "var(--text-muted)", lineHeight: 1.65, margin: "12px 0 0" }}>
-          {LEGAL_NOTE}
+          {LEGAL_NOTE} Contact: {CONTACT_EMAIL}
         </p>
       </div>
     </div>

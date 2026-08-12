@@ -12,6 +12,7 @@
 
 import { createClientFromRequest } from "npm:@base44/sdk@0.8.31";
 import { importSPKI, jwtVerify } from "npm:jose@5.9.6";
+import { resolveTier } from "../../shared/donorTier.ts";
 
 // Wix event types (verbatim from Wix docs).
 const ORDER_APPROVED = "wix.ecom.v1.order_approved";
@@ -166,6 +167,27 @@ async function handleOrderApproved(db: any, eventData: any): Promise<Response> {
   //   - Gate paid access on a WRITABLE field you set here (e.g. plan / has_paid on the user or an
   //     Entitlement row) — NEVER on is_verified: it is platform-protected and cannot be set here,
   //     even as service role, so gating access on it locks the paying buyer out.
+  //
+  // Grant: a public Donor record with the earned tier badge. Idempotent — keyed on purchase.id.
+  const existingDonor = await db.entities.Donor.filter({ purchase_id: purchase.id });
+  if (!existingDonor?.length) {
+    const amount = Number(purchase.amount ?? 0);
+    const { tier, badge } = resolveTier(amount);
+    const nameFromOrder =
+      order?.buyerInfo?.firstName ||
+      order?.billingInfo?.contactDetails?.firstName ||
+      (buyerEmail ? buyerEmail.split("@")[0] : "Anonymous Supporter");
+    await db.entities.Donor.create({
+      display_name: nameFromOrder,
+      email: buyerEmail,
+      amount,
+      tier,
+      badge,
+      is_public: true,
+      purchase_id: purchase.id,
+    });
+    console.log("payments-webhook: donor badge granted", { purchaseId: purchase.id, tier });
+  }
   // ===== END APP-SPECIFIC =====
 
   // Mark paid LAST, so "paid" always implies the grant above completed. The idempotency

@@ -105,7 +105,7 @@ export default function DonationWidget({ amount, onAmount, freq, onFreq, onFund 
             </div>
           ))}
           <div className="font-body" style={{ fontSize: 9, color: "var(--text-muted)" }}>
-            QR codes available on request — email: invest@aethonapex.com
+            QR codes available on request — email: aethonapexip@gmail.com
           </div>
         </div>
       )}

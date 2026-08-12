@@ -73,21 +73,24 @@ Deno.serve(async (req: Request) => {
     // client — a buyer can tamper the request body and pay any amount. The client sends only a
     // product identifier; look up the authoritative price here (a Product entity, a config map,
     // etc.). For a subscription, set `subscriptionInfo` (frequency/interval/billingCycles).
-    const productId = String(body.productId ?? "");
+    // This app sells exactly one thing: a mission donation. The donor chooses the amount, so the
+    // amount is legitimately buyer-supplied — but it is validated to a hard server-side range here.
+    const productId = "donation";
+    const donation = Number(body.amount ?? 0);
+    if (!Number.isFinite(donation) || donation < 1 || donation > 100000) {
+      return new Response(JSON.stringify({ error: "Donation must be between $1 and $100,000" }), { status: 400 });
+    }
     // Quantity is buyer-controlled, so VALIDATE it server-side. Check the RAW value is a positive
     // integer BEFORE using it — do NOT Math.trunc first, or a fractional POST (e.g. 1.9) silently
     // passes as 1 and charges a quantity the UI never allowed. For a plan / fixed-entitlement product,
     // hard-code `1` and ignore the body; for a genuine multi-unit product, also enforce YOUR own max.
-    const quantity = Number(body.quantity ?? 1);
-    if (!Number.isInteger(quantity) || quantity < 1) {
-      return new Response(JSON.stringify({ error: "Invalid quantity" }), { status: 400 });
-    }
+    const quantity = 1;
     // Example — replace with your real trusted product source:
     //   const product = (await base44.asServiceRole.entities.Product.filter({ id: productId }))[0];
     //   if (!product) return new Response(JSON.stringify({ error: "Unknown product" }), { status: 400 });
     //   const productName = product.name; const price = String(product.price); const currency = product.currency ?? "USD";
-    const productName = "Purchase"; // TODO: from your trusted product source
-    const price = "0.00";           // TODO: authoritative per-unit price (major units), resolved server-side
+    const productName = "Aethon Apex Mission Donation";
+    const price = donation.toFixed(2);
     const currency = "USD";
     // For a SUBSCRIPTION set this to Wix's subscriptionInfo; leave null for a one-time payment.
     const subscriptionInfo = null;

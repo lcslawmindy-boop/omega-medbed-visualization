@@ -26,6 +26,9 @@ import SafetyCenter from './pages/SafetyCenter';
 import DataInsights from './pages/DataInsights';
 import ChildProgress from './pages/ChildProgress';
 import HardwareGallery from './pages/HardwareGallery';
+import Supporters from './pages/Supporters';
+import CommunityForum from './pages/CommunityForum';
+import ThankYou from './pages/ThankYou';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -72,6 +75,9 @@ const AuthenticatedApp = () => {
       <Route path="/data-insights" element={<DataInsights />} />
       <Route path="/child-progress" element={<ChildProgress />} />
       <Route path="/hardware-gallery" element={<HardwareGallery />} />
+      <Route path="/supporters" element={<Supporters />} />
+      <Route path="/forum" element={<CommunityForum />} />
+      <Route path="/ThankYou" element={<ThankYou />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

@@ -219,4 +219,4 @@ export const PARTNER_TYPES = [
   },
 ];
 
-export const INVESTOR_CONTACT = "invest@aethonapex.com";
+export const INVESTOR_CONTACT = "aethonapexip@gmail.com";

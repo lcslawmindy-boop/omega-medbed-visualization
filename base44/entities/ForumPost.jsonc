@@ -1,0 +1,25 @@
+{
+  "name": "ForumPost",
+  "type": "object",
+  "properties": {
+    "author_name": {
+      "type": "string"
+    },
+    "photo_url": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string"
+    },
+    "badge": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "author_name",
+    "body"
+  ]
+}
