@@ -13,10 +13,10 @@ export default function CampaignTechnology() {
           Four Devices. Four Documented Scientific Lineages. One Mission.
         </h2>
         <p className="font-body mx-auto" style={{ fontSize: 11.5, color: "var(--text-muted)", lineHeight: 1.75, maxWidth: 720, margin: "10px auto 0" }}>
-          Antoine Prioré cured terminal cancer in the 1960s. T. Henry Moray demonstrated 50kW of cold radiant energy in the 1920s.
-          T.E. Bearden documented the scalar EM physics in the 1980s. Every device in this portfolio is buildable today with
-          off-the-shelf components and documented 1960s-1980s physics. None of this is new. What's new is integration,
-          engineering, and deployment.
+          Terminal cancer regression was documented in the 1960s. 50kW of cold radiant energy was demonstrated in the 1920s.
+          The scalar EM physics was formalised in the 1980s. Originator identities are redacted for protection. Every device in
+          this portfolio is buildable today with off-the-shelf components and documented 1960s-1980s physics. None of this is
+          new. What's new is integration, engineering, and deployment.
         </p>
       </div>
 

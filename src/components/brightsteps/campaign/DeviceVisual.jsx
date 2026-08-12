@@ -5,7 +5,7 @@ export default function DeviceVisual({ device }) {
   const box = { width: "100%", height: 200, display: "block" };
   if (device === "priore") {
     return (
-      <svg viewBox="0 0 320 200" style={box} aria-label="Prioré multichannel EM device">
+      <svg viewBox="0 0 320 200" style={box} aria-label="Multichannel EM device">
         <defs>
           <radialGradient id="pv-beam"><stop offset="0%" stopColor="#fff" stopOpacity="0.95" /><stop offset="100%" stopColor="#fff" stopOpacity="0" /></radialGradient>
         </defs>

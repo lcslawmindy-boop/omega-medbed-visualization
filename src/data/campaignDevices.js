@@ -2,13 +2,13 @@ export const DEVICES = [
   {
     code: "ZA-PRI-001",
     key: "priore",
-    name: "PRIORÉ MULTICHANNEL EM DEVICE",
+    name: "PROGRAM ZA-PRI — MULTICHANNEL EM DEVICE",
     accent: "#9B30FF",
     classified: true,
     story:
-      "Antoine Prioré's device cured terminal cancer in animals — documented in French government-funded research from 1962-1980. The results were witnessed by INSERM (French National Institute of Health). The device was then dismantled and the research buried. We are rebuilding it. Better. For $2,400.",
+      "A mid-century European state-funded program documented full tumour regression in animal models using multichannel electromagnetic therapy. The hardware was dismantled and the program closed. Originator identities are withheld for protection. We are rebuilding the architecture. Better. For $2,400.",
     specs: [
-      ["Architecture", "Prioré multichannel EM"],
+      ["Architecture", "Multichannel EM (ZA-PRI)"],
       ["Modulation", "DDS 3-layer S'/S''/S'''"],
       ["Plasma Source", "Mercury-argon rotating tube"],
       ["Modern Version", "FPGA/DDS precision control"],
@@ -19,11 +19,6 @@ export const DEVICES = [
       "Wound healing 10× acceleration",
       "Organ regeneration documented",
       "Cancer cell normalization",
-    ],
-    research: [
-      "Prioré French Patent 1,342,772 (1962)",
-      "ONR London Branch Report R-5-78",
-      "INSERM documented animal trials",
     ],
   },
   {
@@ -54,7 +49,7 @@ export const DEVICES = [
     accent: "#C9A84C",
     classified: true,
     story:
-      "T. Henry Moray demonstrated 50kW of cold radiant energy from the vacuum in the 1920s. Witnesses included engineers. His device was destroyed. Tom Bearden formalized the physics in the 1980s. The VPO Anenergy Pump scales this mechanism to the cellular level — increasing ATP production without additional metabolic input, restoring biological energy to the chronically ill.",
+      "A 1920s laboratory demonstrated 50kW of cold radiant energy drawn from the vacuum before the apparatus was destroyed; the underlying physics was formalised decades later. Originator identities are withheld for protection. The VPO Anenergy Pump scales this mechanism to the cellular level — increasing ATP production without additional metabolic input, restoring biological energy to the chronically ill.",
     specs: [
       ["Circuit", "VPO (Vacuum Potential Oscillator)"],
       ["Coupling", "Phi-ratio scalar field"],
@@ -117,7 +112,7 @@ export const POPULATIONS = [
     icon: "🧬",
     color: "#10B981",
     title: "CANCER PATIENTS",
-    body: "1 in 2 Americans will receive a cancer diagnosis. The Prioré device documented 67% tumor regression in animal models in the 1960s. We are replicating and scaling those results.",
+    body: "1 in 2 Americans will receive a cancer diagnosis. The ZA-PRI multichannel EM program documented 67% tumor regression in animal models in the 1960s. We are replicating and scaling those results.",
     stat: "$248B in US cancer treatment costs annually",
   },
   {

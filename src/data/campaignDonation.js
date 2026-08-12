@@ -35,7 +35,7 @@ export const DONATION_TIERS = [
     color: "var(--sky)",
     style: "sky",
     blurb:
-      "Cover one component in the BOM. A $25 contribution covers resistors, capacitors, and passive components for one Prioré prototype board.",
+      "Cover one component in the BOM. A $25 contribution covers resistors, capacitors, and passive components for one ZA-PRI prototype board.",
     perks: [
       "Everything in Seedling",
       'Digital "Beacon of Light" badge',
@@ -70,7 +70,7 @@ export const DONATION_TIERS = [
     color: "var(--violet)",
     style: "violet",
     blurb:
-      "$500 covers a Prioré plasma tube assembly, or 4 coil pair assemblies for the Cranial Scalar Helmet prototype. You are building the device that will change how humanity heals.",
+      "$500 covers a ZA-PRI plasma tube assembly, or 4 coil pair assemblies for the Cranial Scalar Helmet prototype. You are building the device that will change how humanity heals.",
     perks: [
       "Everything in Builder",
       '"Device Healer" patron recognition',
@@ -90,7 +90,7 @@ export const DONATION_TIERS = [
     style: "gold",
     glow: true,
     blurb:
-      "$2,500 funds one complete Prioré clinical prototype — the device that will enter the IRB animal trial proving tumor regression. You built this device.",
+      "$2,500 funds one complete ZA-PRI clinical prototype — the device that will enter the IRB animal trial proving tumor regression. You built this device.",
     perks: [
       "Everything in Healer",
       "Named device plaque on your funded prototype",
@@ -132,11 +132,11 @@ export const FREQUENCIES = ["ONE TIME", "MONTHLY", "QUARTERLY", "ANNUAL"];
 // Impact thresholds — highest matching threshold wins
 export const IMPACT = [
   { min: 25, text: "Covers passive BOM components for 1 prototype circuit board" },
-  { min: 100, text: "Funds PCB fabrication for 1 Prioré control board" },
+  { min: 100, text: "Funds PCB fabrication for 1 ZA-PRI control board" },
   { min: 340, text: "Funds 1 complete plasma tube assembly" },
   { min: 500, text: "Funds 4 toroidal coil pairs for the Cranial Healing Helmet" },
   { min: 1200, text: "Funds 1 complete VPO Anenergy Pump prototype" },
-  { min: 2400, text: "Funds 1 complete Prioré clinical prototype — fully built" },
+  { min: 2400, text: "Funds 1 complete ZA-PRI clinical prototype — fully built" },
   { min: 3800, text: "Funds 1 Cranial Scalar Healing Helmet" },
   { min: 10000, text: "Funds all 3 therapy device prototypes + provisional patent" },
 ];

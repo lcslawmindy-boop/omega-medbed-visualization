@@ -16,7 +16,7 @@ export const MILESTONES = [
     budget: 480000,
     funded: 96000,
     items: [
-      "Assemble 4 Prioré clinical prototypes ($2,400 each)",
+      "Assemble 4 ZA-PRI clinical prototypes ($2,400 each)",
       "IRB-approved animal trial: tumor regression endpoint",
       "University lab partnership for COP > 1 VPO verification",
       "File 4 provisional patent applications (Claims 1-10)",
@@ -31,7 +31,7 @@ export const MILESTONES = [
     status: "pending",
     budget: 1200000,
     items: [
-      "Prioré Phase I/II human clinical trial (oncology)",
+      "ZA-PRI Phase I/II human clinical trial (oncology)",
       "Cranial helmet PTSD trial — VA partnership",
       "VPO pilot deployment in 3 off-grid communities",
       "File 4 utility patents + PCT international filing",
@@ -46,7 +46,7 @@ export const MILESTONES = [
     status: "pending",
     budget: 2400000,
     items: [
-      "FDA 510(k) submissions: Prioré + Cranial Helmet",
+      "FDA 510(k) submissions: ZA-PRI + Cranial Helmet",
       "Scalar Grid Node: DOE demonstration permit",
       "EU MDR conformity assessment for therapy devices",
       "Establish GMP manufacturing (Minewing partnership)",
@@ -61,7 +61,7 @@ export const MILESTONES = [
     status: "pending",
     budget: 4800000,
     items: [
-      "Hospital deployment: Prioré therapy standard of care",
+      "Hospital deployment: ZA-PRI therapy standard of care",
       "City-scale grid node pilot (1MW equivalent)",
       "Open-source hardware ecosystem launch ($48B TAM)",
       "Strategic licensing to pharma ($340B pivot market)",
@@ -110,10 +110,10 @@ export const PHASE_BUDGET = [
 ];
 
 export const BOM = [
-  ["PRI-001", 1, "Prioré Plasma Tube Assembly (mercury-argon, rotating)", 340],
+  ["PRI-001", 1, "ZA-PRI Plasma Tube Assembly (mercury-argon, rotating)", 340],
   ["PRI-002", 1, "DDS 3-Channel Modulator (AD9854 ×3 + OCXO)", 280],
   ["PRI-003", 1, "Helmholtz Coil Pair (AWG10, 72 turns each)", 180],
-  ["PRI-004", 2, "Bedini-Conditioned Electron Tube (custom)", 420],
+  ["PRI-004", 2, "Conditioned Electron Tube (custom)", 420],
   ["PRI-005", 4, "Double-Balanced Mixer Array (Mini-Circuits)", 160],
   ["PRI-006", 1, "FPGA Control Board (Lattice iCE40 + BeagleBone)", 220],
   ["PRI-007", 1, "Power Supply (48V/24V/12V medical-grade)", 190],
@@ -123,7 +123,7 @@ export const BOM = [
   ["BRH-003", 1, "Schumann Resonance Generator (7.83 Hz OCXO)", 120],
   ["BRH-004", 1, "Quartz Phase Conjugate Mirror Array", 380],
   ["BRH-005", 1, "Helmet Shell (carbon fiber, EM transparent)", 260],
-  ["VPO-001", 1, "Vacuum Energy Collector (Moray tube assembly)", 180],
+  ["VPO-001", 1, "Vacuum Energy Collector (radiant collector tube assembly)", 180],
   ["VPO-002", 1, "Phi-Ratio Coupling Coil (toroidal, 144 turns)", 140],
   ["VPO-003", 1, "Resonance Crystal Array (6 quartz octahedrons)", 220],
   ["VPO-004", 1, "VPO Oscillator Circuit Board", 160],
@@ -141,7 +141,7 @@ export const BOM = [
 ];
 
 export const BOM_SUBTOTALS = [
-  ["Prioré ZA-PRI-001", "$2,000 components"],
+  ["ZA-PRI-001 EM Device", "$2,000 components"],
   ["Cranial Helmet ZA-BRH-002", "$1,580 components"],
   ["VPO ZA-VPO-003", "$900 components"],
   ["Grid Node ZA-GRD-004", "$48,000 components"],
