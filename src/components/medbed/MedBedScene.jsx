@@ -3,6 +3,13 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { MODALITIES, MODALITY_BY_CODE } from "@/data/modalities";
 
+// Zone key → modalities that occupy that 3D zone (some zones are shared)
+const ZONE_TO_MODALITIES = {};
+MODALITIES.forEach((m) => {
+  if (!ZONE_TO_MODALITIES[m.zone]) ZONE_TO_MODALITIES[m.zone] = [];
+  ZONE_TO_MODALITIES[m.zone].push(m);
+});
+
 // Camera presets
 const VIEWS = {
   reset: { pos: [0, 2, 6], tgt: [0, 0.6, 0] },
@@ -13,6 +20,7 @@ const VIEWS = {
 
 export default function MedBedScene({ activeCode, view, onPickModality, paused, power }) {
   const mountRef = useRef(null);
+  const tooltipRef = useRef(null);
   const stateRef = useRef(null);
   const activeCodeRef = useRef(activeCode);
   const viewRef = useRef(view);
@@ -416,13 +424,13 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       }
     });
 
+    const pickMeshes = zoneMeshMap.map((z) => z.mesh);
     const onPointerDown = (ev) => {
       const rect = renderer.domElement.getBoundingClientRect();
       pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
       pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
       raycaster.setFromCamera(pointer, camera);
-      const meshes = zoneMeshMap.map((z) => z.mesh);
-      const hits = raycaster.intersectObjects(meshes, false);
+      const hits = raycaster.intersectObjects(pickMeshes, false);
       if (hits.length) {
         const hit = hits[0].object;
         const entry = zoneMeshMap.find((z) => z.mesh === hit);
@@ -433,6 +441,41 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       }
     };
     renderer.domElement.addEventListener("pointerdown", onPointerDown);
+
+    // Hover tooltip — show modality name(s) for the zone under the cursor
+    const tooltipEl = tooltipRef.current;
+    const onPointerMove = (ev) => {
+      if (!tooltipEl) return;
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(pickMeshes, false);
+      let mods = null;
+      if (hits.length) {
+        const entry = zoneMeshMap.find((z) => z.mesh === hits[0].object);
+        if (entry) mods = ZONE_TO_MODALITIES[entry.zone];
+      }
+      if (mods && mods.length) {
+        tooltipEl.style.display = "block";
+        tooltipEl.style.left = `${ev.clientX - rect.left + 14}px`;
+        tooltipEl.style.top = `${ev.clientY - rect.top + 14}px`;
+        tooltipEl.innerHTML = mods
+          .map(
+            (m) => `<div style="display:flex;align-items:center;gap:6px;white-space:nowrap;">
+              <span style="width:6px;height:6px;border-radius:50%;background:${m.color};box-shadow:0 0 6px ${m.color};flex:none;"></span>
+              <span style="font-family:var(--font-display);font-size:10px;color:${m.color};letter-spacing:0.06em;">${m.code}</span>
+              <span style="font-family:var(--font-body);font-size:10px;color:var(--text-primary);">${m.name}</span>
+            </div>`
+          )
+          .join("");
+      } else {
+        tooltipEl.style.display = "none";
+      }
+    };
+    const onPointerLeave = () => { if (tooltipEl) tooltipEl.style.display = "none"; };
+    renderer.domElement.addEventListener("pointermove", onPointerMove);
+    renderer.domElement.addEventListener("pointerleave", onPointerLeave);
 
     // Camera tween targets
     const camTarget = camera.position.clone();
@@ -562,6 +605,8 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       renderer.domElement.removeEventListener("pointerdown", onPointerDown);
+      renderer.domElement.removeEventListener("pointermove", onPointerMove);
+      renderer.domElement.removeEventListener("pointerleave", onPointerLeave);
       controls.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
@@ -570,5 +615,22 @@ export default function MedBedScene({ activeCode, view, onPickModality, paused, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <div ref={mountRef} className="absolute inset-0" style={{ background: "#000408" }} />;
+  return (
+    <div className="absolute inset-0" style={{ background: "#000408" }}>
+      <div ref={mountRef} className="absolute inset-0" />
+      <div
+        ref={tooltipRef}
+        className="absolute z-20 pointer-events-none"
+        style={{
+          display: "none",
+          background: "rgba(0,4,8,0.92)",
+          border: "1px solid var(--gold)",
+          borderRadius: 4,
+          padding: "6px 8px",
+          backdropFilter: "blur(6px)",
+          maxWidth: 240,
+        }}
+      />
+    </div>
+  );
 }
