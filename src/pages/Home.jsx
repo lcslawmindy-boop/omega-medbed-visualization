@@ -3,6 +3,7 @@ import "@/styles/brightsteps.css";
 import { CRISES } from "@/data/crisisData";
 import HomeHero from "@/components/home/HomeHero";
 import FeatureVideos from "@/components/home/FeatureVideos";
+import AppNav from "@/components/nav/AppNav";
 import CrisisCard from "@/components/home/CrisisCard";
 import SolutionSection from "@/components/home/SolutionSection";
 import JourneyLink from "@/components/home/JourneyLink";
@@ -22,6 +23,7 @@ function Divider({ id, n, label, color = "var(--sky)" }) {
 export default function Home() {
   return (
     <div className="bs-root fixed inset-0 overflow-y-auto bs-scroll">
+      <AppNav />
       <div className="mx-auto p-3 space-y-3" style={{ maxWidth: 1100 }}>
         <HomeHero />
 

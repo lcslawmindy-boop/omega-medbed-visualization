@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "@/styles/brightsteps.css";
+import AppNav from "@/components/nav/AppNav";
 
 export default function PageShell({ title, subtitle, accent = "var(--sky, #38BDF8)", children }) {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function PageShell({ title, subtitle, accent = "var(--sky, #38BDF
           {subtitle && <div className="font-mono truncate" style={{ fontSize: 9, color: "var(--text-muted)" }}>{subtitle}</div>}
         </div>
       </header>
+      <AppNav top="calc(60px + env(safe-area-inset-top))" />
       <div className="p-3 space-y-3 pb-14">{children}</div>
       <div className="font-mono text-center pb-6" style={{ fontSize: 8, color: "var(--text-muted)", lineHeight: 1.6 }}>
         CONCEPT — NOT A MEDICAL DEVICE · NOT FOR MANUFACTURE<br />© 2026 Aethon Apex IP Holdings LLC
