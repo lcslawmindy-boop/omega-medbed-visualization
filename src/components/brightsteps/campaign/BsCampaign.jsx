@@ -14,6 +14,7 @@ import CampaignTeam from "./CampaignTeam";
 import CampaignResearch from "./CampaignResearch";
 import CampaignLegal from "./CampaignLegal";
 import CampaignFooter from "./CampaignFooter";
+import CampaignEarth from "./earth/CampaignEarth";
 
 export default function BsCampaign() {
   const [tier, setTier] = useState(null);
@@ -40,6 +41,7 @@ export default function BsCampaign() {
         </button>
       </div>
 
+      <CampaignEarth />
       <CampaignFunding />
       <CampaignTechnology />
       <CampaignMission onJoin={() => setTier(TIERS[0])} />
