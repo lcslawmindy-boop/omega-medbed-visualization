@@ -5,6 +5,7 @@ import ModalitySidebar from "@/components/medbed/ModalitySidebar";
 import SpecPanel from "@/components/medbed/SpecPanel";
 import MedBedScene from "@/components/medbed/MedBedScene";
 import SceneOverlay from "@/components/medbed/SceneOverlay";
+import CenterPanel from "@/components/medbed/CenterPanel";
 
 export default function OmegaMedBed() {
   const [activeCode, setActiveCode] = useState("SFT");
@@ -32,11 +33,14 @@ export default function OmegaMedBed() {
 
       {/* Center scene area */}
       <main
-        className="absolute overflow-hidden"
+        className="absolute flex flex-col overflow-hidden"
         style={{ top: 60, bottom: 40, left: 280, right: 320, background: "var(--bg-primary)" }}
       >
-        <MedBedScene activeCode={activeCode} view={view} onPickModality={setActiveCode} />
-        <SceneOverlay activeCode={activeCode} onHighlight={setActiveCode} onView={setView} />
+        <div className="relative flex-1 min-h-0">
+          <MedBedScene activeCode={activeCode} view={view} onPickModality={setActiveCode} />
+          <SceneOverlay activeCode={activeCode} onHighlight={setActiveCode} onView={setView} />
+        </div>
+        <CenterPanel activeCode={activeCode} onSelect={setActiveCode} />
       </main>
 
       <LegalFooter />
