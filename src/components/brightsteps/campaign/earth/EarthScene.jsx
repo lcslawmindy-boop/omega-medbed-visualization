@@ -2,8 +2,9 @@ import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
 
 const DARK = {
-  land: new THREE.Color("#241016"),
+  land: new THREE.Color("#2A0B08"),
   ocean: new THREE.Color("#12060A"),
+  tint: new THREE.Color("#8F4038"),
   grid: new THREE.Color("#FF2D2D"),
   atmo: new THREE.Color("#FF2A2A"),
   node: new THREE.Color("#FF3B30"),
@@ -12,6 +13,7 @@ const DARK = {
 const LIGHT = {
   land: new THREE.Color("#1B5E4A"),
   ocean: new THREE.Color("#08304A"),
+  tint: new THREE.Color("#E9F5EC"),
   grid: new THREE.Color("#C9A84C"),
   atmo: new THREE.Color("#5BE0A0"),
   node: new THREE.Color("#F5D27A"),
@@ -64,13 +66,17 @@ export default function EarthScene({ target = 0, quality = "high" }) {
     const starMat = new THREE.PointsMaterial({ color: 0xdfe9ff, size: 0.09, transparent: true, opacity: 0.5, depthWrite: false });
     scene.add(new THREE.Points(starGeo, starMat));
 
-    // --- planet body
+    // --- planet body (real Earth surface, blood-tinted when smothered)
     const bodyMat = new THREE.MeshStandardMaterial({
-      color: DARK.ocean.clone(), roughness: 0.85, metalness: 0.15,
+      color: DARK.tint.clone(), roughness: 0.85, metalness: 0.15,
       emissive: DARK.land.clone(), emissiveIntensity: 0.35,
     });
     const body = new THREE.Mesh(new THREE.SphereGeometry(2, low ? 40 : 72, low ? 28 : 52), bodyMat);
     globe.add(body);
+    new THREE.TextureLoader().load(
+      "https://unpkg.com/three-globe@2.31.0/example/img/earth-blue-marble.jpg",
+      (tx) => { tx.colorSpace = THREE.SRGBColorSpace; bodyMat.map = tx; bodyMat.needsUpdate = true; }
+    );
 
     // --- lat/long grid (EMF net → scalar lattice)
     const gridMat = new THREE.LineBasicMaterial({ color: DARK.grid.clone(), transparent: true, opacity: 0.85 });
@@ -79,6 +85,15 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       gridMat
     );
     globe.add(grid);
+
+    // --- second choke-net: dense inner gridlock that constricts in the dark timeline
+    const chokeMat = new THREE.LineBasicMaterial({ color: DARK.grid.clone(), transparent: true, opacity: 0.35 });
+    const choke = new THREE.LineSegments(
+      new THREE.WireframeGeometry(new THREE.SphereGeometry(2.06, low ? 36 : 48, low ? 24 : 32)),
+      chokeMat
+    );
+    choke.rotation.z = 0.5;
+    globe.add(choke);
 
     // --- city / node points
     const nodeMat = new THREE.PointsMaterial({ color: DARK.node.clone(), size: low ? 0.075 : 0.06, transparent: true, opacity: 0.95 });
@@ -207,14 +222,18 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       t += (goal - t) * Math.min(dt / 0.75, 1);
       const e = t * t * (3 - 2 * t); // smoothstep
 
-      bodyMat.color.copy(c.copy(DARK.ocean).lerp(LIGHT.ocean, e));
+      bodyMat.color.copy(c.copy(DARK.tint).lerp(LIGHT.tint, e));
       bodyMat.emissive.copy(c.copy(DARK.land).lerp(LIGHT.land, e));
-      bodyMat.emissiveIntensity = 0.35 + e * 0.35;
+      bodyMat.emissiveIntensity = 0.3 - e * 0.18;
       gridMat.color.copy(c.copy(DARK.grid).lerp(LIGHT.grid, e));
-      gridMat.opacity = 0.85 - e * 0.35;
+      gridMat.opacity = 0.85 - e * 0.55;
       nodeMat.color.copy(c.copy(DARK.node).lerp(LIGHT.node, e));
       atmoMat.color.copy(c.copy(DARK.atmo).lerp(LIGHT.atmo, e));
-      atmoMat.opacity = 0.16 + e * 0.16;
+      atmoMat.opacity = 0.26 - e * 0.08;
+      // choke-net throbs and constricts as it smothers; dissolves in the light
+      chokeMat.opacity = (1 - e) * (0.3 + 0.18 * Math.sin(now / 340));
+      choke.scale.setScalar(1 - (1 - e) * 0.012 * (0.5 + 0.5 * Math.sin(now / 480)));
+      choke.rotation.y -= dt * 0.02 * (1 - e);
       hazeMat.color.copy(c.copy(DARK.haze).lerp(LIGHT.haze, e));
       hazeMat.opacity = 0.55 - e * 0.38;
       rim.color.copy(c.copy(DARK.grid).lerp(LIGHT.grid, e));
