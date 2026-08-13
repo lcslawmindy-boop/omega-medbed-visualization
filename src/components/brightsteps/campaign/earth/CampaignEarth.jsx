@@ -127,17 +127,20 @@ export default function CampaignEarth() {
       </div>
 
       {/* Toggle */}
-      <div className="p-3" style={{ borderTop: "1px solid var(--border)" }}>
+      <div className="p-3" style={{ borderTop: "1px solid var(--border)", background: "#050A12" }}>
+        <div className="font-display text-center mb-2" style={{ fontSize: 10, letterSpacing: "0.2em", color: mode.color, textShadow: `0 0 14px ${mode.color}88` }}>
+          ↓ TAP TO SWITCH THE FUTURE ↓
+        </div>
         <div className="flex gap-2">
           <button
             onClick={() => setLight(false)}
             className="font-display flex-1 rounded"
             style={{
-              fontSize: 10, padding: "13px 10px", minHeight: 50, letterSpacing: "0.1em",
-              color: light ? "var(--text-muted)" : "#FFF0EF",
-              background: light ? "transparent" : "rgba(255,59,48,0.18)",
-              border: `1px solid ${light ? "var(--border)" : RED}`,
-              boxShadow: light ? "none" : `0 0 26px rgba(255,59,48,0.4)`,
+              fontSize: 12, padding: "16px 10px", minHeight: 58, letterSpacing: "0.1em",
+              color: light ? "#FF8A80" : "#FFF0EF",
+              background: light ? "rgba(255,59,48,0.10)" : "rgba(255,59,48,0.30)",
+              border: `2px solid ${light ? "rgba(255,59,48,0.55)" : RED}`,
+              boxShadow: light ? "none" : `0 0 30px rgba(255,59,48,0.5)`,
               transition: "all 600ms ease",
             }}
           >
@@ -147,11 +150,11 @@ export default function CampaignEarth() {
             onClick={() => setLight(true)}
             className="font-display flex-1 rounded"
             style={{
-              fontSize: 10, padding: "13px 10px", minHeight: 50, letterSpacing: "0.1em",
-              color: light ? "#0B0803" : "var(--text-muted)",
-              background: light ? GOLD : "transparent",
-              border: `1px solid ${light ? GOLD : "var(--border)"}`,
-              boxShadow: light ? `0 0 30px ${GOLD}77` : "none",
+              fontSize: 12, padding: "16px 10px", minHeight: 58, letterSpacing: "0.1em",
+              color: light ? "#0B0803" : GOLD,
+              background: light ? GOLD : `${GOLD}22`,
+              border: `2px solid ${light ? GOLD : `${GOLD}99`}`,
+              boxShadow: light ? `0 0 34px ${GOLD}99` : `0 0 16px ${GOLD}44`,
               transition: "all 600ms ease",
             }}
           >
