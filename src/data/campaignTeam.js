@@ -6,23 +6,22 @@ export const FOUNDER = {
   location: "Henderson, Nevada",
   initials: "MM",
   statement: [
-    "I started this mission because I watched a generation of children diagnosed with ASD, ADHD, and neurological conditions that the conventional medical system cannot explain and cannot solve. I watched veterans come home broken in ways no one could heal.",
-    "I found the research. The suppressed technology that was buried by institutions protecting $8 trillion in annual pharmaceutical revenue.",
-    "These devices were real. The physics was documented. The results were witnessed.",
-    "Nobody was building them.",
-    "So we are.",
+    "I started this work because I watched a generation of children diagnosed with ASD, ADHD and neurological conditions that current care does not fully explain, and veterans come home with injuries that existing options do not reach.",
+    "I went looking for the older research — experimental work from the last century that was never properly replicated.",
+    "The papers exist. The physics is documented. The results were never independently confirmed.",
+    "Nobody was testing them honestly.",
+    "So we are — openly, on the bench, with the results published either way.",
   ],
   credentials: [
     "Founder, Aethon Apex IP Holdings LLC (2026)",
-    "Founder, BrightSteps ASD Unified Therapy Systems",
+    "Founder, BrightSteps ASD support systems (research stage)",
     "Founder, Zenith Apex Research Division",
-    "Founder, Zenith Defense Systems (ZDS)",
     "IP portfolio: 4 core device architectures, 10 patent claims, 6 trade secrets",
-    "Research documentation: integrated archival research framework — named sources disclosed on request under NDA",
+    "Research documentation: archival research framework — full citations shared on request under NDA",
     "Accepting LOI submissions: PDR · PRD · BOM · SOW · EVT · DVT validation for prototype builds",
     "Seeking silicon system partner: BrightSteps OS learning tablet, wearable band, BFAC + ACE control stack",
     "In talks with hardware manufacturing partners (AATCS-P1 EVT)",
-    "Seeking angel investors and venture capital — aethonapexip@gmail.com",
+    "Open to conversations with research funders — aethonapexip@gmail.com",
     "Legal domicile: Henderson, Nevada 89002",
   ],
   emails: ["aethonapexip@gmail.com"],
@@ -56,20 +55,20 @@ const WITHHELD = "Full citation withheld — disclosed to credentialed partners 
 
 export const RESEARCH_SOURCES = [
   {
-    title: "ZA-SRC-01 — EUROPEAN STATE PROGRAM PATENT",
+    title: "ZA-SRC-01 — EUROPEAN RESEARCH PATENT",
     color: GOLD,
     type: "Patent",
     date: "1962",
     country: "Europe",
-    body: "Original national patent documenting the 3-channel EM modulation architecture used in a state-funded healing device program that documented tumour regression in animal models. Witnessed by a national medical research institute. Program closed; results suppressed. Originator identity withheld.",
+    body: "Published national patent documenting a 3-channel EM modulation architecture used in a mid-century research program that reported effects in animal models. The program later closed. Cited here as published research history; results are unreplicated and no outcome is claimed.",
     citation: WITHHELD,
   },
   {
-    title: "ZA-SRC-02 — DECLASSIFIED NAVAL RESEARCH REPORT",
+    title: "ZA-SRC-02 — PUBLIC RESEARCH REVIEW",
     color: "#38BDF8",
-    type: "Government Document",
+    type: "Published Document",
     date: "1978",
-    body: "Declassified US naval research office report documenting the ZA-SRC-01 program's experimental results and recommending further investigation.",
+    body: "Publicly available research review summarising the ZA-SRC-01 experimental results and recommending further investigation. Referenced from the public record only.",
     citation: WITHHELD,
   },
   {
@@ -85,7 +84,7 @@ export const RESEARCH_SOURCES = [
     color: "#EF4444",
     type: "Soviet Research",
     date: "1974",
-    body: "Soviet biophysics program documented that cytopathogenic effects — cellular damage patterns — could be transmitted between cells via UV photon channels, without direct physical contact. Basis for the ZA-RIF UV quartz applicator mechanism.",
+    body: "Published biophysics literature reported that cytopathogenic effects — cellular damage patterns — could be transmitted between cells via UV photon channels, without direct physical contact. Basis for the ZA-RIF UV quartz applicator mechanism.",
     citation: WITHHELD,
   },
   {
@@ -93,7 +92,7 @@ export const RESEARCH_SOURCES = [
     color: "#EF4444",
     type: "Clinical Record",
     date: "1934",
-    body: "A 1934 clinical trial at a major US university — 16 terminal cancer patients treated with resonant frequency devices. Reported: 14 of 16 recovered. Records subsequently disappeared. Originator identity withheld.",
+    body: "A 1934 study at a US university involving resonant frequency devices. The reported outcomes were never independently verified and the primary records are incomplete. Referenced as research history only — not as evidence of any treatment effect.",
     citation: WITHHELD,
   },
   {
@@ -136,17 +135,17 @@ export const DISCLAIMERS = [
   {
     title: "RESEARCH DISCLAIMER",
     color: "#F59E0B",
-    body: "Third-party experimental results referenced on this platform — including declassified government reports and archival program records (ZA-SRC series, named sources withheld) — are historical research documentation and do not constitute medical claims. This content describes documented experimental outcomes in laboratory settings — not clinical treatments. Consult a licensed physician for any medical decisions.",
+    body: "Third-party experimental results referenced on this platform (ZA-SRC series) are historical, publicly available research documentation and do not constitute medical claims by this company. They describe unreplicated laboratory reports — not clinical treatments, and not evidence of safety or effectiveness. Nothing on this site is medical advice; consult a licensed physician for any medical decisions.",
   },
   {
     title: "DEVICE CLASSIFICATION NOTICE",
     color: "#EF4444",
-    body: "All devices described — including the ZA-PRI Multichannel EM Device, Cranial Scalar Healing Helmet, VPO Anenergy Pump, Scalar Energy Grid Node, Omega MedBed ZA-MB-Ω, and BrightSteps ASD Therapy Pod BS-ATP-Ω — are research prototypes and conceptual engineering frameworks only. No device described has been approved by the FDA, FCC, or any regulatory authority for medical, therapeutic, commercial, or consumer use. All devices are subject to manufacturer validation, IRB approval, and applicable regulatory clearance before any patient use.",
+    body: "All devices described — including the ZA-PRI Multichannel EM Platform, Cranial Field Research Headset, VPO Oscillator Research Unit, Field Node Research Platform, Omega MedBed ZA-MB-Ω, and BrightSteps BS-ATP-Ω — are conceptual engineering frameworks and bench research prototypes only. No device described has been cleared or approved by the FDA, FCC or any regulatory authority, none is offered for sale, treatment or human use, and no medical, therapeutic or performance benefit is claimed. Any future human use would require applicable regulatory clearance and IRB approval.",
   },
   {
     title: "INVESTMENT DISCLAIMER",
     color: GOLD,
-    body: "This campaign page does not constitute an offer to sell, or a solicitation of an offer to buy, any security. Any investment opportunity will be made only through appropriate offering documents in compliance with applicable federal and state securities laws, including the Securities Act of 1933. Investments in early-stage companies involve substantial risk of loss and are not suitable for all investors. Aethon Apex IP Holdings LLC does not guarantee any financial return on any contribution, donation, or investment. Consult a licensed financial advisor before making any investment decision.",
+    body: "This site does not constitute an offer to sell, or a solicitation of an offer to buy, any security, and no securities are offered or sold here. Contributions are voluntary donations that carry no equity, profit share, return, repayment or other financial interest of any kind. Any future securities offering would be made only through appropriate offering documents in compliance with federal and state securities laws, including the Securities Act of 1933. Consult a licensed financial advisor before making any financial decision.",
   },
   {
     title: "INTELLECTUAL PROPERTY NOTICE",
@@ -157,8 +156,8 @@ export const DISCLAIMERS = [
 
 export const FOOTER_COLUMNS = [
   { title: "THE MISSION", links: ["The Crisis", "Dark Timeline", "Light Timeline", "The Technology", "Who We Help"] },
-  { title: "PLATFORMS", links: ["ZARP Research Platform", "Omega MedBed ZA-MB-Ω", "BrightSteps ASD Pod", "ZDS Defense Portfolio", "KIDS-OS Tablet"] },
-  { title: "GET INVOLVED", links: ["Donate to the Mission", "Investor Inquiry", "Partner With Us", "Careers"] },
+  { title: "PLATFORMS", links: ["ZARP Research Platform", "Omega MedBed ZA-MB-Ω", "BrightSteps BS-ATP-Ω", "KIDS-OS Tablet"] },
+  { title: "GET INVOLVED", links: ["Donate to the Mission", "Information Request", "Partner With Us", "Careers"] },
 ];
 
 export const FOOTER_EMAILS = ["aethonapexip@gmail.com"];

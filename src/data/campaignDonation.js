@@ -70,7 +70,7 @@ export const DONATION_TIERS = [
     color: "var(--violet)",
     style: "violet",
     blurb:
-      "$500 covers a ZA-PRI plasma tube assembly, or 4 coil pair assemblies for the Cranial Scalar Helmet prototype. You are building the device that will change how humanity heals.",
+      "$500 covers a ZA-PRI plasma tube assembly, or 4 coil pair assemblies for the cranial research headset prototype.",
     perks: [
       "Everything in Builder",
       '"Device Healer" patron recognition',
@@ -90,14 +90,14 @@ export const DONATION_TIERS = [
     style: "gold",
     glow: true,
     blurb:
-      "$2,500 funds one complete ZA-PRI clinical prototype — the device that will enter the IRB animal trial proving tumor regression. You built this device.",
+      "$2,500 funds one complete ZA-PRI bench prototype — the research unit used for characterisation and instrumentation studies.",
     perks: [
       "Everything in Healer",
       "Named device plaque on your funded prototype",
       "Direct briefing from Mindy Moore (1 hour)",
       "IP portfolio access (NDA required)",
       "Founding Pioneer recognition — permanent",
-      "Priority consideration for future equity offering",
+      "Priority campaign updates",
     ],
   },
   {
@@ -112,10 +112,9 @@ export const DONATION_TIERS = [
     wide: true,
     partner: true,
     blurb:
-      "At $10,000+ you are funding multiple prototypes + patent filing + clinical trial preparation. This is civilizational infrastructure. Your name belongs in the history books.",
+      "At $10,000+ you are funding multiple bench prototypes, patent filing and research preparation.",
     perks: [
       "Everything in Pioneer",
-      "Equity conversation (subject to securities law)",
       "Advisory board consideration",
       "All IP documents under NDA",
       "Full 5-year financial model access",
@@ -134,10 +133,10 @@ export const IMPACT = [
   { min: 25, text: "Covers passive BOM components for 1 prototype circuit board" },
   { min: 100, text: "Funds PCB fabrication for 1 ZA-PRI control board" },
   { min: 340, text: "Funds 1 complete plasma tube assembly" },
-  { min: 500, text: "Funds 4 toroidal coil pairs for the Cranial Healing Helmet" },
+  { min: 500, text: "Funds 4 toroidal coil pairs for the cranial research headset" },
   { min: 1200, text: "Funds 1 complete VPO Anenergy Pump prototype" },
-  { min: 2400, text: "Funds 1 complete ZA-PRI clinical prototype — fully built" },
-  { min: 3800, text: "Funds 1 Cranial Scalar Healing Helmet" },
+  { min: 2400, text: "Funds 1 complete ZA-PRI bench prototype — fully built" },
+  { min: 3800, text: "Funds 1 cranial field research headset" },
   { min: 10000, text: "Funds all 3 therapy device prototypes + provisional patent" },
 ];
 
@@ -148,7 +147,7 @@ export const CRYPTO = [
 ];
 
 export const LEGAL_NOTE =
-  "Aethon Apex IP Holdings LLC is a private company. This is not a securities offering. Donations are not tax-deductible unless noted. No goods or services are provided in exchange for donations below $2,500. Consult a financial advisor for contributions above $5,000.";
+  "Aethon Apex IP Holdings LLC is a private company. Contributions are voluntary donations to fund research and development. This page is not an offer to sell, or a solicitation of an offer to buy, any security, and no equity, revenue share, profit, return or future financial interest of any kind is offered or implied. Donations are not investments and are not tax-deductible. Donations do not fund, and are not payment for, any medical treatment or device.";
 
 export const SUPPORTERS = [
   { name: "M. Ellison", loc: "Austin, TX · USA", tier: "PIONEER" },
@@ -168,20 +167,20 @@ export const SUPPORTERS = [
 export const PARTNER_TYPES = [
   {
     id: "investor",
-    kicker: "INVEST | Equity / Convertible Note",
-    title: "ACCREDITED INVESTOR",
+    kicker: "INTRODUCTION | Information request only",
+    title: "PROFESSIONAL INQUIRY",
     color: "var(--gold)",
     body:
-      "For accredited investors seeking early-stage participation in suppressed technology IP commercialization.",
-    minimum: "$25,000 minimum",
+      "For professional parties who want to understand the research and IP portfolio. Informational only — no securities are offered or sold through this site.",
+    minimum: "Information request — no capital commitment",
     gets: [
-      "Full investor brief (NDA required)",
-      "5-year financial model",
+      "Company and research overview (NDA required)",
+      "Roadmap and cost breakdown",
       "IP portfolio documentation",
       "Patent claim drafts (Claims 1–10)",
-      "Direct diligence sessions with the engineering team",
+      "Technical sessions with the engineering team",
     ],
-    cta: "REQUEST INVESTOR BRIEF",
+    cta: "REQUEST INFORMATION PACK",
   },
   {
     id: "strategic",
@@ -189,7 +188,7 @@ export const PARTNER_TYPES = [
     title: "STRATEGIC PARTNER",
     color: "var(--sky)",
     body:
-      "For medical device manufacturers, contract labs, and distribution partners who can accelerate the roadmap from prototype to clinic.",
+      "For device manufacturers and contract labs who can help take these concepts from drawing to validated bench prototype.",
     minimum: "Capability-based — no capital minimum",
     gets: [
       "Technical integration package",

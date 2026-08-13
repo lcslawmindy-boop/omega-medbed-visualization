@@ -24,7 +24,7 @@ export const CRISES = [
       "Autism spectrum diagnoses have moved from a rare condition to a defining feature of a generation. Special education systems, families and clinics are absorbing a load they were never built to carry.",
     stats: [
       ["1 in 36", "US children diagnosed with ASD today"],
-      ["1 in 22", "Projected prevalence on the dark timeline"],
+      ["1 in 22", "Illustrative projection if current trends continue"],
       ["$70B+", "Annual US special education cost, +8% / yr"],
     ],
   },
@@ -39,7 +39,7 @@ export const CRISES = [
     stats: [
       ["22 / day", "US veterans lost to suicide"],
       ["3.5M", "US veterans living with PTSD"],
-      ["0", "Approved field-restoration therapies"],
+      ["Open", "Question this research aims to study"],
     ],
   },
   {
@@ -61,11 +61,11 @@ export const CRISES = [
 export const SOLUTION = {
   headline: "RESTORE THE FIELD. RESTORE THE BIOLOGY.",
   body:
-    "Every crisis above shares one root: the biological field humans evolved inside has been overwritten, and the cell no longer receives a coherent signal. Aethon Apex builds the hardware that restores it — a documented, engineered, buildable stack of scalar, photonic, thermal and bioelectric systems delivered through two flagship platforms.",
+    "One hypothesis connects the trends above: the electromagnetic environment humans evolved inside has changed faster than biology has. Aethon Apex designs open, bench-testable research hardware to study that hypothesis honestly — scalar, photonic, thermal and bioelectric systems documented through two research platforms. These are pre-regulatory research concepts, not approved treatments.",
   pillars: [
-    ["COHERENT FIELD", "Re-establish 7.83 Hz Schumann baseline at the patient."],
-    ["CELLULAR ENERGY", "Restore ATP production without additional metabolic input."],
-    ["CLOSED-LOOP SAFETY", "BFAC + ACE engines monitor and dose every second of every session."],
+    ["COHERENT FIELD", "Generate a controlled 7.83 Hz reference field for study."],
+    ["CELLULAR ENERGY", "Investigate metabolic markers under controlled bench conditions."],
+    ["CLOSED-LOOP SAFETY", "BFAC + ACE engines monitor exposure limits every second."],
     ["OPEN ENGINEERING", "Full specs, BOM and SOW published — buildable, auditable, not a black box."],
   ],
 };

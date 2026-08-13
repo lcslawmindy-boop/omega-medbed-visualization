@@ -4,12 +4,12 @@ import { PARTNER_TYPES, INVESTOR_CONTACT } from "@/data/campaignDonation";
 export default function InvestorPortal() {
   return (
     <div id="bs-investor-portal" className="bs-card p-4" style={{ background: "linear-gradient(180deg,#05080F 0%, var(--bg-panel) 100%)", border: "1px solid rgba(201,168,76,0.3)" }}>
-      <div className="font-display" style={{ fontSize: 11, color: "var(--gold)", letterSpacing: "0.16em" }}>SERIOUS CAPITAL. SERIOUS MISSION.</div>
+      <div className="font-display" style={{ fontSize: 11, color: "var(--gold)", letterSpacing: "0.16em" }}>INFORMATION ONLY — NO SECURITIES OFFERED</div>
       <div className="font-display mt-1" style={{ fontSize: 22, color: "var(--text-primary)", lineHeight: 1.25 }}>
-        Investor &amp; Strategic Partner Portal
+        Partner &amp; Information Portal
       </div>
       <p className="font-body" style={{ fontSize: 11.5, color: "var(--text-muted)", lineHeight: 1.7, margin: "10px 0 0", maxWidth: 720 }}>
-        The Aethon Apex IP portfolio represents 4 core devices, 10 patent claims, 6 protected trade secrets, and a $31.7M, 5-year roadmap to civilizational impact. This is not a retail investment product. This is an invitation to be part of the most consequential technology mission in human history.
+        The Aethon Apex IP portfolio covers 4 core device concepts, 10 patent claims, 6 trade secrets and a $31.7M, 5-year research roadmap. This page is informational only — no security, equity, note or financial return is offered, sold or implied here.
       </p>
 
       <div className="grid gap-2 mt-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
@@ -42,7 +42,7 @@ export default function InvestorPortal() {
         <div className="font-display" style={{ fontSize: 9.5, color: "var(--gold)", letterSpacing: "0.1em" }}>DIRECT LINE</div>
         <div className="font-mono select-text mt-1" style={{ fontSize: 11, color: "var(--text-primary)" }}>{INVESTOR_CONTACT}</div>
         <p className="font-body" style={{ fontSize: 9, color: "var(--text-muted)", lineHeight: 1.65, margin: "8px 0 0" }}>
-          Aethon Apex IP Holdings LLC is a private company. Nothing on this page is an offer to sell or a solicitation to buy securities. Any investment discussion is conducted separately under applicable securities law with accredited parties only.
+          Aethon Apex IP Holdings LLC is a private company. Nothing on this page is an offer to sell or a solicitation to buy securities, and no return of any kind is offered or implied. Any future offering would be conducted separately under applicable federal and state securities law.
         </p>
       </div>
     </div>

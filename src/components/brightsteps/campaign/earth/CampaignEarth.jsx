@@ -8,19 +8,19 @@ const RED = "#FF3B30";
 
 const COPY = {
   dark: {
-    tag: "DARK TIMELINE — 2050",
-    line: "The grid tightens. Chronic disease compounds. Life expectancy falls to 52 years.",
-    sub: "This is the future nobody chose — it simply arrives if nothing changes.",
-    stat: ["52 yrs", "1 in 22", "$8T"],
-    label: ["Projected lifespan", "Children with ASD", "Protected pharma revenue"],
+    tag: "SCENARIO A — 2050",
+    line: "Trends continue unchecked. Chronic disease compounds and health systems fall further behind.",
+    sub: "An illustrative scenario, not a prediction or a claim.",
+    stat: ["Rising", "1 in 22", "Unstudied"],
+    label: ["Chronic disease load", "Illustrative ASD projection", "Older research left untested"],
     color: RED,
   },
   light: {
-    tag: "LIGHT TIMELINE — 2050",
-    line: "The field is restored. Cellular repair becomes accessible. Children are given their futures back.",
-    sub: "This future doesn't arrive on its own. It gets built — or it doesn't.",
-    stat: ["120 yrs", "Reversible", "$0"],
-    label: ["Restored lifespan", "Neurological outcomes", "Cost of suppression"],
+    tag: "SCENARIO B — 2050",
+    line: "The older research gets tested properly, published openly, and either holds up or doesn't.",
+    sub: "An illustrative scenario. No outcome is promised.",
+    stat: ["Open", "Published", "Testable"],
+    label: ["Research funded", "Results either way", "Independently checkable"],
     color: GOLD,
   },
 };

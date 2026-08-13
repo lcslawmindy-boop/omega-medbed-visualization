@@ -18,11 +18,11 @@ export default function ClassifiedOverlay() {
           boxShadow: "0 0 26px rgba(255,59,48,0.35)",
         }}
       >
-        CLASSIFIED — RESTRICTED
+        CONFIDENTIAL — NDA REQUIRED
       </div>
       <div className="font-mono mt-2" style={{ fontSize: 9, color: "var(--text-muted)", maxWidth: 300, lineHeight: 1.7 }}>
-        Technical detail for this program is withheld. Access is limited to
-        credentialed partners under executed NDA.
+        Company-confidential technical detail. Shared with credentialed
+        partners under executed NDA.
       </div>
     </div>
   );

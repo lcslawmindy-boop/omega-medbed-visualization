@@ -76,9 +76,9 @@ export default function Home() {
           />
           <JourneyLink
             to="/investor-portal"
-            tag="10B — ACCREDITED PARTNERS"
+            tag="10B — PARTNERS"
             title="INVESTOR PORTAL"
-            body="Partner tiers, diligence materials and the IP position for accredited investors evaluating the Aethon Apex portfolio."
+            body="Partner tiers, technical materials and the IP position — informational only; no securities are offered here."
             cta="OPEN INVESTOR PORTAL"
             color="var(--teal)"
           />
