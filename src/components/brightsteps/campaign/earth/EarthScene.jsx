@@ -18,6 +18,19 @@ const LIGHT = {
   haze: new THREE.Color("#C9A84C"),
 };
 
+function glowTexture() {
+  const cnv = document.createElement("canvas");
+  cnv.width = cnv.height = 128;
+  const ctx = cnv.getContext("2d");
+  const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  g.addColorStop(0, "rgba(255,255,255,1)");
+  g.addColorStop(0.35, "rgba(255,255,255,0.35)");
+  g.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, 128, 128);
+  return new THREE.CanvasTexture(cnv);
+}
+
 /** t: 0 = Dark Timeline, 1 = Light Timeline — animated externally via `target` prop */
 export default function EarthScene({ target = 0, quality = "high" }) {
   const mountRef = useRef(null);
@@ -38,6 +51,18 @@ export default function EarthScene({ target = 0, quality = "high" }) {
 
     const globe = new THREE.Group();
     scene.add(globe);
+
+    // --- starfield
+    const starCount = low ? 350 : 800;
+    const spos = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount; i++) {
+      const v = new THREE.Vector3().randomDirection().multiplyScalar(18 + Math.random() * 22);
+      spos.set([v.x, v.y, v.z], i * 3);
+    }
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute("position", new THREE.BufferAttribute(spos, 3));
+    const starMat = new THREE.PointsMaterial({ color: 0xdfe9ff, size: 0.09, transparent: true, opacity: 0.5, depthWrite: false });
+    scene.add(new THREE.Points(starGeo, starMat));
 
     // --- planet body
     const bodyMat = new THREE.MeshStandardMaterial({
@@ -99,6 +124,43 @@ export default function EarthScene({ target = 0, quality = "high" }) {
     const haze = new THREE.Points(hazeGeo, hazeMat);
     scene.add(haze);
 
+    // --- rising golden motes (Light Timeline healing particles)
+    const moteCount = low ? 140 : 320;
+    const mpos = new Float32Array(moteCount * 3);
+    const mspeed = new Float32Array(moteCount);
+    for (let i = 0; i < moteCount; i++) {
+      const v = new THREE.Vector3().randomDirection().multiplyScalar(2.15 + Math.random() * 1.3);
+      mpos.set([v.x, v.y, v.z], i * 3);
+      mspeed[i] = 0.25 + Math.random() * 0.55;
+    }
+    const moteGeo = new THREE.BufferGeometry();
+    moteGeo.setAttribute("position", new THREE.BufferAttribute(mpos, 3));
+    const moteMat = new THREE.PointsMaterial({
+      color: LIGHT.node.clone(), size: 0.055, transparent: true, opacity: 0,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    });
+    const motes = new THREE.Points(moteGeo, moteMat);
+    scene.add(motes);
+
+    // --- healing shockwave (fires on every timeline flip)
+    const waveMat = new THREE.MeshBasicMaterial({
+      color: LIGHT.node.clone(), transparent: true, opacity: 0, side: THREE.BackSide,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    });
+    const wave = new THREE.Mesh(new THREE.SphereGeometry(1, low ? 24 : 40, low ? 16 : 28), waveMat);
+    scene.add(wave);
+
+    // --- sun-glow backlight
+    const glowTex = glowTexture();
+    const glowMat = new THREE.SpriteMaterial({
+      map: glowTex, color: DARK.grid.clone(), transparent: true, opacity: 0.22,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    });
+    const glow = new THREE.Sprite(glowMat);
+    glow.position.set(-2.6, 1.3, -4);
+    glow.scale.setScalar(6);
+    scene.add(glow);
+
     // --- lights
     const key = new THREE.DirectionalLight(0xffffff, 1.5);
     key.position.set(4, 3, 5);
@@ -124,8 +186,10 @@ export default function EarthScene({ target = 0, quality = "high" }) {
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0.05 });
     io.observe(mount);
 
-    // --- animate (t eases toward target over ~800ms)
+    // --- animate (t eases toward target — slow, weighty morph ~2s)
     let t = targetRef.current;
+    let prevGoal = targetRef.current;
+    let waveT = 1;
     let raf, last = performance.now();
     const c = new THREE.Color();
     const loop = (now) => {
@@ -135,7 +199,12 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       if (!visible) return;
 
       const goal = targetRef.current;
-      t += (goal - t) * Math.min(dt / 0.28, 1);
+      if (goal !== prevGoal) {
+        prevGoal = goal;
+        waveT = 0;
+        waveMat.color.copy(goal === 1 ? LIGHT.node : DARK.grid);
+      }
+      t += (goal - t) * Math.min(dt / 0.75, 1);
       const e = t * t * (3 - 2 * t); // smoothstep
 
       bodyMat.color.copy(c.copy(DARK.ocean).lerp(LIGHT.ocean, e));
@@ -147,8 +216,36 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       atmoMat.color.copy(c.copy(DARK.atmo).lerp(LIGHT.atmo, e));
       atmoMat.opacity = 0.16 + e * 0.16;
       hazeMat.color.copy(c.copy(DARK.haze).lerp(LIGHT.haze, e));
-      hazeMat.opacity = 0.55 - e * 0.3;
+      hazeMat.opacity = 0.55 - e * 0.38;
       rim.color.copy(c.copy(DARK.grid).lerp(LIGHT.grid, e));
+      rim.intensity = 3.2 + e * 1.4;
+      glowMat.color.copy(c.copy(DARK.grid).lerp(LIGHT.haze, e));
+      glowMat.opacity = 0.22 + e * 0.3;
+      glow.scale.setScalar(6 + e * 3.5);
+      starMat.opacity = 0.5 + e * 0.3;
+
+      // dark timeline: the grid throbs like a tightening net
+      grid.scale.setScalar(1 + (1 - e) * 0.006 * Math.sin(now / 260));
+
+      // healing shockwave sweep
+      if (waveT < 1) {
+        waveT = Math.min(waveT + dt / 1.5, 1);
+        wave.scale.setScalar(2 + waveT * 7.5);
+        waveMat.opacity = Math.sin(waveT * Math.PI) * 0.4;
+      } else {
+        waveMat.opacity = 0;
+      }
+
+      // rising golden motes
+      moteMat.opacity = e * 0.85;
+      if (e > 0.02) {
+        const arr = moteGeo.attributes.position.array;
+        for (let i = 0; i < moteCount; i++) {
+          arr[i * 3 + 1] += dt * mspeed[i] * e;
+          if (arr[i * 3 + 1] > 3.6) arr[i * 3 + 1] = -3.6;
+        }
+        moteGeo.attributes.position.needsUpdate = true;
+      }
 
       const pulse = 0.5 + 0.5 * Math.sin(now / 420);
       nodeMat.size = (low ? 0.075 : 0.06) * (1 + e * pulse * 0.7);
@@ -158,8 +255,16 @@ export default function EarthScene({ target = 0, quality = "high" }) {
         r.scale.setScalar(0.9 + e * 0.1);
       });
 
+      // cinematic camera drift + punch-in during the flip
+      const punch = waveT < 1 ? Math.sin(waveT * Math.PI) * 0.55 : 0;
+      camera.position.x = Math.sin(now / 9000) * 0.3;
+      camera.position.y = 0.6 + Math.sin(now / 7000) * 0.12;
+      camera.position.z = 6.2 - punch;
+      camera.lookAt(0, 0, 0);
+
       globe.rotation.y += dt * (0.05 + e * 0.03);
       haze.rotation.y -= dt * 0.02;
+      motes.rotation.y += dt * 0.015;
       renderer.render(scene, camera);
     };
     raf = requestAnimationFrame(loop);
@@ -169,6 +274,7 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       ro.disconnect();
       io.disconnect();
       renderer.dispose();
+      glowTex.dispose();
       scene.traverse((o) => {
         if (o.geometry) o.geometry.dispose();
         if (o.material) o.material.dispose();
