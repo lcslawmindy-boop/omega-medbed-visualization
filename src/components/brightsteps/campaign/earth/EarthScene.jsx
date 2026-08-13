@@ -20,6 +20,17 @@ const LIGHT = {
   haze: new THREE.Color("#C9A84C"),
 };
 
+function emojiTexture(emoji) {
+  const cnv = document.createElement("canvas");
+  cnv.width = cnv.height = 64;
+  const ctx = cnv.getContext("2d");
+  ctx.font = "48px serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(emoji, 32, 36);
+  return new THREE.CanvasTexture(cnv);
+}
+
 function glowTexture() {
   const cnv = document.createElement("canvas");
   cnv.width = cnv.height = 128;
@@ -70,6 +81,7 @@ export default function EarthScene({ target = 0, quality = "high" }) {
     const bodyMat = new THREE.MeshStandardMaterial({
       color: DARK.tint.clone(), roughness: 0.85, metalness: 0.15,
       emissive: DARK.land.clone(), emissiveIntensity: 0.35,
+      transparent: true, opacity: 0.72,
     });
     const body = new THREE.Mesh(new THREE.SphereGeometry(2, low ? 40 : 72, low ? 28 : 52), bodyMat);
     globe.add(body);
@@ -94,6 +106,51 @@ export default function EarthScene({ target = 0, quality = "high" }) {
     );
     choke.rotation.z = 0.5;
     globe.add(choke);
+
+    // --- dark-timeline surface markers (fade away when the planet heals)
+    const darkFade = []; // { mat, base }
+    const surfPoint = (r) => new THREE.Vector3().randomDirection().multiplyScalar(r);
+
+    // EMF towers: red spikes jutting from the surface
+    const towerMat = new THREE.MeshBasicMaterial({ color: DARK.grid.clone(), transparent: true, opacity: 0.9 });
+    darkFade.push({ mat: towerMat, base: 0.9 });
+    const towerGeo = new THREE.ConeGeometry(0.015, 0.3, 4);
+    const towerCount = low ? 22 : 40;
+    for (let i = 0; i < towerCount; i++) {
+      const dir = new THREE.Vector3().randomDirection();
+      const tower = new THREE.Mesh(towerGeo, towerMat);
+      tower.position.copy(dir.clone().multiplyScalar(2.12));
+      tower.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+      globe.add(tower);
+    }
+
+    // emoji marker fields: nuclear, fossil fuel, ocean trash, dying plankton, vanishing animals, bees gone
+    const MARKERS = [
+      { emoji: "☢️", count: low ? 6 : 10, scale: 0.26, base: 0.95 },
+      { emoji: "🛢️", count: low ? 6 : 10, scale: 0.24, base: 0.95 },
+      { emoji: "🏭", count: low ? 5 : 8, scale: 0.24, base: 0.9 },
+      { emoji: "🗑️", count: low ? 6 : 10, scale: 0.2, base: 0.85 },
+      { emoji: "🦠", count: low ? 8 : 14, scale: 0.16, base: 0.7 },
+      { emoji: "💀", count: low ? 5 : 8, scale: 0.22, base: 0.9 },
+      { emoji: "🐘", count: 3, scale: 0.24, base: 0.85 },
+      { emoji: "🐋", count: 3, scale: 0.24, base: 0.85 },
+      { emoji: "🐝", count: low ? 5 : 8, scale: 0.18, base: 0.8, flicker: true },
+    ];
+    const flickerMats = [];
+    const markerTextures = [];
+    MARKERS.forEach((mk) => {
+      const tex = emojiTexture(mk.emoji);
+      markerTextures.push(tex);
+      const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: mk.base, depthWrite: false });
+      darkFade.push({ mat, base: mk.base });
+      if (mk.flicker) flickerMats.push(mat);
+      for (let i = 0; i < mk.count; i++) {
+        const s = new THREE.Sprite(mat);
+        s.position.copy(surfPoint(2.18 + Math.random() * 0.1));
+        s.scale.setScalar(mk.scale);
+        globe.add(s);
+      }
+    });
 
     // --- city / node points
     const nodeMat = new THREE.PointsMaterial({ color: DARK.node.clone(), size: low ? 0.075 : 0.06, transparent: true, opacity: 0.95 });
@@ -223,6 +280,10 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       const e = t * t * (3 - 2 * t); // smoothstep
 
       bodyMat.color.copy(c.copy(DARK.tint).lerp(LIGHT.tint, e));
+      bodyMat.opacity = 0.72 + e * 0.24;
+      // sickness markers dissolve as the field is restored; bees flicker out
+      darkFade.forEach((f) => { f.mat.opacity = (1 - e) * f.base; });
+      flickerMats.forEach((m) => { m.opacity = (1 - e) * (0.25 + 0.55 * Math.abs(Math.sin(now / 310))); });
       bodyMat.emissive.copy(c.copy(DARK.land).lerp(LIGHT.land, e));
       bodyMat.emissiveIntensity = 0.3 - e * 0.18;
       gridMat.color.copy(c.copy(DARK.grid).lerp(LIGHT.grid, e));
@@ -294,6 +355,7 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       io.disconnect();
       renderer.dispose();
       glowTex.dispose();
+      markerTextures.forEach((t) => t.dispose());
       scene.traverse((o) => {
         if (o.geometry) o.geometry.dispose();
         if (o.material) o.material.dispose();
