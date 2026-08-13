@@ -278,7 +278,7 @@ export default function EarthScene({ target = 0, quality = "high" }) {
     const resize = () => {
       const w = mount.clientWidth, h = mount.clientHeight;
       if (!w || !h) return;
-      renderer.setSize(w, h);
+      renderer.setSize(w, h, false);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
     };
