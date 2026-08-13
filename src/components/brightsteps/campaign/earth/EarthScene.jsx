@@ -156,6 +156,35 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       }
     });
 
+    // --- light-timeline life markers (fade IN as the planet heals)
+    const lifeFade = [];
+    const LIFE = [
+      { emoji: "🌳", count: low ? 6 : 10, scale: 0.15, base: 0.95 },
+      { emoji: "🌿", count: low ? 5 : 8, scale: 0.13, base: 0.9 },
+      { emoji: "🌸", count: low ? 4 : 7, scale: 0.12, base: 0.85 },
+      { emoji: "🐝", count: low ? 4 : 6, scale: 0.12, base: 0.9 },
+      { emoji: "🦋", count: low ? 4 : 6, scale: 0.13, base: 0.9 },
+      { emoji: "🐦", count: low ? 5 : 8, scale: 0.13, base: 0.95, fly: true },
+      { emoji: "🕊️", count: low ? 3 : 5, scale: 0.13, base: 0.9, fly: true },
+      { emoji: "🐬", count: low ? 4 : 6, scale: 0.15, base: 0.95 },
+      { emoji: "🐋", count: 2, scale: 0.16, base: 0.9 },
+      { emoji: "🐘", count: 2, scale: 0.15, base: 0.9 },
+    ];
+    const flyers = new THREE.Group();
+    globe.add(flyers);
+    LIFE.forEach((mk) => {
+      const tex = emojiTexture(mk.emoji);
+      markerTextures.push(tex);
+      const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false });
+      lifeFade.push({ mat, base: mk.base });
+      for (let i = 0; i < mk.count; i++) {
+        const s = new THREE.Sprite(mat);
+        s.position.copy(surfPoint(mk.fly ? 2.3 + Math.random() * 0.25 : 2.1 + Math.random() * 0.04));
+        s.scale.setScalar(mk.scale);
+        (mk.fly ? flyers : globe).add(s);
+      }
+    });
+
     // --- city / node points
     const nodeMat = new THREE.PointsMaterial({ color: DARK.node.clone(), size: low ? 0.075 : 0.06, transparent: true, opacity: 0.95 });
     const nodeCount = low ? 220 : 420;
@@ -287,6 +316,10 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       // sickness markers dissolve as the field is restored; bees flicker out
       darkFade.forEach((f) => { f.mat.opacity = (1 - e) * f.base; });
       flickerMats.forEach((m) => { m.opacity = (1 - e) * (0.25 + 0.55 * Math.abs(Math.sin(now / 310))); });
+      // life returns with the light timeline; birds circle the restored planet
+      lifeFade.forEach((f) => { f.mat.opacity = e * f.base; });
+      flyers.rotation.y += dt * 0.22 * e;
+      flyers.rotation.x = Math.sin(now / 4200) * 0.08 * e;
       bodyMat.emissive.copy(c.copy(DARK.land).lerp(LIGHT.land, e));
       bodyMat.emissiveIntensity = 0.22 - e * 0.14;
       gridMat.color.copy(c.copy(DARK.grid).lerp(LIGHT.grid, e));
