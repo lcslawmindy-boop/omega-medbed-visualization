@@ -4,7 +4,7 @@ import * as THREE from "three";
 const DARK = {
   land: new THREE.Color("#2A0B08"),
   ocean: new THREE.Color("#12060A"),
-  tint: new THREE.Color("#8F4038"),
+  tint: new THREE.Color("#E9A08E"),
   grid: new THREE.Color("#FF2D2D"),
   atmo: new THREE.Color("#FF2A2A"),
   node: new THREE.Color("#FF3B30"),
@@ -22,13 +22,18 @@ const LIGHT = {
 
 function emojiTexture(emoji) {
   const cnv = document.createElement("canvas");
-  cnv.width = cnv.height = 64;
+  cnv.width = cnv.height = 128;
   const ctx = cnv.getContext("2d");
-  ctx.font = "48px serif";
+  ctx.font = "92px 'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(emoji, 32, 36);
-  return new THREE.CanvasTexture(cnv);
+  ctx.shadowColor = "rgba(0,0,0,0.85)";
+  ctx.shadowBlur = 10;
+  ctx.fillText(emoji, 64, 70);
+  const tex = new THREE.CanvasTexture(cnv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 4;
+  return tex;
 }
 
 function glowTexture() {
@@ -80,8 +85,7 @@ export default function EarthScene({ target = 0, quality = "high" }) {
     // --- planet body (real Earth surface, blood-tinted when smothered)
     const bodyMat = new THREE.MeshStandardMaterial({
       color: DARK.tint.clone(), roughness: 0.85, metalness: 0.15,
-      emissive: DARK.land.clone(), emissiveIntensity: 0.35,
-      transparent: true, opacity: 0.72,
+      emissive: DARK.land.clone(), emissiveIntensity: 0.22,
     });
     const body = new THREE.Mesh(new THREE.SphereGeometry(2, low ? 40 : 72, low ? 28 : 52), bodyMat);
     globe.add(body);
@@ -126,15 +130,15 @@ export default function EarthScene({ target = 0, quality = "high" }) {
 
     // emoji marker fields: nuclear, fossil fuel, ocean trash, dying plankton, vanishing animals, bees gone
     const MARKERS = [
-      { emoji: "☢️", count: low ? 6 : 10, scale: 0.26, base: 0.95 },
-      { emoji: "🛢️", count: low ? 6 : 10, scale: 0.24, base: 0.95 },
-      { emoji: "🏭", count: low ? 5 : 8, scale: 0.24, base: 0.9 },
-      { emoji: "🗑️", count: low ? 6 : 10, scale: 0.2, base: 0.85 },
-      { emoji: "🦠", count: low ? 8 : 14, scale: 0.16, base: 0.7 },
-      { emoji: "💀", count: low ? 5 : 8, scale: 0.22, base: 0.9 },
-      { emoji: "🐘", count: 3, scale: 0.24, base: 0.85 },
-      { emoji: "🐋", count: 3, scale: 0.24, base: 0.85 },
-      { emoji: "🐝", count: low ? 5 : 8, scale: 0.18, base: 0.8, flicker: true },
+      { emoji: "☢️", count: low ? 4 : 6, scale: 0.17, base: 0.95 },
+      { emoji: "🛢️", count: low ? 4 : 6, scale: 0.15, base: 0.9 },
+      { emoji: "🏭", count: low ? 4 : 6, scale: 0.16, base: 0.9 },
+      { emoji: "🗑️", count: low ? 4 : 6, scale: 0.13, base: 0.8 },
+      { emoji: "🦠", count: low ? 5 : 8, scale: 0.11, base: 0.65 },
+      { emoji: "💀", count: low ? 3 : 5, scale: 0.14, base: 0.85 },
+      { emoji: "🐘", count: 2, scale: 0.15, base: 0.8 },
+      { emoji: "🐋", count: 2, scale: 0.15, base: 0.8 },
+      { emoji: "🐝", count: low ? 4 : 6, scale: 0.12, base: 0.8, flicker: true },
     ];
     const flickerMats = [];
     const markerTextures = [];
@@ -146,7 +150,7 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       if (mk.flicker) flickerMats.push(mat);
       for (let i = 0; i < mk.count; i++) {
         const s = new THREE.Sprite(mat);
-        s.position.copy(surfPoint(2.18 + Math.random() * 0.1));
+        s.position.copy(surfPoint(2.1 + Math.random() * 0.04));
         s.scale.setScalar(mk.scale);
         globe.add(s);
       }
@@ -236,7 +240,7 @@ export default function EarthScene({ target = 0, quality = "high" }) {
     // --- lights
     const key = new THREE.DirectionalLight(0xffffff, 1.5);
     key.position.set(4, 3, 5);
-    scene.add(key, new THREE.AmbientLight(0xffffff, 0.35));
+    scene.add(key, new THREE.AmbientLight(0xffffff, 1.1));
     const rim = new THREE.PointLight(DARK.grid.getHex(), 3.2, 22);
     rim.position.set(-4, 1.5, -3);
     scene.add(rim);
@@ -280,12 +284,11 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       const e = t * t * (3 - 2 * t); // smoothstep
 
       bodyMat.color.copy(c.copy(DARK.tint).lerp(LIGHT.tint, e));
-      bodyMat.opacity = 0.72 + e * 0.24;
       // sickness markers dissolve as the field is restored; bees flicker out
       darkFade.forEach((f) => { f.mat.opacity = (1 - e) * f.base; });
       flickerMats.forEach((m) => { m.opacity = (1 - e) * (0.25 + 0.55 * Math.abs(Math.sin(now / 310))); });
       bodyMat.emissive.copy(c.copy(DARK.land).lerp(LIGHT.land, e));
-      bodyMat.emissiveIntensity = 0.3 - e * 0.18;
+      bodyMat.emissiveIntensity = 0.22 - e * 0.14;
       gridMat.color.copy(c.copy(DARK.grid).lerp(LIGHT.grid, e));
       gridMat.opacity = 0.85 - e * 0.55;
       nodeMat.color.copy(c.copy(DARK.node).lerp(LIGHT.node, e));
