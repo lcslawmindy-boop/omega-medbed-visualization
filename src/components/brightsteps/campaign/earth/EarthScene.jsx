@@ -301,9 +301,10 @@ export default function EarthScene({ target = 0, quality = "high" }) {
       raf = requestAnimationFrame(loop);
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      if (!visible) return;
-
       const goal = targetRef.current;
+      // keep animating while a timeline flip is still settling, even if scrolled out of view
+      if (!visible && Math.abs(goal - t) < 0.001 && waveT >= 1) return;
+
       if (goal !== prevGoal) {
         prevGoal = goal;
         waveT = 0;
