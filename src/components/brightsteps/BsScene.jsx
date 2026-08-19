@@ -11,10 +11,12 @@ const VIEWS = {
   fit: { pos: [0, 3.4, 10.5], tgt: [0.8, 1.0, 0] },
 };
 
-export default function BsScene({ activeCode, view, modeColor, autoRotate = true, sessionActive = false, onHover }) {
+export default function BsScene({ activeCode, view, modeColor, autoRotate = true, sessionActive = false, onHover, onPick }) {
   const mountRef = useRef(null);
   const hoverRef = useRef(onHover);
   useEffect(() => { hoverRef.current = onHover; }, [onHover]);
+  const pickRef = useRef(onPick);
+  useEffect(() => { pickRef.current = onPick; }, [onPick]);
   const stateRef = useRef(null);
   const sessionRef = useRef(sessionActive);
   const activeRef = useRef(activeCode);
@@ -350,19 +352,76 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
     // register PEMF via a proxy standard material trick: track opacity boost manually
     pemfMats.forEach((m) => { m.userData = { baseEmissive: 0.4, peak: 0.9, boost: 0 }; if (!zones.pemf) zones.pemf = []; zones.pemf.push(m); });
 
-    // Scalar corona — 4 violet rings above pod (GSC)
+    // Scalar corona (GSC) — Omega-style energy centerpiece above the pod:
+    // counter-rotating rings + orbiting nodes + pulsing core + particle swirl + session beams
+    const coronaGroup = new THREE.Group();
+    coronaGroup.position.y = 2.3;
+    scene.add(coronaGroup);
+    const coronaColors = [0xa78bfa, 0x38bdf8, 0x2dd4bf, 0xa78bfa];
     const coronaRings = [];
+    const coronaNodes = [];
     for (let i = 0; i < 4; i++) {
+      const rad = 0.35 + i * 0.22;
       const mat = new THREE.MeshStandardMaterial({
-        color: 0xa78bfa, emissive: 0xa78bfa, emissiveIntensity: 0.8, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending,
+        color: coronaColors[i], emissive: coronaColors[i], emissiveIntensity: 0.8, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending,
       });
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.35 + i * 0.22, 0.015, 8, 48), mat);
-      ring.position.y = 2.15 + i * 0.08;
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(rad, 0.015, 8, 48), mat);
+      ring.position.y = -0.15 + i * 0.08;
       ring.rotation.x = Math.PI / 2;
       ring.userData.spin = (i % 2 === 0 ? 1 : -1) * 0.001 * (i + 1);
-      scene.add(ring);
+      coronaGroup.add(ring);
       coronaRings.push(ring);
       registerZone("gsc", mat, 0.8, 1.7);
+      // 6 orbiting nodes per ring
+      for (let n = 0; n < 6; n++) {
+        const nm = new THREE.MeshStandardMaterial({
+          color: coronaColors[i], emissive: coronaColors[i], emissiveIntensity: 1.2, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending,
+        });
+        const node = new THREE.Mesh(new THREE.SphereGeometry(0.03, 10, 10), nm);
+        const a = (n / 6) * Math.PI * 2;
+        node.position.set(Math.cos(a) * rad, ring.position.y, Math.sin(a) * rad);
+        node.userData.orbit = { rad, a, y: ring.position.y, speed: (i % 2 === 0 ? 1 : -1) * (0.006 + i * 0.003) };
+        coronaGroup.add(node);
+        coronaNodes.push(node);
+        registerZone("gsc", nm, 0.9, 1.6);
+      }
+    }
+    // Central pulsing core
+    const coreMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff, emissive: 0xa78bfa, emissiveIntensity: 1.4, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending,
+    });
+    const coronaCore = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 20), coreMat);
+    coronaGroup.add(coronaCore);
+    const coronaLight = new THREE.PointLight(0xa78bfa, 0.5, 6);
+    coronaGroup.add(coronaLight);
+    // Orbiting particle swirl
+    const cpCount = 220;
+    const cpGeo = new THREE.BufferGeometry();
+    const cpPos = new Float32Array(cpCount * 3);
+    const cpData = [];
+    for (let i = 0; i < cpCount; i++) {
+      const r = 0.3 + Math.random() * 1.0;
+      const a = Math.random() * Math.PI * 2;
+      const y = (Math.random() - 0.5) * 0.4;
+      cpPos[i * 3] = Math.cos(a) * r;
+      cpPos[i * 3 + 1] = y;
+      cpPos[i * 3 + 2] = Math.sin(a) * r;
+      cpData.push({ r, a, y, speed: 0.3 + Math.random() * 0.8, dir: Math.random() > 0.5 ? 1 : -1 });
+    }
+    cpGeo.setAttribute("position", new THREE.BufferAttribute(cpPos, 3));
+    const cpMat = new THREE.PointsMaterial({
+      color: 0xa78bfa, size: 0.03, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, sizeAttenuation: true,
+    });
+    coronaGroup.add(new THREE.Points(cpGeo, cpMat));
+    // Beams connecting corona down toward the pod (fade in with session)
+    const beamMats = [];
+    for (let b = 0; b < 5; b++) {
+      const bm = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, side: THREE.DoubleSide });
+      const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.06, 1.1, 8, 1, true), bm);
+      const a = (b / 5) * Math.PI * 2;
+      beam.position.set(Math.cos(a) * 0.22, -0.7, Math.sin(a) * 0.22);
+      coronaGroup.add(beam);
+      beamMats.push(bm);
     }
 
     // Biophoton fireflies
@@ -402,24 +461,25 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
 
     // ---- HOVER LABELS FOR POD SUBSECTIONS ----
     const pickables = [];
-    const tag = (objs, label, sub) => {
+    const tag = (objs, label, sub, code) => {
       (Array.isArray(objs) ? objs : [objs]).forEach((o) => {
         o.userData.label = label;
         o.userData.sub = sub;
+        o.userData.code = code;
         pickables.push(o);
       });
     };
     tag(shell, "Pod Shell", "Enclosed acoustic chamber · 1600×1400×1500mm");
-    tag(canopy, "Chromotherapy Canopy — CHM", "RGBW LED dome · 380–780nm");
-    tag(pbm, "Photobiomodulation Array — PBM", "660/850nm · 40–60 mW/cm²");
-    tag(nadNodes, "Nada Resonators — NAD", "7-node acoustic spine column");
-    tag(seat, "Vibroacoustic Seat — VAT", "30–520Hz 6-transducer matrix");
-    tag(fitPanels, "Far-Infrared Panels — FIT", "5–14µm · 36–42°C envelope");
-    tag(eegRing, "EEG Headset Dock — EEG", "8-channel dry electrode array");
-    tag([binL, binR], "Binaural Emitters — BIN", "Delta 0.5–4Hz · Theta 4–8Hz");
-    tag(mctPorts, "Microcurrent Ports — MCT", "Armrest contact electrodes");
-    tag([vor, vorWater], "Vortex Water Unit — VOR", "Structured-water resonance loop");
-    tag(coronaRings, "Scalar Corona — GSC", "Counter-rotating field rings");
+    tag(canopy, "Chromotherapy Canopy — CHM", "RGBW LED dome · 380–780nm", "CHM");
+    tag(pbm, "Photobiomodulation Array — PBM", "660/850nm · 40–60 mW/cm²", "PBM");
+    tag(nadNodes, "Nada Resonators — NAD", "7-node acoustic spine column", "NAD");
+    tag(seat, "Vibroacoustic Seat — VAT", "30–520Hz 6-transducer matrix", "VAT");
+    tag(fitPanels, "Far-Infrared Panels — FIT", "5–14µm · 36–42°C envelope", "FIT");
+    tag(eegRing, "EEG Headset Dock — EEG", "8-channel dry electrode array", "EEG");
+    tag([binL, binR], "Binaural Emitters — BIN", "Delta 0.5–4Hz · Theta 4–8Hz", "BIN");
+    tag(mctPorts, "Microcurrent Ports — MCT", "Armrest contact electrodes", "MCT");
+    tag([vor, vorWater], "Vortex Water Unit — VOR", "Structured-water resonance loop", "VOR");
+    tag([...coronaRings, coronaCore, ...coronaNodes], "Scalar Corona — GSC", "Counter-rotating field rings · tap to inspect", "GSC");
     tag(headrest, "Headrest", "Adjustable pediatric support");
     tag(rim, "Access Rim", "Illuminated open-face safety edge");
     tag([cHead, cHair, cTorso, cNeck, ...arms], "Patient Position", "Ages 4–17 · reclined 15°");
@@ -447,10 +507,21 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
       }
     };
     const onPointerLeave = () => { lastLabel = null; if (hoverRef.current) hoverRef.current(null); };
+    // Tap/click a component to select its system (Omega-style picking)
+    const onPointerDown = (e) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      ptr.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      ptr.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      ray.setFromCamera(ptr, camera);
+      const hit = ray.intersectObjects(pickables, false)[0];
+      if (hit && hit.object.userData.code && pickRef.current) pickRef.current(hit.object.userData.code);
+    };
     renderer.domElement.addEventListener("pointermove", onPointerMove);
     renderer.domElement.addEventListener("pointerleave", onPointerLeave);
+    renderer.domElement.addEventListener("pointerdown", onPointerDown);
 
     let raf;
+    let energyCur = 0;
     const clock = new THREE.Clock();
     const animate = () => {
       raf = requestAnimationFrame(animate);
@@ -522,8 +593,38 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
         ring.rotation.y += ring.userData.speed;
       });
 
-      // Corona spin
-      coronaRings.forEach((r) => { r.rotation.z += r.userData.spin; });
+      // Corona — turbine spin-up: gentle idle, accelerating when a session runs or GSC is highlighted
+      const energyGoal = inSession ? 1 : activeRef.current === "GSC" ? 0.65 : 0.18;
+      energyCur = THREE.MathUtils.lerp(energyCur, energyGoal, 0.03);
+      const spinFactor = 1 + Math.pow(energyCur, 1.5) * 9;
+      coronaRings.forEach((r, i) => {
+        r.rotation.z += r.userData.spin * spinFactor;
+        r.rotation.x = Math.PI / 2 + Math.sin(t * 0.5 + i) * 0.1 * (0.3 + energyCur);
+      });
+      coronaNodes.forEach((n) => {
+        const o = n.userData.orbit;
+        o.a += o.speed * (1 + energyCur * 5);
+        n.position.set(Math.cos(o.a) * o.rad, o.y, Math.sin(o.a) * o.rad);
+      });
+      const corePulse = 1 + Math.sin(t * 3) * 0.16;
+      coronaCore.scale.setScalar(corePulse * (1 + energyCur * 0.7));
+      coreMat.emissiveIntensity = 1.2 + energyCur * 2.4 + Math.sin(t * 3) * 0.2;
+      coreMat.emissive.copy(podLight.color).lerp(new THREE.Color(0xa78bfa), 0.4);
+      coronaLight.intensity = 0.5 + energyCur * 2.6;
+      const cpa = cpGeo.attributes.position.array;
+      for (let i = 0; i < cpCount; i++) {
+        const d = cpData[i];
+        d.a += d.dir * d.speed * 0.01 * (1 + energyCur * 4);
+        cpa[i * 3] = Math.cos(d.a) * d.r;
+        cpa[i * 3 + 2] = Math.sin(d.a) * d.r;
+        cpa[i * 3 + 1] = d.y + Math.sin(t * 2 + i * 0.3) * 0.03;
+      }
+      cpGeo.attributes.position.needsUpdate = true;
+      cpMat.opacity = 0.3 + energyCur * 0.5;
+      cpMat.size = 0.025 + energyCur * 0.03;
+      beamMats.forEach((bm, i) => {
+        bm.opacity = energyCur * 0.4 * (0.7 + Math.sin(t * 4 + i) * 0.3);
+      });
 
       // Fireflies drift
       const bp = bioGeo.attributes.position.array;
@@ -577,6 +678,7 @@ export default function BsScene({ activeCode, view, modeColor, autoRotate = true
       window.removeEventListener("resize", onResize);
       renderer.domElement.removeEventListener("pointermove", onPointerMove);
       renderer.domElement.removeEventListener("pointerleave", onPointerLeave);
+      renderer.domElement.removeEventListener("pointerdown", onPointerDown);
       controls.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);

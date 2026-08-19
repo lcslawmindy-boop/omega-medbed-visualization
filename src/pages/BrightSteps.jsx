@@ -6,6 +6,7 @@ import BsSidebar from "@/components/brightsteps/BsSidebar";
 import BsSpecPanel from "@/components/brightsteps/BsSpecPanel";
 import BsScene from "@/components/brightsteps/BsScene";
 import BsSceneOverlay from "@/components/brightsteps/BsSceneOverlay";
+import BsSceneExplainer from "@/components/brightsteps/BsSceneExplainer";
 import BsSystemCards from "@/components/brightsteps/BsSystemCards";
 import BsEcosystem from "@/components/brightsteps/BsEcosystem";
 import BsSessionLogModal from "@/components/brightsteps/BsSessionLogModal";
@@ -125,8 +126,9 @@ export default function BrightSteps() {
       <main className="bs-main flex flex-col overflow-hidden">
         {/* 3D scene */}
         <div className="relative flex-none no-select" style={{ height: "48%", minHeight: 260 }}>
-          <BsScene activeCode={activeCode} view={view} modeColor={session ? session.color : POD_MODES[podModeIdx].color} autoRotate={autoRotate} sessionActive={!!session} onHover={setHover} />
+          <BsScene activeCode={activeCode} view={view} modeColor={session ? session.color : POD_MODES[podModeIdx].color} autoRotate={autoRotate} sessionActive={!!session} onHover={setHover} onPick={handleHighlight} />
           <BsHoverLabel hover={hover} />
+          <BsSceneExplainer activeCode={activeCode} sessionActive={!!session} />
           <BsSceneOverlay
             activeCode={activeCode}
             onHighlight={handleHighlight}
